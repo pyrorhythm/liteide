@@ -4,6 +4,8 @@
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QObject>
+#include <QThread>
 
 //#ifdef Q_OS_WIN
 //#include <QLocalSocket>

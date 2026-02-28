@@ -27,7 +27,8 @@
 #include <QTableWidget>
 #include <QTextStream>
 #include <QTextDocument>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QComboBox>
@@ -66,7 +67,7 @@ FindThread::FindThread(QObject *parent) :
     qRegisterMetaType<LiteApi::FileSearchResult>("LiteApi::FileSearchResult");
 }
 
-void FindThread::findDir(const QRegExp &reg, const QString &path)
+void FindThread::findDir(const QRegularExpression &reg, const QString &path)
 {
     QDir dir(path);
     if (!dir.exists()) {
@@ -89,7 +90,7 @@ void FindThread::findDir(const QRegExp &reg, const QString &path)
     }
 }
 
-void FindThread::findFile(const QRegExp &reg, const QString &fileName)
+void FindThread::findFile(const QRegularExpression &reg, const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -108,20 +109,26 @@ void FindThread::findFile(const QRegExp &reg, const QString &fileName)
     int lineNr = 1;
     while (!stream.atEnd()) {
         line = stream.readLine();
-        int pos = 0;
-        while ((pos = reg.indexIn(line, pos)) != -1) {
-            if (!useRegExp && matchWord) {
-                const int start = pos;
-                const int end = start + reg.matchedLength();
-                if ((start != 0 && line.at(start - 1).isLetterOrNumber())
-                        || (end != line.length() && line.at(end).isLetterOrNumber())) {
-                    //if this is not a whole word, continue the search in the string
-                    pos = end+1;
-                    continue;
-                }
+        int searchFrom = 0;
+        for (;;) {
+            QRegularExpressionMatch m = reg.match(line, searchFrom);
+            if (!m.hasMatch()) {
+                break;
             }
-            emit findResult(LiteApi::FileSearchResult(fileName, line,lineNr,pos, reg.matchedLength()));
-            pos += reg.matchedLength();
+
+            const int start = m.capturedStart(0);
+            const int len   = m.capturedLength(0);
+            if (start < 0 || len < 0) {
+                break;
+            }
+
+            emit findResult(LiteApi::FileSearchResult(fileName, line, lineNr, start, len));
+
+            // Avoid infinite loops on zero-length matches
+            searchFrom = start + (len > 0 ? len : 1);
+            if (searchFrom > line.size()) {
+                break;
+            }
         }
         lineNr++;
         if (!finding) {
@@ -143,8 +150,7 @@ void FindThread::stop()
 void FindThread::run()
 {
     finding = true;
-    QRegExp reg;
-    reg.setCaseSensitivity(matchCase ? Qt::CaseSensitive : Qt::CaseInsensitive);
+    QRegularExpression reg;
 
     if (useRegExp) {
         if (matchWord) {
@@ -154,7 +160,6 @@ void FindThread::run()
         }
     } else {
        reg.setPattern(findText);
-       reg.setPatternSyntax(QRegExp::FixedString);
     }
     findDir(reg,findPath);
     finding = false;

@@ -37,7 +37,7 @@
 struct ResponseError
 {
     QString error;
-    QString id;
+    int id = 0;
     QVariant result;
     void fromMap(const QVariantMap &map)
     {

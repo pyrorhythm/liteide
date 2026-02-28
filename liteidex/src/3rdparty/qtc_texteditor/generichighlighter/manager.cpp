@@ -47,7 +47,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QRegExp>
+#include <QRegularExpression>
 #include <QtCore/QFuture>
 #include <QtCore/QtConcurrentRun>
 #include <QtCore/QtConcurrentMap>
@@ -207,7 +207,7 @@ void Manager::loadFromPath(const QStringList & definitionsPaths)
 //                                    else
 //                                        continue;
 //                                }
-//                                QRegExp regExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard);
+//                                QRegularExpression regExp(pattern, Qt::CaseSensitive, QRegularExpression::Wildcard);
 //                                globPatterns.append(Core::MimeGlobPattern(regExp, 50));
 //                            }
 //                        }
@@ -332,7 +332,7 @@ void Manager::registerMimeTypes()
 //                                    else
 //                                        continue;
 //                                }
-//                                QRegExp regExp(pattern, Qt::CaseSensitive, QRegExp::Wildcard);
+//                                QRegularExpression regExp(pattern, Qt::CaseSensitive, QRegularExpression::Wildcard);
 //                                globPatterns.append(Core::MimeGlobPattern(regExp, 50));
 //                            }
 //                        }

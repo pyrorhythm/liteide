@@ -35,7 +35,8 @@
 #include <QProcess>
 #include <QFileDialog>
 #include <QDesktopServices>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QDebug>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
@@ -233,12 +234,14 @@ void GolangPresentEdit::extOutput(const QByteArray &data, bool bError)
     } else {
         QString msg = QString::fromUtf8(data);
         m_editor->setNavigateHead(LiteApi::EditorNavigateError,msg);
-        QRegExp re("(\\w?:?[\\w\\d_@\\-\\\\/\\.]+):(\\d+):");
-        if ((re.indexIn(msg)>=0) && re.captureCount() >= 2) {
+        QRegularExpression re("(\\w?:?[\\w\\d_@\\-\\\\/\\.]+):(\\d+):");
+		auto match = re.match(msg);
+        if (match.hasMatch() && match.lastCapturedIndex() >= 2) {
             bool ok = false;
-            int line = re.cap(2).toInt(&ok);
+            int line = match.captured(2).toInt(&ok);
             if (ok) {
-                QString errmsg = re.cap(0)+"\n"+msg.mid(re.cap(0).length()).trimmed();
+				QString cap0 = match.captured(0);
+                QString errmsg = cap0 +"\n" + msg.mid(cap0.length()).trimmed();
                 m_editor->insertNavigateMark(line-1,LiteApi::EditorNavigateError,errmsg, GOPRESENT_TAG);
                 m_errorMsg.append(errmsg);
             }

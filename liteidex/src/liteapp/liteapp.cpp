@@ -49,6 +49,7 @@
 #include "liteapi/liteids.h"
 #include <QApplication>
 #include <QSplashScreen>
+#include <QStandardPaths>
 #include <QMenuBar>
 #include <QDir>
 #include <QToolBar>
@@ -62,6 +63,8 @@
 #include <QComboBox>
 #include <QProcessEnvironment>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QStandardPaths>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -125,9 +128,9 @@ QString LiteApp::getResoucePath()
 QString LiteApp::getStoragePath()
 {
 #if QT_VERSION >= 0x050000
-    QString root = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QString root = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 #else
-    QString root = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    QString root = QDesktopServices::storageLocation(QDesktopServices::AppDataLocation);
 #endif
     return root+"/liteide";
 }
@@ -1076,16 +1079,26 @@ void LiteApp::dbclickLogOutput(QTextCursor cur)
     if (text.length() < 9) {
         return;
     }
-    QRegExp rep("(\\w?\\:?[\\w\\d\\_\\-\\\\/\\.]+):(\\d+):");
-    int index = rep.indexIn(text.mid(8));
+    QReglarExpression rep("(\\w?\\:?[\\w\\d\\_\\-\\\\/\\.]+):(\\d+):");
+    int index = rep.match(text.mid(8));
     if (index < 0)
         return;
     QStringList capList = rep.capturedTexts();
 
-    if (capList.count() < 3)
+    // file:line:  (skip leading timestamp like "08:38:49")
+    static const QRegularExpression rep(
+        R"((\w?:?[\w\d_\-\\/.]+):(\d+):)"
+    );
+    const QString s = text.mid(8);
+    const QRegularExpressionMatch match = rep.match(s);
+    if (!match.hasMatch())
+    	return;
+
+    // captured(0)=whole, (1)=file, (2)=line
+    if (match.lastCapturedIndex() < 2)
         return;
-    QString fileName = capList[1];
-    QString fileLine = capList[2];
+    const QString fileName = match.captured(1);
+    const QString fileLine = match.captured(2);
 
     bool ok = false;
     int line = fileLine.toInt(&ok);

@@ -27,7 +27,7 @@
 #include "litecompleter.h"
 #include <QHash>
 #include <QSet>
-#include <QRegExp>
+#include <QRegularExpression>
 
 class QStandardItemModel;
 class QStandardItem;

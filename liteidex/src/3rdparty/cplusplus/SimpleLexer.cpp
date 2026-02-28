@@ -32,6 +32,7 @@
 #include "Lexer.h"
 #include "Token.h"
 
+#include <QStringView>
 #include <QDebug>
 
 using namespace CPlusPlus;
@@ -88,7 +89,7 @@ QList<Token> SimpleLexer::operator()(const QString &text, int state)
             break;
         }
 
-        QStringRef spell = text.midRef(lex.tokenOffset(), lex.tokenLength());
+        QStringView spell = QStringView{text}.mid(lex.tokenOffset(), lex.tokenLength());
         lex.setScanAngleStringLiteralTokens(false);
 
         if (tk.f.newline && tk.is(T_POUND))

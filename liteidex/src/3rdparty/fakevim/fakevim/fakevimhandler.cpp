@@ -69,7 +69,9 @@
 #include <QObject>
 #include <QPointer>
 #include <QProcess>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QStringView>
 #include <QTextStream>
 #include <QTimer>
 #include <QStack>
@@ -393,9 +395,9 @@ static bool eatString(const char *prefix, QString *str)
     return true;
 }
 
-static QRegExp vimPatternToQtPattern(QString needle, bool ignoreCaseOption, bool smartCaseOption)
+static QRegularExpression vimPatternToQtPattern(QString needle, bool ignoreCaseOption, bool smartCaseOption)
 {
-    /* Transformations (Vim regexp -> QRegExp):
+    /* Transformations (Vim regexp -> QRegularExpression):
      *   \a -> [A-Za-z]
      *   \A -> [^A-Za-z]
      *   \h -> [A-Za-z_]
@@ -426,7 +428,7 @@ static QRegExp vimPatternToQtPattern(QString needle, bool ignoreCaseOption, bool
      */
     // FIXME: Option smartcase should be used only if search was typed by user.
     bool ignorecase = ignoreCaseOption
-        && !(smartCaseOption && needle.contains(QRegExp(_("[A-Z]"))));
+        && !(smartCaseOption && needle.contains(QRegularExpression(_("[A-Z]"))));
     QString pattern;
     pattern.reserve(2 * needle.size());
 
@@ -534,7 +536,7 @@ static QRegExp vimPatternToQtPattern(QString needle, bool ignoreCaseOption, bool
     else if (brace)
         pattern.append(QLatin1Char('['));
 
-    return QRegExp(pattern);
+    return QRegularExpression(pattern);
 }
 
 static bool afterEndOfLine(const QTextDocument *doc, int position)
@@ -543,7 +545,7 @@ static bool afterEndOfLine(const QTextDocument *doc, int position)
         && doc->findBlock(position).length() > 1;
 }
 
-static void searchForward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
+static void searchForward(QTextCursor *tc, QRegularExpression &needleExp, int *repeat)
 {
     const QTextDocument *doc = tc->document();
     const int startPos = tc->position();
@@ -581,7 +583,7 @@ static void searchForward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
         tc->movePosition(Left);
 }
 
-static void searchBackward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
+static void searchBackward(QTextCursor *tc, QRegularExpression &needleExp, int *repeat)
 {
     // Search from beginning of line so that matched text is the same.
     QTextBlock block = tc->block();
@@ -590,7 +592,10 @@ static void searchBackward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
     int i = line.indexOf(needleExp, 0);
     while (i != -1 && i < tc->positionInBlock()) {
         --*repeat;
-        i = line.indexOf(needleExp, i + qMax(1, needleExp.matchedLength()));
+	QRegularExpressionMatch match = needleExp.match(line, i);
+	if (match.hasMatch()) {
+		i = line.indexOf(needleExp, i + qMax(1, match.capturedLength()));
+	}
         if (i == line.size())
             i = -1;
     }
@@ -606,7 +611,10 @@ static void searchBackward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
         i = line.indexOf(needleExp, 0);
         while (i != -1) {
             --*repeat;
-            i = line.indexOf(needleExp, i + qMax(1, needleExp.matchedLength()));
+		QRegularExpressionMatch match = needleExp.match(line, i);
+		if (match.hasMatch()) {
+			i = line.indexOf(needleExp, i + qMax(1, match.capturedLength()));
+		}
             if (i == line.size())
                 i = -1;
         }
@@ -619,17 +627,23 @@ static void searchBackward(QTextCursor *tc, QRegExp &needleExp, int *repeat)
 
     i = line.indexOf(needleExp, 0);
     while (*repeat < 0) {
-        i = line.indexOf(needleExp, i + qMax(1, needleExp.matchedLength()));
+	QRegularExpressionMatch match = needleExp.match(line, i);
+		if (match.hasMatch()) {
+			i = line.indexOf(needleExp, i + qMax(1, match.capturedLength()));
+		}
         ++*repeat;
     }
     tc->setPosition(block.position() + i);
-    tc->setPosition(tc->position() + needleExp.matchedLength(), KeepAnchor);
+	QRegularExpressionMatch match = needleExp.match(line, i); // or relevant string
+	if (match.hasMatch()) {
+		tc->setPosition(tc->position() + match.capturedLength(), KeepAnchor);
+	}
 }
 
 // Commands [[, []
 static void bracketSearchBackward(QTextCursor *tc, const QString &needleExp, int repeat)
 {
-    QRegExp re(needleExp);
+    QRegularExpression re(needleExp);
     QTextCursor tc2 = *tc;
     tc2.setPosition(tc2.position() - 1);
     searchBackward(&tc2, re, &repeat);
@@ -642,7 +656,7 @@ static void bracketSearchBackward(QTextCursor *tc, const QString &needleExp, int
 static void bracketSearchForward(QTextCursor *tc, const QString &needleExp, int repeat,
                                  bool searchWithCommand)
 {
-    QRegExp re(searchWithCommand ? QString(_("^\\}|^\\{")) : needleExp);
+    QRegularExpression re(searchWithCommand ? QString(_("^\\}|^\\{")) : needleExp);
     QTextCursor tc2 = *tc;
     tc2.setPosition(tc2.position() + 1);
     searchForward(&tc2, re, &repeat);
@@ -660,14 +674,17 @@ static void bracketSearchForward(QTextCursor *tc, const QString &needleExp, int 
     }
 }
 
-static bool substituteText(QString *text, QRegExp &pattern, const QString &replacement,
+static bool substituteText(QString *text, QRegularExpression &pattern, const QString &replacement,
     bool global)
 {
     bool substituted = false;
     int pos = 0;
     int right = -1;
     while (true) {
-        pos = pattern.indexIn(*text, pos, QRegExp::CaretAtZero);
+        QRegularExpressionMatch match = pattern.match(*text, pos);
+		if (match.hasMatch()) {
+			pos = match.capturedStart();
+			QString matched = text->mid(pos, match.captured(0).length());
         if (pos == -1)
             break;
 
@@ -682,7 +699,7 @@ static bool substituteText(QString *text, QRegExp &pattern, const QString &repla
         right = text->size() - pos;
 
         substituted = true;
-        QString matched = text->mid(pos, pattern.cap(0).size());
+        //QString matched = text->mid(pos, match.captured(0).length());
         QString repl;
         bool escape = false;
         // insert captured texts
@@ -692,7 +709,7 @@ static bool substituteText(QString *text, QRegExp &pattern, const QString &repla
                 escape = false;
                 if (c.isDigit()) {
                     if (c.digitValue() <= pattern.captureCount())
-                        repl += pattern.cap(c.digitValue());
+			repl += match.captured(c.digitValue());
                 } else {
                     repl += c;
                 }
@@ -700,7 +717,7 @@ static bool substituteText(QString *text, QRegExp &pattern, const QString &repla
                 if (c == QLatin1Char('\\'))
                     escape = true;
                 else if (c == QLatin1Char('&'))
-                    repl += pattern.cap(0);
+                    repl += match.captured(c.digitValue());
                 else
                     repl += c;
             }
@@ -713,6 +730,7 @@ static bool substituteText(QString *text, QRegExp &pattern, const QString &repla
     }
 
     return substituted;
+    }
 }
 
 static int findUnescaped(QChar c, const QString &line, int from)
@@ -928,7 +946,7 @@ QString quoteUnprintable(const QString &ba)
         else if (cc == QLatin1Char('\n'))
             res += _("<CR>");
         else
-            res += QString::fromLatin1("\\x%1").arg(c.unicode(), 2, 16, QLatin1Char('0'));
+            res += QString::fromLatin1("\\x%1").arg(int(c.unicode()), 2, 16, QLatin1Char('0'));
     }
     return res;
 }
@@ -1116,7 +1134,7 @@ public:
             return QLatin1Char('\n');
         if (m_key == Key_Escape)
             return QChar(27);
-        return m_xkey;
+        return QChar(m_xkey);
     }
 
     QString toString() const
@@ -1257,7 +1275,7 @@ class History
 public:
     History() : m_items(QString()), m_index(0) {}
     void append(const QString &item);
-    const QString &move(const QStringRef &prefix, int skip);
+    const QString &move(const QStringView &prefix, int skip);
     const QString &current() const { return m_items[m_index]; }
     const QStringList &items() const { return m_items; }
     void restart() { m_index = m_items.size() - 1; }
@@ -1278,7 +1296,7 @@ void History::append(const QString &item)
     restart();
 }
 
-const QString &History::move(const QStringRef &prefix, int skip)
+const QString &History::move(const QStringView &prefix, int skip)
 {
     if (!current().startsWith(prefix))
         restart();
@@ -1310,7 +1328,7 @@ public:
         m_buffer = s; m_pos = m_userPos = pos; m_anchor = anchor >= 0 ? anchor : pos;
     }
 
-    QStringRef userContents() const { return m_buffer.leftRef(m_userPos); }
+    QStringView userContents() const { return QStringView(m_buffer).left(m_userPos); }
     const QChar &prompt() const { return m_prompt; }
     const QString &contents() const { return m_buffer; }
     bool isEmpty() const { return m_buffer.isEmpty(); }
@@ -1455,7 +1473,7 @@ public:
     }
 
     // Reset iterator state. Keep previous mode if 0.
-    void reset(char mode = 0)
+    void reset(int mode = 0)
     {
         clear();
         m_lastValid = -1;
@@ -2579,7 +2597,7 @@ void FakeVimHandler::Private::commitInsertState()
     lastInsertion.prepend(QString(_("<DELETE>")).repeated(insertState.deletes));
 
     // Remove indentation.
-    lastInsertion.replace(QRegExp(_("(^|\n)[\\t ]+")), _("\\1"));
+    lastInsertion.replace(QRegularExpression(_("(^|\n)[\\t ]+")), _("\\1"));
 }
 
 void FakeVimHandler::Private::invalidateInsertState()
@@ -2672,8 +2690,8 @@ void FakeVimHandler::Private::importSelection()
 
 void FakeVimHandler::Private::updateEditor()
 {
-    const int charWidth = QFontMetrics(EDITOR(font())).width(QLatin1Char(' '));
-    EDITOR(setTabStopWidth(charWidth * config(ConfigTabStop).toInt()));
+    const int charWidth = QFontMetrics(EDITOR(font())).horizontalAdvance((QLatin1Char(' ')));
+	EDITOR(setTabStopDistance(charWidth * config(ConfigTabStop).toInt()));
     setupCharClass();
 }
 
@@ -2683,8 +2701,8 @@ void FakeVimHandler::Private::restoreWidget(int tabSize)
     //updateMiniBuffer();
     //EDITOR(removeEventFilter(q));
     //EDITOR(setReadOnly(m_wasReadOnly));
-    const int charWidth = QFontMetrics(EDITOR(font())).width(QLatin1Char(' '));
-    EDITOR(setTabStopWidth(charWidth * tabSize));
+    const int charWidth = QFontMetrics(EDITOR(font())).horizontalAdvance((QLatin1Char(' ')));
+    EDITOR(setTabStopDistance(charWidth * tabSize));
     g.visualMode = NoVisualMode;
     // Force "ordinary" cursor.
     EDITOR(setOverwriteMode(false));
@@ -3746,7 +3764,7 @@ bool FakeVimHandler::Private::handleMovement(const Input &input)
         QString needle;
         QTextCursor tc = m_cursor;
         tc.select(QTextCursor::WordUnderCursor);
-        needle = QRegExp::escape(tc.selection().toPlainText());
+        needle = QRegularExpression::escape(tc.selection().toPlainText());
         if (!g.gflag)
             needle = _("\\<") + needle + _("\\>");
         setAnchorAndPosition(tc.position(), tc.anchor());
@@ -5384,7 +5402,7 @@ bool FakeVimHandler::Private::parseExCommmand(QString *line, ExCommand *cmd)
     cmd->cmd = line->mid(0, i).trimmed();
 
     // command arguments starts with first non-letter character
-    cmd->args = cmd->cmd.section(QRegExp(_("(?=[^a-zA-Z])")), 1);
+    cmd->args = cmd->cmd.section(QRegularExpression(_("(?=[^a-zA-Z])")), 1);
     if (!cmd->args.isEmpty()) {
         cmd->cmd.chop(cmd->args.size());
         cmd->args = cmd->args.trimmed();
@@ -5404,7 +5422,7 @@ bool FakeVimHandler::Private::parseExCommmand(QString *line, ExCommand *cmd)
 bool FakeVimHandler::Private::parseLineRange(QString *line, ExCommand *cmd)
 {
     // remove leading colons and spaces
-    line->remove(QRegExp(_("^\\s*(:+\\s*)*")));
+    line->remove(QRegularExpression(_("^\\s*(:+\\s*)*")));
 
     // special case ':!...' (use invalid range)
     if (line->startsWith(QLatin1Char('!'))) {
@@ -5463,7 +5481,7 @@ bool FakeVimHandler::Private::handleExSubstituteCommand(const ExCommand &cmd)
 
     int count = 1;
     QString line = cmd.args;
-    const int countIndex = line.lastIndexOf(QRegExp(_("\\d+$")));
+    const int countIndex = line.lastIndexOf(QRegularExpression(_("\\d+$")));
     if (countIndex != -1) {
         count = line.mid(countIndex).toInt();
         line = line.mid(0, countIndex).trimmed();
@@ -5502,7 +5520,7 @@ bool FakeVimHandler::Private::handleExSubstituteCommand(const ExCommand &cmd)
     if (g.lastSubstituteFlags.contains(QLatin1Char('i')))
         needle.prepend(_("\\c"));
 
-    QRegExp pattern = vimPatternToQtPattern(needle, hasConfig(ConfigIgnoreCase),
+    QRegularExpression pattern = vimPatternToQtPattern(needle, hasConfig(ConfigIgnoreCase),
                                             hasConfig(ConfigSmartCase));
 
     QTextBlock lastBlock;
@@ -5611,8 +5629,8 @@ bool FakeVimHandler::Private::handleExMapCommand(const ExCommand &cmd0) // :map
         break;
     }
 
-    const QString lhs = args.section(QRegExp(_("\\s+")), 0, 0);
-    const QString rhs = args.section(QRegExp(_("\\s+")), 1);
+    const QString lhs = args.section(QRegularExpression(_("\\s+")), 0, 0);
+    const QString rhs = args.section(QRegularExpression(_("\\s+")), 1);
     if ((rhs.isNull() && type != Unmap) || (!rhs.isNull() && type == Unmap)) {
         // FIXME: Dump mappings here.
         //qDebug() << g.mappings;
@@ -5718,7 +5736,7 @@ bool FakeVimHandler::Private::handleExSetCommand(const ExCommand &cmd)
         if (!act) {
             showMessage(MessageError, FakeVimHandler::tr("Unknown option:")
                         + QLatin1Char(' ') + cmd.args);
-        } else if (act->defaultValue().type() == QVariant::Bool) {
+        } else if (act->defaultValue().typeId() == QMetaType::Bool) {
             bool oldValue = act->value().toBool();
             if (printOption) {
                 showMessage(MessageInfo, (oldValue ? _("") : _("no"))
@@ -5894,7 +5912,7 @@ bool FakeVimHandler::Private::handleExJoinCommand(const ExCommand &cmd)
 bool FakeVimHandler::Private::handleExWriteCommand(const ExCommand &cmd)
 {
     // :w, :x, :wq, ...
-    //static QRegExp reWrite("^[wx]q?a?!?( (.*))?$");
+    //static QRegularExpression reWrite("^[wx]q?a?!?( (.*))?$");
     if (cmd.cmd != _("w") && cmd.cmd != _("x") && cmd.cmd != _("wq"))
         return false;
 
@@ -6250,7 +6268,7 @@ void FakeVimHandler::Private::searchBalanced(bool forward, QChar needle, QChar o
 QTextCursor FakeVimHandler::Private::search(const SearchData &sd, int startPos, int count,
     bool showMessages)
 {
-    QRegExp needleExp = vimPatternToQtPattern(sd.needle, hasConfig(ConfigIgnoreCase),
+    QRegularExpression needleExp = vimPatternToQtPattern(sd.needle, hasConfig(ConfigIgnoreCase),
                                               hasConfig(ConfigSmartCase));
     if (!needleExp.isValid()) {
         if (showMessages) {
@@ -8203,33 +8221,63 @@ bool FakeVimHandler::Private::changeNumberTextObject(int count)
     const QTextBlock block = this->block();
     const QString lineText = block.text();
     const int posMin = m_cursor.positionInBlock() + 1;
-
-    // find first decimal, hexadecimal or octal number under or after cursor position
-    QRegExp re(_("(0[xX])(0*[0-9a-fA-F]+)|(0)(0*[0-7]+)(?=\\D|$)|(\\d+)"));
+// 1. Declare variables outside the scope
+//QString nrFormats = config(ConfigNrFormats).toString(); // Ensure ConfigNrFormats is correct
+	QString num;
+	QString prefix;
+	int len = 0;
     int pos = 0;
-    while ((pos = re.indexIn(lineText, pos)) != -1 && pos + re.matchedLength() < posMin)
-        ++pos;
-    if (pos == -1)
-        return false;
-    int len = re.matchedLength();
-    QString prefix = re.cap(1) + re.cap(3);
-    bool hex = prefix.length() >= 2 && (prefix[1].toLower() == QLatin1Char('x'));
-    bool octal = !hex && !prefix.isEmpty();
-    const QString num = hex ? re.cap(2) : octal ? re.cap(4) : re.cap(5);
-
-    // parse value
     bool ok;
-    int base = hex ? 16 : octal ? 8 : 10;
     qlonglong value = 0;  // decimal value
     qlonglong uvalue = 0; // hexadecimal or octal value (only unsigned)
-    if (hex || octal)
+    QRegularExpression re(_("(0[xX])(0*[0-9a-fA-F]+)|(0)(0*[0-7]+)(?=\\D|$)|(\\d+)"));
+QRegularExpressionMatch match = re.match(lineText, pos);
+	bool isHex = !match.captured(2).isEmpty();
+	bool isOctal = !match.captured(4).isEmpty();
+	int base = isHex ? 16 : isOctal ? 8 : 10;
+if (match.hasMatch()) {
+    len = match.capturedLength();
+    prefix = match.captured(1) + match.captured(3);
+    num = isHex ? match.captured(2) : (isOctal ? match.captured(4) : match.captured(5));
+}
+
+// 3. Now the code below will work because 'num', 'prefix', and 'len' exist here
+if (!num.isEmpty()) {
+    uvalue = num.toULongLong(&ok, base);
+    // ... rest of your code ...
+    setAnchorAndPosition(pos, pos + len);
+}
+    // find first decimal, hexadecimal or octal number under or after cursor position
+    //QRegularExpression re(_("(0[xX])(0*[0-9a-fA-F]+)|(0)(0*[0-7]+)(?=\\D|$)|(\\d+)"));
+	//QRegularExpressionMatch match = re.match(lineText, pos);
+	while (match.hasMatch() && match.capturedStart() + match.capturedLength() < posMin) {
+		pos = match.capturedStart();
+		int len = match.capturedLength();
+		QString prefix = match.captured(1) + match.captured(3);
+		const QString num = isHex ? match.captured(2) : (isOctal ? match.captured(4) : match.captured(5));
+		match = re.match(lineText, match.capturedEnd()); // Continue searching
+		pos = match.capturedEnd();
+		match = re.match(lineText, pos);
+		}
+        ++pos;
+    //if (pos == -1)
+        return false;
+	if (match.hasMatch()) {
+    int len = match.capturedLength();
+    QString prefix = match.captured(1) + match.captured(3);
+    const QString num = isHex ? match.captured(2) : (isOctal ? match.captured(4) : match.captured(5));
+    //bool hex = prefix.length() >= 2 && (prefix[1].toLower() == QLatin1Char('x'));
+    //bool octal = !hex && !prefix.isEmpty();
+	}
+    // parse value
+    if (isHex || isOctal)
         uvalue = num.toULongLong(&ok, base);
     else
         value = num.toLongLong(&ok, base);
     QTC_ASSERT(ok, qDebug() << "Cannot parse number:" << num << "base:" << base; return false);
 
     // negative decimal number
-    if (!octal && !hex && pos > 0 && lineText[pos - 1] == QLatin1Char('-')) {
+    if (!isOctal && !isHex && pos > 0 && lineText[pos - 1] == QLatin1Char('-')) {
         value = -value;
         --pos;
         ++len;
@@ -8237,20 +8285,20 @@ bool FakeVimHandler::Private::changeNumberTextObject(int count)
 
     // result to string
     QString repl;
-    if (hex || octal)
+    if (isHex || isOctal)
         repl = QString::number(uvalue + count, base);
     else
         repl = QString::number(value + count, base);
 
     // convert hexadecimal number to upper-case if last letter was upper-case
-    if (hex) {
-        const int lastLetter = num.lastIndexOf(QRegExp(_("[a-fA-F]")));
+    if (isHex) {
+        const int lastLetter = num.lastIndexOf(QRegularExpression(_("[a-fA-F]")));
         if (lastLetter != -1 && num[lastLetter].isUpper())
             repl = repl.toUpper();
     }
 
     // preserve leading zeroes
-    if ((octal || hex) && repl.size() < num.size())
+    if ((isHex || isOctal) && repl.size() < num.size())
         prefix.append(QString::fromLatin1("0").repeated(num.size() - repl.size()));
     repl.prepend(prefix);
 

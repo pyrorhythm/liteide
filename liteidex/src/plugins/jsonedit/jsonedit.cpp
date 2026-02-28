@@ -30,7 +30,6 @@
 #include <QProcess>
 #include <QToolBar>
 #include <QToolButton>
-#include <QTextCodec>
 #include <QMenu>
 #include <QDebug>
 //lite_memory_check_begin
@@ -187,7 +186,7 @@ void JsonEdit::fmtEditor(LiteApi::IEditor *editor, bool compact, bool tabs, bool
     }
     LiteApi::ILiteEditor *liteEditor = LiteApi::getLiteEditor(editor);
     liteEditor->clearAllNavigateMark(LiteApi::EditorNavigateBad, "Json");
-    QTextCodec *codec = QTextCodec::codecForName("utf-8");
+    QByteArray bytes = text.toUtf8();
 
     if (process.exitCode() != 0) {
         m_liteApp->appendLog("jsonfmt",QString::fromUtf8(process.readAll()),true);
@@ -207,11 +206,11 @@ void JsonEdit::fmtEditor(LiteApi::IEditor *editor, bool compact, bool tabs, bool
     //int pos = cur.position();
     cur.beginEditBlock();
     if (diff) {
-        EditorUtil::loadDiff(cur,codec->toUnicode(data));
+        EditorUtil::loadDiff(cur, QString::fromUtf8(data));
     } else {
         cur.select(QTextCursor::Document);
         cur.removeSelectedText();
-        cur.insertText(codec->toUnicode(data));
+        cur.insertText(QString::fromUtf8(data));
     }
     //cur.setPosition(pos);
     cur.endEditBlock();

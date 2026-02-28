@@ -24,6 +24,7 @@
 #include "pluginmanager.h"
 #include "pluginsdialog.h"
 
+#include <algorithm>
 #include <QDir>
 #include <QPluginLoader>
 #include <QMenu>
@@ -86,10 +87,11 @@ void PluginManager::loadPlugins(const QString &dir)
     QMapIterator<QString,int> i(idIndexMap);
     while (i.hasNext()) {
         i.next();
-        deps.insertMulti(i.value(),idPlguinMap.value(i.key()));
+        deps.insert(i.value(),idPlguinMap.value(i.key()));
     }
-    QList<int> keys = deps.keys().toSet().toList();
-    qSort(keys);
+    QList<int> keys = QSet<int>(deps.keys().begin(), deps.keys().end()).values();
+    //std::sort(keys);
+	std::sort(keys.begin(), keys.end());
     foreach(int index, keys) {
         foreach(IPluginFactory *p, deps.values(index)) {
             m_factoryList.append(p);

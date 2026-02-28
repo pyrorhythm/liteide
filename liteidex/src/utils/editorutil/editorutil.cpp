@@ -28,6 +28,7 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QPlainTextEdit>
+#include <QRegularExpression>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -292,7 +293,7 @@ void EditorUtil::loadDiff(QTextCursor &cursor, const QString &diff)
     int curBlockNumber = orgBlockNumber;
 
     //load diff
-    QRegExp reg("@@\\s+\\-(\\d+),?(\\d+)?\\s+\\+(\\d+),?(\\d+)?\\s+@@");
+    static QRegularExpression reg(QStringLiteral("@@\\s+\\-(\\d+),?(\\d+)?\\s+\\+(\\d+),?(\\d+)?\\s+@@"));
     QTextBlock block;
     int line = -1;
     int line_add = 0;
@@ -313,12 +314,13 @@ void EditorUtil::loadDiff(QTextCursor &cursor, const QString &diff)
 
         QChar ch = s.at(0);
         if (ch == '@') {
-            if (reg.indexIn(s) == 0) {
-                int s1 = reg.cap(1).toInt();
-                int s2 = reg.cap(2).toInt();
-                //int n1 = reg.cap(3).toInt();
-                int n2 = reg.cap(4).toInt();
-                line = line_add+s1;
+ 		QRegularExpressionMatch match = reg.match(s);
+
+		if (match.hasMatch() && match.capturedStart() == 0) {
+    			int s1 = match.captured(1).toInt();
+    			int s2 = match.captured(2).toInt();
+    			int n2 = match.captured(4).toInt();
+               line = line_add+s1;
                 //block = cursor.document()->findBlockByNumber(line-1);
                 line_add += n2-s2;//n2+n1-(s2+s1);
                 block_number = line-1;

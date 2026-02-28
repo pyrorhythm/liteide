@@ -41,14 +41,14 @@ public:
     QString name() const {
         return m_name;
     }
-    void setForegound(const QColor &forgound) {
-        m_foregound = forgound;
+    void setForeground(const QColor &foreground) {
+        m_foreground = foreground;
     }
-    QColor foregound() const {
-        return m_foregound;
+    QColor foreground() const {
+        return m_foreground;
     }
-    void setBackground(const QColor &backgound) {
-        m_background = backgound;
+    void setBackground(const QColor &background) {
+        m_background = background;
     }
     QColor background() const {
         return m_background;
@@ -67,7 +67,7 @@ public:
     }
 protected:
     QString m_name;
-    QColor  m_foregound;
+    QColor  m_foreground;
     QColor  m_background;
     bool    m_bold;
     bool    m_italic;

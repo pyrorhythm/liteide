@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QTimer>
+#include <algorithm>
 #include <QApplication>
 #include <QDebug>
 //lite_memory_check_begin
@@ -49,7 +50,7 @@ QuickOpenFiles::QuickOpenFiles(LiteApi::IApplication *app, QObject *parent)
     m_proxyModel = new QSortFilterProxyModel(this);
     m_proxyModel->setSourceModel(m_model);
     m_matchCase = Qt::CaseInsensitive;
-    m_maxCount = 10000;
+    m_maxCount = 100000;
     m_thread = new FindFilesThread(this);
     connect(m_thread,SIGNAL(findResult(QStringList)),this,SLOT(findResult(QStringList)));
 }
@@ -93,9 +94,7 @@ QModelIndex QuickOpenFiles::rootIndex() const
 
 void QuickOpenFiles::updateModel()
 {
-    cancel();
-
-    m_maxCount = m_liteApp->settings()->value(QUICKOPEN_FILES_MAXCOUNT,10000).toInt();
+    m_maxCount = m_liteApp->settings()->value(QUICKOPEN_FILES_MAXCOUNT,100000).toInt();
     m_matchCase = m_liteApp->settings()->value(QUICKOPNE_FILES_MATCHCASE,false).toBool() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
     m_model->clear();
@@ -114,7 +113,7 @@ void QuickOpenFiles::updateModel()
         names.push_back(editor->name()+";"+editor->filePath());
         m_editors.push_back(editor->filePath());
     }
-    qSort(names);
+    std::sort(names.begin(),names.end());
     foreach (QString text, names) {
         QStringList ar = text.split(";");
         m_model->appendRow(QList<QStandardItem*>() << new QStandardItem("*") << new QStandardItem(ar[0]) << new QStandardItem(ar[1]));
@@ -139,7 +138,7 @@ void QuickOpenFiles::startFindThread()
 
     int count = m_model->rowCount();
     int maxcount = count+m_liteApp->settings()->value(QUICKOPEN_FILES_MAXCOUNT,100000).toInt();
-    QSet<QString> editorSet = m_editors.toSet();
+    QSet<QString> editorSet(m_editors.begin(), m_editors.end());
 
     LiteApi::IEditor *editor = m_liteApp->editorManager()->currentEditor();
     QStringList folderList;
@@ -150,6 +149,7 @@ void QuickOpenFiles::startFindThread()
 
     m_thread->setFolderList(folderList,extSet,editorSet,maxcount);
 
+    m_thread->stop();
     m_thread->start();
 }
 

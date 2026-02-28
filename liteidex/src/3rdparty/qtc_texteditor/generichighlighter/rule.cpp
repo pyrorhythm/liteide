@@ -139,13 +139,22 @@ bool Rule::predicateMatchSucceed(const QString &text,
                                  const int length,
                                  ProgressData *progress,
                                  const predicate_t &p) const
-{
-    int original = progress->offset();
-    while (progress->offset() < length && p(text.at(progress->offset())))
-        progress->incrementOffset();
+ {
+     // auto p = predicate;
+ 
+    // Wrap predicate in a lambda that supports both:
+    //   - free functions:  bool f(QChar)
+    //   - member functions: bool (QChar::*)() const
+    auto callPredicate = [&](const QChar &ch) -> bool {
+        if constexpr (std::is_member_function_pointer_v<predicate_t>) {
+            return (ch.*p)();
+        } else {
+            return p(ch);
+        }
+    };
 
-    if (original != progress->offset())
-        return true;
+    while (progress->offset() < length &&
+           callPredicate(text.at(progress->offset())));
 
     return false;
 }
@@ -155,7 +164,7 @@ bool Rule::charPredicateMatchSucceed(const QString &text,
                                      ProgressData *progress,
                                      bool (QChar::* predicate)() const) const
 {
-    return predicateMatchSucceed(text, length, progress, std::mem_fun_ref(predicate));
+    return predicateMatchSucceed(text, length, progress, predicate);
 }
 
 bool Rule::charPredicateMatchSucceed(const QString &text,
@@ -163,7 +172,7 @@ bool Rule::charPredicateMatchSucceed(const QString &text,
                                      ProgressData *progress,
                                      bool (*predicate)(const QChar &)) const
 {
-    return predicateMatchSucceed(text, length, progress, std::ptr_fun(predicate));
+    return predicateMatchSucceed(text, length, progress, predicate);
 }
 
 bool Rule::matchSucceed(const QString &text, const int length, ProgressData *progress)

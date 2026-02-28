@@ -29,7 +29,6 @@
 class QPlainTextEdit;
 class ProcessEx;
 class TextOutput;
-class QTextCodec;
 class QLabel;
 class GoplayBrowser : public LiteApi::IBrowserEditor
 {

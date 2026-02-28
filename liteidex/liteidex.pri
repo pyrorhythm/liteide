@@ -18,7 +18,7 @@ isEmpty(IDE_LIBRARY_BASENAME) {
     IDE_LIBRARY_BASENAME = lib
 }
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
+greaterThan(QT_MAJOR_VERSION, 5): QT += 5compat base 
 
 DEFINES += LITEAPP_LIBRARY
 

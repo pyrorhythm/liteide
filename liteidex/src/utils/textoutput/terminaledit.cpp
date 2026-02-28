@@ -35,6 +35,8 @@
 #include <QApplication>
 #include <QMimeData>
 #include <QDebug>
+#include <QRegularExpression>
+
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -120,7 +122,9 @@ void TerminalEdit::append(const QString &text, QTextCharFormat *fmt)
 {
     QString str = text;
     if (m_bFilterTermColor) {
-        static QRegExp rx("\033\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]");
+	static QRegularExpression rx(
+    	QStringLiteral("\033\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mK]")
+	);
         str.remove(rx);
     }
     if (str.isEmpty()) {

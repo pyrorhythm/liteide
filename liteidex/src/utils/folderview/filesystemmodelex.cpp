@@ -22,6 +22,7 @@
 // Creator: visualfc <visualfc@gmail.com>
 
 #include "filesystemmodelex.h"
+#include <algorithm>
 #include <QDateTime>
 #include <QLocale>
 //lite_memory_check_begin
@@ -43,14 +44,14 @@ QString FileSystemModelEx::fileSize(qint64 bytes)
     const qint64 gb = 1024 * mb;
     const qint64 tb = 1024 * gb;
     if (bytes >= tb)
-        return QFileSystemModel::tr("%1 TB").arg(QLocale().toString(qreal(bytes) / tb, 'f', 3));
+        return QFileSystemModel::tr("%1 TB").arg(QLocale::system().toString(qreal(bytes) / tb, 'f', 3));
     if (bytes >= gb)
-        return QFileSystemModel::tr("%1 GB").arg(QLocale().toString(qreal(bytes) / gb, 'f', 2));
+        return QFileSystemModel::tr("%1 GB").arg(QLocale::system().toString(qreal(bytes) / gb, 'f', 2));
     if (bytes >= mb)
-        return QFileSystemModel::tr("%1 MB").arg(QLocale().toString(qreal(bytes) / mb, 'f', 1));
+        return QFileSystemModel::tr("%1 MB").arg(QLocale::system().toString(qreal(bytes) / mb, 'f', 1));
     if (bytes >= kb)
-        return QFileSystemModel::tr("%1 KB").arg(QLocale().toString(bytes / kb));
-    return QFileSystemModel::tr("%1 bytes").arg(QLocale().toString(bytes));
+        return QFileSystemModel::tr("%1 KB").arg(QLocale::system().toString(bytes / kb));
+    return QFileSystemModel::tr("%1 bytes").arg(QLocale::system().toString(bytes));
 }
 
 void FileSystemModelEx::setShowDetails(bool b)
@@ -88,7 +89,7 @@ QVariant FileSystemModelEx::data(const QModelIndex &index, int role) const
             return QString("%1\n%2\n%3")
                     .arg(QDir::toNativeSeparators(info.filePath()))
                     .arg(fileSize(info.size()))
-                    .arg(info.lastModified().toString(Qt::SystemLocaleDate));
+                    .arg(QLocale::system().toString(info.lastModified(), QLocale::ShortFormat));
         }
     }
     return QFileSystemModel::data(index,role);

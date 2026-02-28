@@ -29,7 +29,7 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QFileInfo>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QFile>
 #include <QDir>
 #include <QUrl>
@@ -204,7 +204,7 @@ void HtmlPreview::appLoaded()
     m_cssMenu->addActions(m_cssActGroup->actions());
 
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
     layout->addWidget(m_htmlWidget->widget(),1);
     m_widget->setLayout(layout);
@@ -349,7 +349,8 @@ void HtmlPreview::loadHtmlData(const QByteArray &data, const QByteArray &title, 
         QTextCodec *codec = QTextCodec::codecForName("utf-8");
         m_exportHtml.replace("__MARKDOWN_TITLE__",title);
 #if QT_VERSION >= 0x050000
-        m_exportHtml.replace("__MARKDOWN_CONTENT__","<pre>"+codec->toUnicode(data).toHtmlEscaped().toUtf8()+"</pre>");
+		QByteArray content = "<pre>" + codec->toUnicode(data).toHtmlEscaped().toUtf8() + "</pre>";
+		m_exportHtml.replace("__MARKDOWN_CONTENT__", content);
 #else
         m_exportHtml.replace("__MARKDOWN_CONTENT__","<pre>"+Qt::escape(codec->toUnicode(data)).toUtf8()+"</pre>");
 #endif
@@ -432,8 +433,8 @@ void HtmlPreview::printPreview()
     }
 #ifndef QT_NO_PRINTER
     QPrinter printer(QPrinter::HighResolution);
-    printer.setPageMargins(10,10,10,10,QPrinter::Millimeter);
-    printer.setPageSize(QPrinter::A4);
+    printer.setPageMargins(QMarginsF(10,10,10,10), QPageLayout::Millimeter);
+    printer.setPageSize(QPageSize::A4);
     QPrintPreviewDialog dlg(&printer,m_widget);
     connect(&dlg,SIGNAL(paintRequested(QPrinter*)),m_htmlWidget,SLOT(print(QPrinter*)));
     dlg.exec();

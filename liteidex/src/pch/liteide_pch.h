@@ -19,10 +19,10 @@
 #include <QStack>
 #include <QVariant>
 #include <QObject>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QString>
 #include <QStringList>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QPointer>
 #include <QScopedPointer>
 #include <QSharedPointer>

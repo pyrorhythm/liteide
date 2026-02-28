@@ -243,10 +243,10 @@ void SendProcessCtrlC(QProcess */*process*/)
 #else
 void SendProcessCtrlC(QProcess *process)
 {
-    if (process->pid() <= 0) {
+    if (process->processId() <= 0) {
         return;
     }
-    kill(process->pid(),SIGINT);
+    kill(process->processId(),SIGINT);
 }
 #endif
 
@@ -308,7 +308,7 @@ BOOL CALLBACK sendInterruptMessageToAllWindowsOfProcess_enumWnd(HWND hwnd, LPARA
 void LiteProcess::interrupt()
 {
     if (m_useCtrlC) {
-        Q_PID processId = this->pid();
+        qint64 processId = this->processId();
 #ifdef Q_OS_WIN
         if (processId) {
             EnumWindows(sendInterruptMessageToAllWindowsOfProcess_enumWnd, processId->dwProcessId);
@@ -324,7 +324,7 @@ void LiteProcess::interrupt()
 void LiteProcess::terminate()
 {
     if (m_useCtrlC) {
-        Q_PID processId = this->pid();
+        qint64 processId = this->processId();
 #ifdef Q_OS_WIN
         if (processId) {
             EnumWindows(sendShutDownMessageToAllWindowsOfProcess_enumWnd, processId->dwProcessId);

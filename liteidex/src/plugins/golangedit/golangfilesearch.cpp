@@ -24,6 +24,8 @@
 #include "golangfilesearch.h"
 #include "litebuildapi/litebuildapi.h"
 #include <QTextBlock>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -168,7 +170,7 @@ void GolangFileSearch::findUsagesOutput(QByteArray data, bool bStdErr)
         m_liteApp->appendLog("find usage error",info,true);
         return;
     }
-    QRegExp reg(":(\\d+):(\\d+)-?(\\d*)");
+    QRegularExpression reg(":(\\d+):(\\d+)-?(\\d*)");
     foreach (QByteArray line, data.split('\n')) {
         QString info = QString::fromUtf8(line).trimmed();
         if (m_bParserHead) {
@@ -190,13 +192,19 @@ void GolangFileSearch::findUsagesOutput(QByteArray data, bool bStdErr)
             }
             continue;
         }
-        int pos = reg.lastIndexIn(info);
-        if (pos >= 0) {
+			QRegularExpressionMatch match = reg.match(info);
+			QRegularExpressionMatch lastMatch;
+			auto it = reg.globalMatch(info);
+			while (it.hasNext()) { lastMatch = it.next(); }
+			int pos = lastMatch.capturedStart();
+			if (match.hasMatch()) {
             QString fileName = info.left(pos);
-            int fileLine = reg.cap(1).toInt();
-            int fileCol = reg.cap(2).toInt();
+			int fileLine = match.captured(1).toInt();
+			int fileCol  = match.captured(2).toInt();
             bool hasCol2 = false;
-            int fileCol2 = reg.cap(3).toInt(&hasCol2);
+			int fileCol2 = match.captured(3).toInt(&hasCol2);
+			int pos      = match.capturedStart(); // This replaces your 'pos' variable
+			
             if (m_file.fileName() != fileName) {
                 m_file.close();
                 m_file.setFileName(fileName);

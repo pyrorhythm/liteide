@@ -28,7 +28,7 @@
 #include <QDateTime>
 #include <QSharedPointer>
 #include "varianthelper.h"
-#include "qjsonrpc/src/json/qjsonobject.h"
+#include <qjsonobject.h>
 
 #include <QDebug>
 

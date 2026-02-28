@@ -47,6 +47,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #ifdef Q_OS_WIN
 #include <windows.h>
 //lite_memory_check_begin
@@ -66,7 +68,7 @@ FileBrowser::FileBrowser(LiteApi::IApplication *app, QObject *parent) :
 {
     m_widget = new QWidget;
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
     QDir::Filters filters = QDir::AllDirs | QDir::Files | QDir::Drives
@@ -142,7 +144,7 @@ FileBrowser::FileBrowser(LiteApi::IApplication *app, QObject *parent) :
 
     m_rootCombo = new QComboBox;
     m_rootCombo->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
-    m_rootCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    m_rootCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     m_rootCombo->setEditable(false);
 
     m_rootToolBar->addAction(m_cdupAct);

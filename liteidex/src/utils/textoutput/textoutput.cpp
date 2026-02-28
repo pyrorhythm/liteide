@@ -31,6 +31,7 @@
 #include <QTextBlock>
 #include <QElapsedTimer>
 #include <QTime>
+#include <QtGui/qtextlayout.h>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -57,7 +58,7 @@ TextOutput::TextOutput(LiteApi::IApplication *app, bool readOnly, QWidget *paren
 
     m_fmt = this->currentCharFormat();
     m_defPalette = this->palette();
-    m_clrText = m_defPalette.foreground().color();
+    m_clrText = m_defPalette.color(QPalette::WindowText);
     m_clrTag = Qt::darkBlue;
     m_clrError = Qt::red;
     m_existsTimer.start();
@@ -142,17 +143,17 @@ void TextOutput::loadColorStyleScheme()
 
     QPalette p = this->m_defPalette;
     if (useColorShceme && text) {
-        if (text->foregound().isValid()) {
-            p.setColor(QPalette::Text,text->foregound());
-            p.setColor(QPalette::Foreground, text->foregound());
+        if (text->foreground().isValid()) {
+            p.setColor(QPalette::WindowText, text->foreground());
+            //p.setColor(QPalette::Foreground, text->foreground());
         }
         if (text->background().isValid()) {
             p.setColor(QPalette::Base, text->background());
         }
     }
     if (useColorShceme && selection) {
-        if (selection->foregound().isValid()) {
-            p.setColor(QPalette::HighlightedText, selection->foregound());
+        if (selection->foreground().isValid()) {
+            p.setColor(QPalette::HighlightedText, selection->foreground());
         }
         if (selection->background().isValid()) {
             p.setColor(QPalette::Highlight, selection->background());
@@ -174,13 +175,13 @@ void TextOutput::loadColorStyleScheme()
     m_fmt.setForeground(p.text().color());
     m_fmt.setBackground(p.base().color());
 
-    if (useColorShceme && keyword && keyword->foregound().isValid()) {
-        m_clrTag = keyword->foregound();
+    if (useColorShceme && keyword && keyword->foreground().isValid()) {
+        m_clrTag = keyword->foreground();
     } else {
         m_clrTag = Qt::darkBlue;
     }
-    if (useColorShceme && error && error->foregound().isValid()) {
-        m_clrError = error->foregound();
+    if (useColorShceme && error && error->foreground().isValid()) {
+        m_clrError = error->foreground();
     } else {
         m_clrError = Qt::red;
     }

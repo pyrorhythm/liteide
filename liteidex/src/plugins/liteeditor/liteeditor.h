@@ -34,6 +34,8 @@
 #include <QHash>
 #include <QStack>
 #include <QTextBlock>
+#include <QtCore5Compat/QTextCodec>
+#include <QActionGroup>
 #include <QLabel>
 
 //#define LITEEDITOR_FIND

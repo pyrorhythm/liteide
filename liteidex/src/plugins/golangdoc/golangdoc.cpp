@@ -56,7 +56,7 @@
 #include <QTextCursor>
 #include <QGroupBox>
 #include <QToolButton>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QTextCursor>
 #include <QDesktopServices>
 #include <QDomDocument>

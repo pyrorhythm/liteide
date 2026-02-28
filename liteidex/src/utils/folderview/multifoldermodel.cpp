@@ -25,7 +25,7 @@
 #include "filesystemmodelex.h"
 #include <QFileSystemModel>
 #include <QFileInfo>
-#include <QDirModel>
+#include <QFileSystemModel>
 #include <QDateTime>
 #include <QDebug>
 //lite_memory_check_begin
@@ -75,7 +75,11 @@ bool QDirSortItemComparator::sort(const QDirSortItem &n1, const QDirSortItem &n2
         r = f1->item.lastModified().secsTo(f2->item.lastModified());
         break;
       case QDir::Size:
-          r = int(qBound<qint64>(-1, f2->item.size() - f1->item.size(), 1));
+          r = int(qBound<qint64>(
+    			static_cast<qint64>(-1),
+    			static_cast<qint64>(f2->item.size() - f1->item.size()),
+    			static_cast<qint64>(1)
+				));
         break;
       case QDir::Type:
       {
@@ -325,7 +329,7 @@ QFile::Permissions MultiFolderModel::permissions(const QModelIndex &index) const
 {
     SourceModelIndex si = this->mapToSourceEx(index);
     if (!si.isValid()) {
-        return 0;
+        return QFile::Permissions{};
     }
     return ((QFileSystemModel*)si.model)->permissions(si.index);
 }
@@ -400,9 +404,16 @@ QDir::Filters MultiFolderModel::filter() const
     return m_filters;
 }
 
-void MultiFolderModel::setSorting(QDir::SortFlags sort)
+void MultiFolderModel::sort(int column, Qt::SortOrder order)
 {
-    m_sorts = sort;
+    Q_UNUSED(column);
+
+    if (order == Qt::AscendingOrder)
+        m_sorts = QDir::Name | QDir::IgnoreCase;
+    else
+        m_sorts = QDir::Name | QDir::IgnoreCase | QDir::Reversed;
+
+    reloadAll();   // or whatever your model uses to refresh
 }
 
 QDir::SortFlags MultiFolderModel::sorting() const

@@ -37,6 +37,8 @@
 #include <QTextDocumentFragment>
 #include <QScrollBar>
 #include <QInputMethodEvent>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QTimer>
 #include <cmath>
 //lite_memory_check_begin
@@ -209,27 +211,27 @@ public:
     }
 public:
 
-    QSize sizeHint() const {
+    QSize sizeHint() const override {
         return QSize(textEdit->extraAreaWidth(), 0);
     }
 protected:
-    void paintEvent(QPaintEvent *event){
+    void paintEvent(QPaintEvent *event) override {
         textEdit->extraAreaPaintEvent(event);
     }
-    void mousePressEvent(QMouseEvent *event){
+    void mousePressEvent(QMouseEvent *event) override {
         textEdit->extraAreaMouseEvent(event);
     }
-    void mouseMoveEvent(QMouseEvent *event){
+    void mouseMoveEvent(QMouseEvent *event) override {
         textEdit->extraAreaMouseEvent(event);
     }
-    void mouseReleaseEvent(QMouseEvent *event){
+    void mouseReleaseEvent(QMouseEvent *event) override {
         textEdit->extraAreaMouseEvent(event);
     }
-    void leaveEvent(QEvent *event){
+    void leaveEvent(QEvent *event) override {
         textEdit->extraAreaLeaveEvent(event);
     }
 
-    void wheelEvent(QWheelEvent *event) {
+    void wheelEvent(QWheelEvent *event) override {
         QCoreApplication::sendEvent(textEdit->viewport(), event);
     }
 protected:
@@ -244,27 +246,27 @@ public:
     }
 public:
 
-    QSize sizeHint() const {
+    QSize sizeHint() const override {
         return QSize(textEdit->navigateAreaWidth(), 0);
     }
 protected:
-    void paintEvent(QPaintEvent *event){
+    void paintEvent(QPaintEvent *event) override {
         textEdit->navigateAreaPaintEvent(event);
     }
-    void mousePressEvent(QMouseEvent *event){
+    void mousePressEvent(QMouseEvent *event) override {
         textEdit->navigateAreaMouseEvent(event);
     }
-    void mouseMoveEvent(QMouseEvent *event){
+    void mouseMoveEvent(QMouseEvent *event) override {
         textEdit->navigateAreaMouseEvent(event);
     }
-    void mouseReleaseEvent(QMouseEvent *event){
+    void mouseReleaseEvent(QMouseEvent *event) override {
         textEdit->navigateAreaMouseEvent(event);
     }
-    void enterEvent(QEvent * event) {
+    void enterEvent(QEnterEvent *event) override {
         this->setMouseTracking(true);
         textEdit->navigateAreaEnterEvent(event);
     }
-    void leaveEvent(QEvent *event){
+    void leaveEvent(QEvent *event) override {
         this->setMouseTracking(false);
         textEdit->navigateAreaLeaveEvent(event);
     }
@@ -373,7 +375,7 @@ LiteEditorWidgetBase::LiteEditorWidgetBase(LiteApi::IApplication *app, QWidget *
     m_indentLineForeground = QColor(Qt::darkCyan);
     m_visualizeWhitespaceForeground = QColor(Qt::darkGray);
     m_extraForeground = QColor(Qt::darkCyan);
-    m_extraBackground = m_extraArea->palette().color(QPalette::Background);
+    m_extraBackground = m_extraArea->palette().color(QPalette::Window);
     m_currentLineBackground = QColor(180,200,200,128);
     m_matchBracketsBackground = QColor(Qt::gray);
     m_matchBracketsBackground.setAlpha(128);
@@ -413,8 +415,8 @@ LiteEditorWidgetBase::LiteEditorWidgetBase(LiteApi::IApplication *app, QWidget *
     m_upToolTipTimer->setSingleShot(true);
     connect(m_upToolTipTimer,SIGNAL(timeout()),this,SLOT(uplinkInfoTimeout()));
 
-    m_selectionExpression.setCaseSensitivity(Qt::CaseSensitive);
-    m_selectionExpression.setPatternSyntax(QRegExp::FixedString);
+    m_selectionExpression.setPatternOptions(QRegularExpression::NoPatternOption);
+    m_selectionExpression.setPattern(QRegularExpression::escape(""));
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(slotUpdateExtraAreaWidth()));
     connect(this, SIGNAL(modificationChanged(bool)), this, SLOT(slotModificationChanged(bool)));
@@ -548,7 +550,7 @@ int LiteEditorWidgetBase::tabSize() const
 
 void LiteEditorWidgetBase::updateTabWidth()
 {
-    setTabStopWidth(QFontMetrics(font()).averageCharWidth() * m_nTabSize);
+    setTabStopDistance(QFontMetricsF(font()).horizontalAdvance(' ') * m_nTabSize);
 }
 
 void LiteEditorWidgetBase::setTabToSpaces(bool b)
@@ -589,7 +591,7 @@ void LiteEditorWidgetBase::editContentsChanged(int position, int charsRemoved, i
             documentLayout->updateMarksBlock(posBlock);
         }
     }
-    if (!m_findExpression.isEmpty()) {
+    if (!m_findExpression.pattern().isEmpty()) {
         this->updateFindOrSelectionMark(LiteApi::EditorNavigateFind);
     }
 }
@@ -776,7 +778,7 @@ void LiteEditorWidgetBase::setExtraColor(const QColor &foreground,const QColor &
     if (background.isValid()) {
         m_extraBackground = background;
     } else {
-        m_extraBackground = m_extraArea->palette().color(QPalette::Background);
+        m_extraBackground = m_extraArea->palette().color(QPalette::Window);
     }
 }
 
@@ -794,7 +796,7 @@ int LiteEditorWidgetBase::extraAreaWidth()
             max /= 10;
             ++digits;
         }
-        space += linefm.width(QLatin1Char('9')) * digits;
+        space += linefm.horizontalAdvance(QLatin1Char('9')) * digits;
     }
     if (m_marksVisible) {
         int markWidth = fm.lineSpacing();
@@ -1531,20 +1533,20 @@ void LiteEditorWidgetBase::setFindOption(LiteApi::FindOption *opt)
     } else {
         m_findExpression.setPattern(opt->findText);
         if (opt->useRegexp) {
-            m_findExpression.setPatternSyntax(QRegExp::RegExp);
+            m_findExpression.setPattern(QString());
         } else {
-            m_findExpression.setPatternSyntax(QRegExp::FixedString);
+            m_findExpression.setPattern(QRegularExpression::escape(opt->findText));
         }
-        m_findFlags = 0;
+        m_findFlags = {};
         if (opt->backWard) {
             m_findFlags |= QTextDocument::FindBackward;
         }
 
         if (opt->matchCase) {
             m_findFlags |= QTextDocument::FindCaseSensitively;
-            m_findExpression.setCaseSensitivity(Qt::CaseSensitive);
+            m_findExpression.setPatternOptions(QRegularExpression::NoPatternOption);
         } else {
-            m_findExpression.setCaseSensitivity(Qt::CaseInsensitive);
+            m_findExpression.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
         }
         if (opt->matchWord) {
             m_findFlags |= QTextDocument::FindWholeWords;
@@ -1554,7 +1556,7 @@ void LiteEditorWidgetBase::setFindOption(LiteApi::FindOption *opt)
         }
     }
     updateFindOrSelectionMark(LiteApi::EditorNavigateFind);
-    if (!m_selectionExpression.isEmpty()) {
+    if (!m_selectionExpression.pattern().isEmpty()) {
         updateFindOrSelectionMark(LiteApi::EditorNavigateSelection);
     }
     viewport()->update();
@@ -1853,7 +1855,7 @@ void LiteEditorWidgetBase::joinLines()
         QString cutLine = cursor.selectedText();
 
         // Collapse leading whitespaces to one or insert whitespace
-        cutLine.replace(QRegExp(QLatin1String("^\\s*")), QLatin1String(" "));
+        cutLine.replace(QRegularExpression(QLatin1String("^\\s*")), QLatin1String(" "));
         cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
         cursor.removeSelectedText();
 
@@ -3185,7 +3187,7 @@ QTextBlock LiteEditorWidgetBase::foldedBlockAt(const QPoint &pos, QRect *box) co
 
                 QRectF collapseRect(lineRect.right() + 12,
                                     lineRect.top(),
-                                    fontMetrics().width(QLatin1String(" {...}; ")),
+                                    fontMetrics().horizontalAdvance(QLatin1String(" {...}; ")),
                                     lineRect.height());
                 if (collapseRect.contains(pos)) {
                     QTextBlock result = block;
@@ -3643,7 +3645,7 @@ void LiteEditorWidgetBase::mouseMoveEvent(QMouseEvent *e)
                 int column = this->tabSettings().columnAt(
                             cursor.block().text(), cursor.positionInBlock());
                 if (cursor.positionInBlock() == cursor.block().length()-1)
-                    column += (e->pos().x() - cursorRect().center().x())/QFontMetricsF(font()).width(QLatin1Char(' '));
+                    column += (e->pos().x() - cursorRect().center().x())/fontMetrics().horizontalAdvance(QLatin1Char(' '));
                 m_blockSelection.moveAnchor(cursor.blockNumber(), column);
                 setTextCursor(m_blockSelection.selection(this->tabSettings()));
                 viewport()->update();
@@ -3692,39 +3694,57 @@ static void fillBackground(QPainter *p, const QRectF &rect, QBrush brush, QRectF
 }
 
 //copy of QTextDocument
-static bool findInBlock(const QTextBlock &block, const QRegExp &expression, int offset,
+static bool findInBlock(const QTextBlock &block, const QRegularExpression &expression, int offset,
                         QTextDocument::FindFlags options, QTextCursor &cursor)
 {
-    const QRegExp expr(expression);
-    QString text = block.text();
-    text.replace(QChar::Nbsp, QLatin1Char(' '));
+    if (!block.isValid()) {
+        return false;
+    }
 
-    int idx = -1;
-    while (offset >=0 && offset <= text.length()) {
-        idx = (options & QTextDocument::FindBackward) ?
-               expr.lastIndexIn(text, offset) : expr.indexIn(text, offset);
+    const QString text = block.text();
+    const int from = qMax(0, offset);
 
-        if (idx == -1 || expr.matchedLength() == 0)
-            return false;
+    int matchStart = -1;
+    int matchLen = 0;
 
-        if (options & QTextDocument::FindWholeWords) {
-            const int start = idx;
-            const int end = start + expr.matchedLength();
-            if ((start != 0 && isIdentifierChar(text.at(start - 1)))
-                || (end != text.length() && isIdentifierChar(text.at(end)))) {
-                //if this is not a whole word, continue the search in the string
-                offset = (options & QTextDocument::FindBackward) ? idx-1 : end+1;
-                idx = -1;
-                continue;
+    if (options & QTextDocument::FindBackward) {
+        // QRegularExpression has no lastIndexIn(). Iterate and keep the last match that ends at/before `from`.
+        int lastStart = -1;
+        int lastLen = 0;
+
+        QRegularExpressionMatchIterator it = expression.globalMatch(text);
+        while (it.hasNext()) {
+            const QRegularExpressionMatch m = it.next();
+            if (!m.hasMatch()) {
+                break;
+            }
+            const int s = m.capturedStart(0);
+            const int e = m.capturedEnd(0);
+            if (e <= from) {
+                lastStart = s;
+                lastLen = m.capturedLength(0);
+            } else {
+                // globalMatch is ordered; once we pass `from` we're done.
+                break;
             }
         }
-        //we have a hit, return the cursor for that.
-        break;
+
+        matchStart = lastStart;
+        matchLen = lastLen;
+    } else {
+        const QRegularExpressionMatch m = expression.match(text, from);
+        if (m.hasMatch()) {
+            matchStart = m.capturedStart(0);
+            matchLen = m.capturedLength(0);
+        }
     }
-    if (idx == -1)
+
+    if (matchStart < 0 || matchLen <= 0) {
         return false;
-    cursor = QTextCursor(block.docHandle(), block.position() + idx);
-    cursor.setPosition(cursor.position() + expr.matchedLength(), QTextCursor::KeepAnchor);
+    }
+
+    cursor.setPosition(block.position() + matchStart);
+    cursor.setPosition(block.position() + matchStart + matchLen, QTextCursor::KeepAnchor);
     return true;
 }
 
@@ -3897,7 +3917,7 @@ void LiteEditorWidgetBase::paintEvent(QPaintEvent *e)
                 painter.fillRect(rr, m_currentLineBackground);
             }
             bool findSelectionMark = false;
-            if (!m_findExpression.isEmpty()) {
+            if (!m_findExpression.pattern().isEmpty()) {
                 painter.save();
                 QColor color(this->palette().color(QPalette::Text));
                 color.setAlpha(128);
@@ -3918,7 +3938,7 @@ void LiteEditorWidgetBase::paintEvent(QPaintEvent *e)
                     }
                 }
                 painter.restore();
-            } else if (!m_selectionExpression.isEmpty()) {
+            } else if (!m_selectionExpression.pattern().isEmpty()) {
                 painter.save();
                 QColor color(this->palette().color(QPalette::Text));
                 color.setAlpha(128);
@@ -3952,7 +3972,7 @@ void LiteEditorWidgetBase::paintEvent(QPaintEvent *e)
                     && block.position() <= m_blockSelection.lastBlock.block().position()) {
                 QString text = block.text();
                 const TextEditor::TabSettings &ts = this->tabSettings();
-                qreal spacew = QFontMetricsF(font()).width(QLatin1Char(' '));
+                qreal spacew = QFontMetricsF(font()).horizontalAdvance(QLatin1Char(' '));
 
                 int offset = 0;
                 int relativePos  =  ts.positionAtColumn(text, m_blockSelection.firstVisualColumn, &offset);
@@ -4157,7 +4177,7 @@ void LiteEditorWidgetBase::paintEvent(QPaintEvent *e)
 
             QRectF collapseRect(lineRect.right() + 12,
                                 lineRect.top(),
-                                fontMetrics().width(QLatin1String(" {...}; ")),
+                                fontMetrics().horizontalAdvance(QLatin1String(" {...}; ")),
                                 lineRect.height());
             painter.setRenderHint(QPainter::Antialiasing, true);
             painter.translate(.5, .5);
@@ -4206,7 +4226,7 @@ void LiteEditorWidgetBase::paintEvent(QPaintEvent *e)
 
     if (backgroundVisible() && !block.isValid() && offset.y() <= er.bottom()
         && (centerOnScroll() || verticalScrollBar()->maximum() == verticalScrollBar()->minimum())) {
-        painter.fillRect(QRect(QPoint((int)er.left(), (int)offset.y()), er.bottomRight()), palette().background());
+        painter.fillRect(QRect(QPoint((int)er.left(), (int)offset.y()), er.bottomRight()), palette().color(QPalette::Window));
     }
 
     if (m_rightLineVisible) {
@@ -4344,10 +4364,10 @@ void LiteEditorWidgetBase::updateFindOrSelectionMark(LiteApi::EditorNaviagteType
 bool LiteEditorWidgetBase::checkFindOrSelectionMark(LiteApi::EditorNaviagteType type) const
 {
     if (LiteApi::EditorNavigateFind == type) {
-        return !m_findExpression.isEmpty();
+        return !m_findExpression.pattern().isEmpty();
     }
     if (LiteApi::EditorNavigateSelection == type) {
-        return !m_selectionExpression.isEmpty() && m_findExpression.isEmpty();
+        return !m_selectionExpression.pattern().isEmpty() && m_findExpression.pattern().isEmpty();
     }
     return false;
 }

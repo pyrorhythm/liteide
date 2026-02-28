@@ -37,6 +37,8 @@
 #include <QMimeData>
 #include <QMenu>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -109,12 +111,15 @@ QString LiteEditorWidget::importUnderCursor(QTextCursor tc) const
     if (text.isEmpty()) {
         return QString();
     }
-    static QRegExp reg("[\"`][a-zA-Z0-9_\\-\\.\\/]*$");
-    int index = reg.indexIn(text);
-    if (index < 0) {
+    static QRegularExpression reg("[\"`][a-zA-Z0-9_\\-\\.\\/]*$");
+	QRegularExpressionMatch match = reg.match(text);
+	if (!match.hasMatch()) { 
         return QString();
     }
-    return text.right(reg.matchedLength()-1);
+    QRegularExpressionMatch match1 = reg.match(text);
+	if (match1.hasMatch()) {
+		return text.right(match1.capturedLength() - 1);
+	}
 }
 
 QString LiteEditorWidget::textUnderCursor(QTextCursor tc) const
@@ -123,16 +128,19 @@ QString LiteEditorWidget::textUnderCursor(QTextCursor tc) const
     if (text.isEmpty()) {
         return QString();
     }
-    //int index = text.lastIndexOf(QRegExp("\\b[a-zA-Z_][a-zA-Z0-9_\.]+"));
-    static QRegExp reg("[a-zA-Z0-9_\\.]+[a-zA-Z0-9_\\.\\:]*$");
-    int index = reg.indexIn(text);
-    if (index < 0) {
+    //int index = text.lastIndexOf(QRegularExpression("\\b[a-zA-Z_][a-zA-Z0-9_\.]+"));
+    static QRegularExpression reg("[a-zA-Z0-9_\\.]+[a-zA-Z0-9_\\.\\:]*$");
+	QRegularExpressionMatch match = reg.match(text);
+	if (!match.hasMatch()) {
         return QString();
     }
-    return text.right(reg.matchedLength());
-    //int index = text.lastIndexOf(QRegExp("[\w]+$"));
+	QRegularExpressionMatch match2 = reg.match(text);
+	if (match2.hasMatch()) {
+		return text.right(match2.capturedLength());
+	}
+    //int index = text.lastIndexOf(QRegularExpression("[\w]+$"));
     //     qDebug() << ">" << text << index;
-    //     int left = text.lastIndexOf(QRegExp("[ |\t|\"|\(|\)|\'|<|>]"));
+    //     int left = text.lastIndexOf(QRegularExpression("[ |\t|\"|\(|\)|\'|<|>]"));
     //     text = text.right(text.length()-left+1);
     //return "";
 }
@@ -145,7 +153,7 @@ void LiteEditorWidget::focusInEvent(QFocusEvent *e)
 void LiteEditorWidget::wheelEvent(QWheelEvent *e)
 {
     if (m_scrollWheelZooming && e->modifiers() & Qt::ControlModifier) {
-        const int delta = e->delta();
+        const int delta = e->angleDelta().y();
         if (delta < 0)
             zoomOut();
         else if (delta > 0)
@@ -332,7 +340,7 @@ QString LiteEditorWidget::cursorToHtml(QTextCursor cursor) const
     const int endOfDocument = tempDocument->characterCount() - 1;
     for (QTextBlock current = start; current.isValid() && current != end; current = current.next()) {
         const QTextLayout *layout = current.layout();
-        foreach (const QTextLayout::FormatRange &range, layout->additionalFormats()) {
+        foreach (const QTextLayout::FormatRange &range, layout->formats()) {
             const int start = current.position() + range.start - selectionStart;
             const int end = start + range.length;
             if (end <= 0 || start >= endOfDocument)

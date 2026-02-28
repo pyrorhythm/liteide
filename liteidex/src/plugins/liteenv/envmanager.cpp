@@ -30,7 +30,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QToolBar>
 #include <QMenu>
 #include <QComboBox>
@@ -54,12 +55,12 @@
 static QString updateValue(const QString &value,const QProcessEnvironment &env)
 {
     QString v = value;
-    QRegExp rx("\\$\\((\\w+)\\)");
-    int pos = 0;
+    QRegularExpression rx("\\$\\((\\w+)\\)");
     QStringList list;
-    while ((pos = rx.indexIn(v, pos)) != -1) {
-         list << rx.cap(1);
-         pos += rx.matchedLength();
+	QRegularExpressionMatchIterator it = rx.globalMatch(v);
+    while (it.hasNext()) {
+		 QRegularExpressionMatch match = it.next();
+         list << match.captured(1);
     }
     foreach (QString str, list) {
          if (env.contains(str)) {
@@ -157,9 +158,9 @@ void Env::loadEnvFile(QIODevice *dev)
 
     m_orgEnvLines.clear();
 #ifdef Q_OS_WIN
-    QRegExp rx("\\%([\\w]+)\\%");
+    QRegularExpression rx("\\%([\\w]+)\\%");
 #else
-    QRegExp rx("\\$([\\w]+)");
+    QRegularExpression rx("\\$([\\w]+)");
 #endif
     while (!dev->atEnd()) {
         QString line = QString::fromUtf8(dev->readLine().trimmed());
@@ -175,12 +176,17 @@ void Env::loadEnvFile(QIODevice *dev)
         QString value = line.right(line.length()-pos-1).trimmed();
         QStringList cap0;
         QStringList cap1;
-        pos = 0;
-        while ((pos = rx.indexIn(value, pos)) != -1) {
-             cap0 << rx.cap(0);
-             cap1 << rx.cap(1);
-             pos += rx.matchedLength();
-        }
+		QStringList list;
+	QRegularExpressionMatch match;
+
+	while (true) {
+		match = rx.match(value, pos);
+		if (!match.hasMatch())
+			break;
+
+		list << match.captured(1);
+		pos = match.capturedEnd(0);
+	}
         for (int i = 0; i < cap0.size(); i++) {
             if (env.contains(cap1.at(i))) {
                 value.replace(cap0.at(i),env.value(cap1.at(i)));

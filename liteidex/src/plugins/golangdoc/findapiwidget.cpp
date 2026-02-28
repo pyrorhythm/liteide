@@ -35,6 +35,7 @@
 #include <QStandardItem>
 #include <QTreeView>
 #include <QHeaderView>
+#include <QRegularExpression>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -86,21 +87,24 @@ void FindApiThread::findInFile(const QString &filePath, const QString &baseName)
         return;
     }
     QTextStream *stream = new QTextStream(&f);
-    QRegExp reg("^pkg\\s([\\w\\-\\.\\/]+)(\\s\\(([\\w\\-]+)\\))?,\\s(\\w+)");
-    QRegExp regm("\\(\\*?([\\w\\-]+)\\)\\s*(\\w+)");
+    QRegularExpression reg("^pkg\\s([\\w\\-\\.\\/]+)(\\s\\(([\\w\\-]+)\\))?,\\s(\\w+)");
+    QRegularExpression regm("\\(\\*?([\\w\\-]+)\\)\\s*(\\w+)");
+    QString line = stream->readLine();
     while (!stream->atEnd()) {
-        QString line = stream->readLine();
-        int pos = reg.indexIn(line);
-        if (pos < 0) {
-            continue;
-        }
+		QRegularExpressionMatch m = reg.match(line);
+			if (m.hasMatch()) {
+        	int index = m.capturedStart(); 
+			QStringList capList = m.capturedTexts();
+			} else {
+             continue;
+        	}
         // 1 pkgname
         // 2 ? (system)
         // 3 ? system
         // 4 const|func|method|var|type
-        QString pkgName = reg.cap(1);
-//        if (!reg.cap(3).isEmpty()) {
-//            pkg = reg.cap(2)+"."+pkg;
+        QString pkgName = m.captured(1);
+//        if (!reg.captured(3).isEmpty()) {
+//            pkg = reg.captured(2)+"."+pkg;
 //        }
 //        if (!lastPkg || lastPkg->name != pkgName) {
 //            lastPkg = m_pkgs.findPackage(pkgName);
@@ -110,10 +114,10 @@ void FindApiThread::findInFile(const QString &filePath, const QString &baseName)
 //                lastType = 0;
 //            }
 //        }
-        QString right = line.mid(reg.cap().length()).trimmed();
+        QString right = line.mid(m.captured().length()).trimmed();
         QString findText;
         QStringList findUrl;
-        QString flag = reg.cap(4);
+        QString flag = m.captured(4);
         if (flag == "var") {
             ///pkg archive/tar, var ErrFieldTooLong error
             int pos = right.indexOf(" ");
@@ -156,11 +160,13 @@ void FindApiThread::findInFile(const QString &filePath, const QString &baseName)
             //pkg archive/tar, method (*Reader) Next() (*Header, error)
             //pkg archive/zip, method (*File) Open() (io.ReadCloser, error)
             //pkg bufio, method (ReadWriter) Available() int
-            int pos = regm.indexIn(right);
-            if (pos != -1) {
-                QString typeName = regm.cap(1);
-                QString name = regm.cap(2);
-                QString exp = right.mid(regm.cap().length()).trimmed();
+            QRegularExpressionMatch m = regm.match(right);
+            int pos = m.capturedStart(); 
+
+			if (m.hasMatch()) {
+                QString typeName = m.captured(1);
+                QString name = m.captured(2);
+                QString exp = right.mid(m.captured().length()).trimmed();
                 findText = pkgName+"."+typeName+"."+name+" "+exp;
                 findUrl << pkgName+"#"+typeName+"."+name;
 //                if (lastType == 0 || lastType->name != typeName || lastType->typ == StructApi) {
@@ -305,13 +311,14 @@ FindApiWidget::FindApiWidget(LiteApi::IApplication *app, QWidget *parent) :
     findBtn->setText(tr("Find"));
 
     QHBoxLayout *findLayout = new QHBoxLayout;
-    findLayout->setMargin(2);
+    findLayout->setContentsMargins(0,0,0,0);
+    findLayout->setSpacing(2);
     findLayout->addWidget(m_findEdit);
     findLayout->addWidget(findBtn);
     findLayout->addWidget(m_chaseWidget);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMargin(1);
+    mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(1);
     mainLayout->addLayout(findLayout);
     mainLayout->addWidget(m_apiView);

@@ -32,7 +32,6 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QPlainTextEdit>
-#include <QTextCodec>
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QScrollBar>

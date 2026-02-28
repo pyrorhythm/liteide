@@ -30,6 +30,8 @@
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -54,12 +56,13 @@ QString LiteWordCompleter::textUnderCursor(QTextCursor tc) const
     if (text.isEmpty()) {
         return QString();
     }
-    static QRegExp reg("[a-zA-Z_]+[a-zA-Z0-9_\\.@]*$");
-    int index = reg.indexIn(text);
-    if (index < 0) {
-        return QString();
+    static QRegularExpression reg("[a-zA-Z_]+[a-zA-Z0-9_\\.@]*$");
+	QRegularExpression::UseUnicodePropertiesOption;
+	QRegularExpressionMatch match = reg.match(text);
+	if (!match.hasMatch()) {
+	        return QString();
     }
-    return text.right(reg.matchedLength());
+    return text.right(match.capturedLength());
 }
 
 void LiteWordCompleter::completionPrefixChanged(QString prefix,bool force)
@@ -98,7 +101,7 @@ void LiteWordCompleter::completionPrefixChanged(QString prefix,bool force)
             block = doc->findBlockByNumber(firstNumber);
         }
     }
-    QRegExp rx("([\\w\\-\\_\\.]+)");
+    QRegularExpression rx("([\\w\\-\\_\\.]+)");
     Qt::CaseSensitivity cs = m_completer->caseSensitivity();
     int count = 0;
     while (block.isValid()) {
@@ -112,16 +115,18 @@ void LiteWordCompleter::completionPrefixChanged(QString prefix,bool force)
         QString line = block.text().trimmed();
         if (!line.isEmpty())  {
              int pos = 0;
-             while ((pos = rx.indexIn(line, pos)) != -1) {
-                 QString cap = rx.cap(1);
-                 if (cap.length() < 20 && cap.startsWith(prefix,cs)) {
+			QRegularExpressionMatch match = rx.match(line, pos);
+			while (match.hasMatch()) {
+			QString cap = match.captured(1);
+                     if (cap.length() < 20 && cap.startsWith(prefix,cs)) {
                      if (isSep) {
                          cap = "@"+cap;
                      }
                      count++;
                      appendItem(cap,m_icon,true);
                  }
-                 pos += rx.matchedLength();
+                 pos = match.capturedEnd(); 
+				 match = rx.match(line, pos);
              }
         }
         block = block.next();

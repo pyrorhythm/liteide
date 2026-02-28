@@ -39,6 +39,7 @@
 #include <QActionGroup>
 #include <QTemporaryFile>
 #include <QApplication>
+#include <QProcess>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -124,7 +125,7 @@ Terminal::Terminal(LiteApi::IApplication *app, QObject *parent) : LiteApi::ITerm
     m_liteApp(app), m_indexId(0)
 {
     qRegisterMetaType<TabInfoData>("TabInfoData");
-    qRegisterMetaTypeStreamOperators<TabInfoData>("TabInfoData");
+    qRegisterMetaType<TabInfoData>();
 
     m_widget = new QWidget;
     m_tab = new LiteTabWidget(QSize(16,16));
@@ -133,7 +134,7 @@ Terminal::Terminal(LiteApi::IApplication *app, QObject *parent) : LiteApi::ITerm
 
 
     QVBoxLayout *layout = new QVBoxLayout(m_widget);
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
     layout->addWidget(m_tab->tabBarWidget());
     layout->addWidget(m_tab->stackedWidget());
@@ -497,7 +498,7 @@ void Terminal::updateFont()
     bool antialias = m_liteApp->settings()->value(TERMINAL_ANTIALIAS,true).toBool();
 
 
-    if (!QFontDatabase().hasFamily(fontFamily)) {
+    if (!QFontDatabase::hasFamily(fontFamily)) {
 #if QT_VERSION >= 0x050200
         fontFamily = QFontDatabase::systemFont(QFontDatabase::FixedFont).family();
 #else
@@ -724,7 +725,7 @@ void Terminal::loadEnv(int index)
             list << QString("export %1=\"%2\"").arg(key).arg(env.value(key));
         }
         file.write("#!/bin/sh\n");
-        file.write("echo \"load environment form LiteIDE.\"");
+        file.write("echo "+term_bold("Load environment form LiteIDE.").toUtf8());
         file.write("\n");
         file.write(list.join("\n").toUtf8());
         file.write("\n");

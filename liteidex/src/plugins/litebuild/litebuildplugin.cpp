@@ -79,7 +79,8 @@ bool LiteBuildPlugin::load(LiteApi::IApplication *app)
     m_executeWidget = new QWidget;
     m_executeWidget->hide();
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(1);
+    hbox->setContentsMargins(0,0,0,0);
+    hbox->setSpacing(1);
     m_executeWidget->setLayout(hbox);
     m_commandCombo = new QComboBox;
     m_commandCombo->setEditable(true);

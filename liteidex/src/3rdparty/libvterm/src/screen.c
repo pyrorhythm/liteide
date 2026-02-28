@@ -95,7 +95,8 @@ static ScreenCell *realloc_buffer(VTermScreen *screen, ScreenCell *buffer, int n
     }
   }
 
-  vterm_allocator_free(screen->vt, buffer);
+  if(buffer)
+    vterm_allocator_free(screen->vt, buffer);
 
   return new_buffer;
 }
@@ -519,7 +520,8 @@ static int resize(int new_rows, int new_cols, VTermPos *delta, void *user)
   screen->rows = new_rows;
   screen->cols = new_cols;
 
-  vterm_allocator_free(screen->vt, screen->sb_buffer);
+  if(screen->sb_buffer)
+    vterm_allocator_free(screen->vt, screen->sb_buffer);
 
   screen->sb_buffer = vterm_allocator_malloc(screen->vt, sizeof(VTermScreenCell) * new_cols);
 
@@ -623,7 +625,7 @@ static VTermStateCallbacks state_cbs = {
 static VTermScreen *screen_new(VTerm *vt)
 {
   VTermState *state = vterm_obtain_state(vt);
-  if (state == NULL)
+  if(!state)
     return NULL;
 
   VTermScreen *screen = vterm_allocator_malloc(vt, sizeof(VTermScreen));
@@ -667,8 +669,11 @@ static VTermScreen *screen_new(VTerm *vt)
 INTERNAL void vterm_screen_free(VTermScreen *screen)
 {
   vterm_allocator_free(screen->vt, screen->buffers[0]);
-  vterm_allocator_free(screen->vt, screen->buffers[1]);
+  if(screen->buffers[1])
+    vterm_allocator_free(screen->vt, screen->buffers[1]);
+
   vterm_allocator_free(screen->vt, screen->sb_buffer);
+
   vterm_allocator_free(screen->vt, screen);
 }
 

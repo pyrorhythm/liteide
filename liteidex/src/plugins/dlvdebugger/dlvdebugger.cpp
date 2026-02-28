@@ -32,8 +32,10 @@
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -360,7 +362,7 @@ void DlvDebugger::runToLine(const QString &fileName, int line)
 
 void DlvDebugger::createWatch(const QString &var)
 {
-    QString cmd = "vars "+QRegExp::escape(var);
+    QString cmd = "vars "+QRegularExpression::escape(var);
     m_updateCmdHistroy.push_back(cmd);
     command_helper(cmd.toUtf8(),true);
 }
@@ -535,7 +537,7 @@ void DlvDebugger::readStdError()
     //Process 4084 has exited with status 0
     QString data = QString::fromUtf8(m_process->readAllStandardError());
    // qDebug() << data << m_processId;
-    //QRegExp reg;
+    //QRegularExpression reg;
     emit debugLog(LiteApi::DebugConsoleLog,data);
     foreach (QString line, data.split("\n",qtSkipEmptyParts)) {
         if (line.startsWith("Process "+m_processId)) {
@@ -579,38 +581,37 @@ void DlvDebugger::handleResponse(const QByteArray &buff)
     //> qlang.io/qlang%2espec%2ev1.Import()
     //> main.main() goapi/_test/_testmain.go:50 (hits goroutine(1):1 total:1) (PC: 0x4011ca)
     if (buff.contains("> ")) {
-        static QRegExp reg(">(\\s+\\[[\\w\\d]+\\])?\\s+([\\w\\d_\\.\\%\\*\\(\\)\\/]+)\\(\\)\\s+((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\/\\.\\\\]+):(\\d+)\\s?(.*)\\s?(\\(PC:\\s+.*)");
-        int n = reg.indexIn(QString::fromUtf8(buff));
-        if (n < 0) {
-            return;
-        }
-        QString fileName = reg.cap(3);
-        if (fileName.startsWith("./")) {
-            fileName = QDir::cleanPath(m_process->workingDirectory()+"/"+fileName);
-        }
-        QString line = reg.cap(4);
+        static QRegularExpression reg(">(\\s+\\[[\\w\\d]+\\])?\\s+([\\w\\d_\\.\\%\\*\\(\\)\\/]+)\\(\\)\\s+((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\/\\.\\\\]+):(\\d+)\\s?(.*)\\s?(\\(PC:\\s+.*)");
+		QRegularExpressionMatch match = reg.match(QString::fromUtf8(buff));
+		QString fileName = match.captured(3);
+		QString line = match.captured(4);
+		if (match.hasMatch()) {
+			if (fileName.startsWith("./")) {
+				fileName = QDir::cleanPath(m_process->workingDirectory()+"/"+fileName);
+			}
 
-        if (!fileName.isEmpty() && !line.isEmpty()) {
-            bool ok = false;
-            int n = line.toInt(&ok);
-            if (ok) {
-                m_lastFileName = fileName;
-                m_lastFileLine = n-1;
-                //check step out
-                emit setCurrentLine(fileName,n-1);
-            }
-        }
+			if (!fileName.isEmpty() && !line.isEmpty()) {
+				bool ok = false;
+				int n = line.toInt(&ok);
+				if (ok) {
+					m_lastFileName = fileName;
+					m_lastFileLine = n-1;
+					//check step out
+					emit setCurrentLine(fileName,n-1);
+				}
+			}
+		}
         m_handleState.setStopped(true);
 
         m_asyncItem->removeRows(0,m_asyncItem->rowCount());
         m_asyncItem->setText("stopped");
-        QString func = reg.cap(2).trimmed();
+        QString func = match.captured(2).trimmed();
         //hack
         if (func.contains("%")) {
             func.replace("%2e",".");
         }
-        QString hits = reg.cap(5).trimmed();
-        QString pc = reg.cap(6).trimmed();
+        QString hits = match.captured(5).trimmed();
+        QString pc = match.captured(6).trimmed();
         int pos = pc.indexOf('\n');
         if (pos != -1) {
             pc.truncate(pos);
@@ -665,7 +666,7 @@ void DlvDebugger::initDebug()
         command_helper("restart",true);
     }
 
-    QMapIterator<QString,int> i(m_initBks);
+    QMultiMapIterator<QString, int> i(m_initBks);
 
     while (i.hasNext()) {
         i.next();
@@ -716,7 +717,7 @@ static QString valueToolTip(const QString &value)
             toolTip += text[i];
         } else if (text[i] == ',') {
             toolTip += text[i];
-            int pos = text.lastIndexOf(QRegExp("\\{|\\[|\\]|\\}"),i-1);
+            int pos = text.lastIndexOf(QRegularExpression("\\{|\\[|\\]|\\}"),i-1);
             if (pos != -1 && text[pos] == '[') {
                 continue;
             }
@@ -861,9 +862,9 @@ void DlvDebugger::readStdOutput()
                 QMap<QString,QString>::iterator it = m_varNameMap.find(name);
                 if (it != m_varNameMap.end() && it.value() != value) {
 #if QT_VERSION >= 0x050000
-        valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+        valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-        valueItem->setData(Qt::red,Qt::TextColorRole);
+        valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
                 }
                 m_varsModel->appendRow(QList<QStandardItem*>() << nameItem << valueItem);
@@ -887,15 +888,15 @@ void DlvDebugger::readStdOutput()
                             find = true;
                             if (m_watchNameMap.value(name) == value) {
 #if QT_VERSION >= 0x050000
-                                valueItem->setData(QColor(Qt::black),Qt::TextColorRole);
+                                valueItem->setData(QColor(Qt::black),Qt::ForegroundRole);
 #else
-                                valueItem->setData(Qt::black,Qt::TextColorRole);
+                                valueItem->setData(Qt::black,Qt::ForegroundRole);
 #endif
                             } else {
 #if QT_VERSION >= 0x050000
-                                valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+                                valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-                                valueItem->setData(Qt::red,Qt::TextColorRole);
+                                valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
                                 valueItem->setText(value);
                             }
@@ -933,7 +934,7 @@ void DlvDebugger::readStdOutput()
             if (s.isEmpty()) {
                 continue;
             }
-            m_updateCmdList << "vars "+QRegExp::escape(s);
+            m_updateCmdList << "vars "+QRegularExpression::escape(s);
         }
     }
 

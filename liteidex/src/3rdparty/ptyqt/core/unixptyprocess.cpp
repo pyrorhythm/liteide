@@ -13,6 +13,7 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 #include <signal.h>
+#include <sys/time.h>
 
 /* for pty_getproc */
 #if defined(__linux__)
@@ -251,7 +252,7 @@ bool UnixPtyProcess::startProcess(const QString &shellPath, const QStringList &a
     m_shellProcess.start(m_shellPath, arguments);
     m_shellProcess.waitForStarted();
 
-    m_pid = m_shellProcess.pid();
+    m_pid = m_shellProcess.processId();
 
     resize(cols, rows);
 
@@ -427,7 +428,7 @@ void UnixPtyProcess::moveToThread(QThread *targetThread)
     m_shellProcess.moveToThread(targetThread);
 }
 
-void ShellProcess::setupChildProcess()
+void ShellProcess::setupChildProcessModifier()
 {
     dup2(m_handleSlave, STDIN_FILENO);
     dup2(m_handleSlave, STDOUT_FILENO);

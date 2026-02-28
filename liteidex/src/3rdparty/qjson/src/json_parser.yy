@@ -101,14 +101,29 @@ members: /* empty */ { $$ = QVariant (QVariantMap()); }
         | pair r_members {
             QVariantMap members = $2.toMap();
             $2 = QVariant(); // Allow reuse of map
-            $$ = QVariant(members.unite ($1.toMap()));
+
+            // QMap::unite() was removed in Qt 6 – merge manually
+            QVariantMap first = $1.toMap();
+            for (QVariantMap::const_iterator it = first.constBegin();
+                 it != first.constEnd(); ++it) {
+                members.insert(it.key(), it.value());
+            }
+
+            $$ = QVariant(members);
           };
 
 r_members: /* empty */ { $$ = QVariant (QVariantMap()); }
         | COMMA pair r_members {
           QVariantMap members = $3.toMap();
           $3 = QVariant(); // Allow reuse of map
-          $$ = QVariant(members.unite ($2.toMap()));
+
+          QVariantMap first = $2.toMap();
+          for (QVariantMap::const_iterator it = first.constBegin();
+               it != first.constEnd(); ++it) {
+              members.insert(it.key(), it.value());
+          }
+
+          $$ = QVariant(members);
           };
 
 pair:   string COLON value {
@@ -146,24 +161,24 @@ value: string { $$ = $1; }
           $$ = null_variant;
         };
 
-special_or_number: MINUS INFINITY_VAL { $$ = QVariant(QVariant::Double); $$.setValue( -std::numeric_limits<double>::infinity() ); }
-                   | INFINITY_VAL { $$ = QVariant(QVariant::Double); $$.setValue( std::numeric_limits<double>::infinity() ); }
-                   | NAN_VAL { $$ = QVariant(QVariant::Double); $$.setValue( std::numeric_limits<double>::quiet_NaN() ); }
+special_or_number: MINUS INFINITY_VAL { $$ = QVariant(QMetaType(QMetaType::Double)); $$.setValue( -std::numeric_limits<double>::infinity() ); }
+                   | INFINITY_VAL { $$ = QVariant(QMetaType(QMetaType::Double)); $$.setValue( std::numeric_limits<double>::infinity() ); }
+                   | NAN_VAL { $$ = QVariant(QMetaType(QMetaType::Double)); $$.setValue( std::numeric_limits<double>::quiet_NaN() ); }
                    | number;
 
 number: int {
             if ($1.toByteArray().startsWith('-')) {
-              $$ = QVariant (QVariant::LongLong);
+              $$ = QVariant(QMetaType(QMetaType::LongLong));
               $$.setValue($1.toLongLong());
             }
             else {
-              $$ = QVariant (QVariant::ULongLong);
+              $$ = QVariant(QMetaType(QMetaType::ULongLong);
               $$.setValue($1.toULongLong());
             }
           }
         | int fract {
             const QByteArray value = $1.toByteArray() + $2.toByteArray();
-            $$ = QVariant(QVariant::Double);
+            $$ = QVariant(QMetaType(QMetaType::Double));
             $$.setValue(value.toDouble());
           }
         | int exp { $$ = QVariant ($1.toByteArray() + $2.toByteArray()); }

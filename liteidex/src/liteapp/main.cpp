@@ -28,7 +28,7 @@
 #include <QDir>
 #include <QSettings>
 #include <QSplashScreen>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #if QT_VERSION >= 0x050000
 #include <QStandardPaths>
 #endif
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
     if (!locale.isEmpty()) {
         const QString &liteideTrPath = resPath+"/translations";
         if (translator.load(QLatin1String("liteide_") + locale, liteideTrPath)) {
-            const QString &qtTrPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+            const QString &qtTrPath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
             const QString &qtTrFile = QLatin1String("qt_") + locale;
             // Binary installer puts Qt tr files into creatorTrPath            
             app.installTranslator(&translator);

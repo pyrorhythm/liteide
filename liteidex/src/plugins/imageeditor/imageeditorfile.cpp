@@ -29,9 +29,10 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QPixmap>
+#include <QtSvgWidgets/QGraphicsSvgItem>
 
 #ifndef QT_NO_SVG
-#include <QGraphicsSvgItem>
+#include <QtSvg>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC

@@ -83,7 +83,7 @@ static bool setTextCharStyle(QTextCharFormat &fmt, const QString &name, const Co
     if (!style) {
         return false;
     }
-    QColor fore = style->foregound();
+    QColor fore = style->foreground();
     if (fore.isValid()) {
         fmt.setForeground(fore);
     }

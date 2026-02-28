@@ -24,7 +24,7 @@
 #include "functiontooltip.h"
 #include "faketooltip.h"
 
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 #include <QStylePainter>
 #include <QStyleOptionFrame>
@@ -48,7 +48,7 @@ FunctionTooltip::FunctionTooltip(LiteApi::IApplication *app, LiteApi::ITextEdito
     m_editWidget = LiteApi::getPlainTextEdit(editor);
     m_popup = new FakeToolTip(m_editWidget);
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
+    hbox->setContentsMargins(0,0,0,0);
     hbox->setSpacing(0);
     m_label = new QLabel;
     hbox->addWidget(m_label);
@@ -190,22 +190,29 @@ void FunctionTooltip::updateHintText()
 
 void FunctionTooltip::showPopup(int startpos)
 {
-    QToolTip::hideText();
-    m_popup->setFixedWidth(m_popup->minimumSizeHint().width());
+    QSize sz = m_popup->sizeHint(); 
+    QPoint pos = m_editor->widget()->mapToGlobal(m_editor->cursorRect().bottomLeft());
 
-    const QDesktopWidget *desktop = QApplication::desktop();
-#ifdef Q_WS_MAC
-    const QRect screen = desktop->availableGeometry(desktop->screenNumber(m_editor->widget()));
-#else
-    const QRect screen = desktop->screenGeometry(desktop->screenNumber(m_editor->widget()));
-#endif
+    QScreen *screenPtr = m_editor->widget()->screen();
+    if (!screenPtr) {
+        screenPtr = QGuiApplication::primaryScreen();
+    }
+    const QRect screenRect = screenPtr->availableGeometry();
 
-    const QSize sz = m_popup->sizeHint();
-    QPoint pos = m_editor->cursorRect(startpos).topLeft();
-    pos.setY(pos.y() - sz.height() - 1);
+    if (pos.x() + sz.width() > screenRect.right()) {
+        pos.setX(screenRect.right() - sz.width());
+    }
+    if (pos.x() < screenRect.left()) {
+        pos.setX(screenRect.left());
+    }
 
-    if (pos.x() + sz.width() > screen.right())
-        pos.setX(screen.right() - sz.width());
+    if (pos.y() + sz.height() > screenRect.bottom()) {
+        pos.setY(pos.y() - sz.height() - m_editor->cursorRect().height());
+    }
+    
+    if (pos.y() < screenRect.top()) {
+        pos.setY(screenRect.top());
+    }
 
     m_popup->move(pos);
     if (!m_popup->isVisible()) {

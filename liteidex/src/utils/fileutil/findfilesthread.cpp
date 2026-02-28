@@ -57,8 +57,8 @@ void FindFilesThread::stop(int time)
 {
     m_cancel = true;
     if (this->isRunning()) {
-        this->quit();
-        this->wait(time);
+        if (!this->wait(time))
+            this->terminate();
     }
 }
 

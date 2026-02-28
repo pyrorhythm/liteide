@@ -22,6 +22,7 @@
 // Creator: visualfc <visualfc@gmail.com>
 
 #include "htmlutil.h"
+#include <QRegularExpression>
 #include <QStringList>
 #include <QDomDocument>
 #include <QDebug>
@@ -47,17 +48,21 @@ HtmlUtil::HtmlUtil()
 
 QString HtmlUtil::findTitle(const QString &data)
 {
-    QRegExp reg("<!--([\\w\\s\\n{}\":/,]*)-->");
-    int n = reg.indexIn(data);
+    QRegularExpression reg(
+		QStringLiteral("<!--([\\w\\s\\n{}\":/,]*)-->"));
+		QRegularExpressionMatch m = reg.match(data);
+		int n = m.hasMatch() ? m.capturedStart(0) : -1;
     if (n < 0) {
         return QString();
     }
-    QRegExp reg1("Title[\"\\s:]*([\\w\\s]*)[\\s\"]*");
-    n = reg1.indexIn(reg.cap(1));
+    QRegularExpression reg1(
+		QStringLiteral("Title[\"\\s:]*([\\w\\s]*)[\\s\"]*"));
+    QRegularExpressionMatch m1 = reg1.match(m.captured(1));
+	n = m1.hasMatch() ? m1.capturedStart(0) : -1;
     if (n < 0) {
         return QString();
     }
-    return reg1.cap(1);
+    return m1.captured(1);
 }
 
 QString HtmlUtil::docToNavdoc(const QString &data, QString &header, QString &nav)
@@ -73,10 +78,12 @@ QString HtmlUtil::docToNavdoc(const QString &data, QString &header, QString &nav
         if (header.isEmpty()) {
             //<!-- How to Write Go Code -->
             QString line = srcLines.at(0);
-            QRegExp reg("<!--([\\w\\s]*)-->");
-            if (reg.indexIn(line) >= 0) {
-                header = reg.cap(1).trimmed();
-            }
+            QRegularExpression reg(
+				QStringLiteral("<!--([\\w\\s]*)-->"));
+				QRegularExpressionMatch m = reg.match(line);
+			if (m.hasMatch()) {
+    			header = m.captured(1).trimmed();
+			}
         }
     }
     foreach(QString source, srcLines) {

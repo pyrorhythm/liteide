@@ -43,7 +43,6 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QTextBlock>
-#include <QTextCodec>
 #include <QProcessEnvironment>
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -52,6 +51,8 @@
 #include <QToolButton>
 #include <QTime>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -445,12 +446,16 @@ QString LiteBuild::envToValue(const QString &value,QMap<QString,QString> &liteEn
         i.next();
         v.replace("$("+i.key()+")",i.value());
     }
-    QRegExp rx("\\$\\((\\w+)\\)");
+    QRegularExpression rx("\\$\\((\\w+)\\)");
     int pos = 0;
     QStringList list;
-    while ((pos = rx.indexIn(v, pos)) != -1) {
-         list << rx.cap(1);
-         pos += rx.matchedLength();
+	QRegularExpressionMatch match;
+    while (true) {
+		match = rx.match(v, pos);
+		if (!match.hasMatch())
+			break;
+        list << match.captured(1);
+        pos = match.capturedEnd(0);
     }
 
     foreach (QString str, list) {
@@ -1425,12 +1430,12 @@ void LiteBuild::extOutput(const QByteArray &data, bool bError)
         if (regexp.isEmpty()) {
             return;
         }
-        QRegExp re(regexp);
+        QRegularExpression re(regexp);
         foreach (QString info, msg.split("\n",qtSkipEmptyParts)) {
-            if (re.indexIn(info) >= 0 && re.captureCount() >= 2) {
-                QString fileName = re.cap(1);
-                QString fileLine = re.cap(2);
-
+		QRegularExpressionMatch match = re.match(info);
+		if (match.hasMatch() && re.captureCount() >= 2) {
+			QString fileName = match.captured(1);
+			QString fileLine = match.captured(2);
                 bool ok = false;
                 int line = fileLine.toInt(&ok);
                 if (ok) {
@@ -1855,12 +1860,16 @@ void LiteBuild::dbclickBuildOutput(const QTextCursor &cur)
         //m_outputRegex = "([\\w\\d_\\\\/\\.]+):(\\d+):";
         m_outputRegex = "(\\w?:?[\\w\\d_@\\-\\\\/\\.]+):(\\d+):";
     }
-    QRegExp rep(m_outputRegex);//"([\\w\\d:_\\\\/\\.]+):(\\d+)");
+    QRegularExpression rep(m_outputRegex);//"([\\w\\d:_\\\\/\\.]+):(\\d+)");
 
-    int index = rep.indexIn(cur.block().text());
-    if (index < 0)
-        return;
-    QStringList capList = rep.capturedTexts();
+	QRegularExpressionMatch match = rep.match(cur.block().text());
+	int index = match.capturedStart(); // returns -1 if no match
+
+	if (match.hasMatch()) {
+		return;
+	}
+
+	QStringList capList = match.capturedTexts();
 
     if (capList.count() < 3)
         return;

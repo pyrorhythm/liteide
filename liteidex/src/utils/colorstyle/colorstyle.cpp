@@ -90,7 +90,7 @@ bool ColorStyleScheme::load(QIODevice *dev, const QString &/*fileName*/)
                 style->setName(tmp);
                 tmp = attrs.value("foreground").toString();
                 if (!tmp.isEmpty()) {
-                    style->setForegound(tmp);
+                    style->setForeground(tmp);
                 }
                 tmp = attrs.value("background").toString();
                 if (!tmp.isEmpty()) {

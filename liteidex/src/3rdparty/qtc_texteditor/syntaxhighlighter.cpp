@@ -39,6 +39,8 @@
 **
 ****************************************************************************/
 
+#include <algorithm>
+
 #include "syntaxhighlighter.h"
 #include "basetextdocumentlayout.h"
 #include <qtextdocument.h>
@@ -111,7 +113,7 @@ void SyntaxHighlighterPrivate::applyFormatChanges(int from, int charsRemoved, in
 
     QTextLayout *layout = currentBlock.layout();
 
-    QList<QTextLayout::FormatRange> ranges = layout->additionalFormats();
+    QList<QTextLayout::FormatRange> ranges = layout->formats();
 
     bool doAdjustRange = currentBlock.contains(from);
 
@@ -178,7 +180,7 @@ void SyntaxHighlighterPrivate::applyFormatChanges(int from, int charsRemoved, in
 
     if (formatsChanged) {
         ranges.append(new_ranges);
-        layout->setAdditionalFormats(ranges);
+        layout->setFormats(ranges);
         doc->markContentsDirty(currentBlock.position(), currentBlock.length());
     }
 }
@@ -422,7 +424,7 @@ void SyntaxHighlighter::setDocument(QTextDocument *doc)
         QTextCursor cursor(d->doc);
         cursor.beginEditBlock();
         for (QTextBlock blk = d->doc->begin(); blk.isValid(); blk = blk.next())
-            blk.layout()->clearAdditionalFormats();
+            blk.layout()->clearFormats();
         cursor.endEditBlock();
     }
     d->doc = doc;
@@ -777,12 +779,12 @@ void SyntaxHighlighter::setExtraAdditionalFormats(const QTextBlock& block,
         r.format.setProperty(QTextFormat::UserProperty, true);
         formats.append(r);
     }
-    qSort(formats.begin(), formats.end(), byStartOfRange);
+    std::sort(formats.begin(), formats.end(), byStartOfRange);
 
     QList<QTextLayout::FormatRange> previousSemanticFormats;
     QList<QTextLayout::FormatRange> formatsToApply;
 
-    const QList<QTextLayout::FormatRange> all = block.layout()->additionalFormats();
+    const QList<QTextLayout::FormatRange> all = block.layout()->formats();
     foreach (const QTextLayout::FormatRange &r, all) {
         if (r.format.hasProperty(QTextFormat::UserProperty))
             previousSemanticFormats.append(r);
@@ -791,7 +793,7 @@ void SyntaxHighlighter::setExtraAdditionalFormats(const QTextBlock& block,
     }
 
     if (formats.size() == previousSemanticFormats.size()) {
-        qSort(previousSemanticFormats.begin(), previousSemanticFormats.end(), byStartOfRange);
+        std::sort(previousSemanticFormats.begin(), previousSemanticFormats.end(), byStartOfRange);
 
         int index = 0;
         for (; index != formats.size(); ++index) {
@@ -812,7 +814,7 @@ void SyntaxHighlighter::setExtraAdditionalFormats(const QTextBlock& block,
 
     bool wasInReformatBlocks = d->inReformatBlocks;
     d->inReformatBlocks = true;
-    block.layout()->setAdditionalFormats(formatsToApply);
+    block.layout()->setFormats(formatsToApply);
     document()->markContentsDirty(block.position(), block.length()-1);
     d->inReformatBlocks = wasInReformatBlocks;
 }

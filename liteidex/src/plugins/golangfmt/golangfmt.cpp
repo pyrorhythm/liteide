@@ -33,10 +33,10 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QPlainTextEdit>
-#include <QTextCodec>
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QScrollBar>
+#include <QRegularExpression>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -164,10 +164,11 @@ void GolangFmt::syncfmtEditor(LiteApi::IEditor *editor, bool save, bool check, i
         if (!errmsg.isEmpty()) {
             //<standard input>:23:1: expected declaration, found 'INT' 1
              foreach(QString msg,errmsg.split("\n")) {
-                QRegExp re(":(\\d+):");
-                if (re.indexIn(msg,16) >= 0) {
-                    bool ok = false;
-                    int line = re.cap(1).toInt(&ok);
+                QRegularExpression re(":(\\d+):");
+				QRegularExpressionMatch match = re.match(msg, 16);
+				if (match.hasMatch()) {
+	                    bool ok = false;
+                    int line = match.captured(1).toInt(&ok);
                     if (ok) {
                         liteEditor->insertNavigateMark(line-1,LiteApi::EditorNavigateError,msg.mid(16), GOLANGFMT_TAG);
                     }
@@ -329,10 +330,11 @@ void GolangFmt::fmtFinish(bool error,int code,QString)
         if (!errmsg.isEmpty()) {
             //<standard input>:23:1: expected declaration, found 'INT' 1
             foreach(QString msg,errmsg.split("\n")) {
-                QRegExp re(":(\\d+):");
-                if (re.indexIn(msg,16) >= 0) {
+                QRegularExpression re(":(\\d+):");
+                QRegularExpressionMatch match = re.match(msg, 16);
+				if (match.hasMatch()) {
                     bool ok = false;
-                    int line = re.cap(1).toInt(&ok);
+                    int line = match.captured(1).toInt(&ok);
                     if (ok) {
                         liteEditor->insertNavigateMark(line-1,LiteApi::EditorNavigateError,msg.mid(16), GOLANGFMT_TAG);
                     }

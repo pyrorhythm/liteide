@@ -32,7 +32,7 @@
 
 #include <QPainter>
 #include <QApplication>
-
+#include <QStyleOptionViewItem>
 #include <QModelIndex>
 #include <QDebug>
 
@@ -49,7 +49,7 @@ void SearchResultTreeItemDelegate::paint(QPainter *painter, const QStyleOptionVi
 
     painter->save();
 
-    QStyleOptionViewItemV3 opt = setOptions(index, option);
+    QStyleOptionViewItem opt = setOptions(index, option);
     painter->setFont(opt.font);
 
     QItemDelegate::drawBackground(painter, opt, index);
@@ -104,7 +104,7 @@ void SearchResultTreeItemDelegate::paint(QPainter *painter, const QStyleOptionVi
 }
 
 // returns the width of the line number area
-int SearchResultTreeItemDelegate::drawLineNumber(QPainter *painter, const QStyleOptionViewItemV3 &option,
+int SearchResultTreeItemDelegate::drawLineNumber(QPainter *painter, const QStyleOptionViewItem &option,
                                                  const QRect &rect,
                                                  const QModelIndex &index) const
 {
@@ -114,8 +114,8 @@ int SearchResultTreeItemDelegate::drawLineNumber(QPainter *painter, const QStyle
         return 0;
     const bool isSelected = option.state & QStyle::State_Selected;
     QString lineText = QString::number(lineNumber);
-    int minimumLineNumberDigits = qMax((int)m_minimumLineNumberDigits, lineText.count());
-    int fontWidth = painter->fontMetrics().width(QString(minimumLineNumberDigits, QLatin1Char('0')));
+    int minimumLineNumberDigits = qMax((int)m_minimumLineNumberDigits, lineText.length());
+    int fontWidth = painter->fontMetrics().horizontalAdvance(QString(minimumLineNumberDigits, QLatin1Char('0')));
     int lineNumberAreaWidth = lineNumberAreaHorizontalPadding + fontWidth + lineNumberAreaHorizontalPadding;
     QRect lineNumberAreaRect(rect);
     lineNumberAreaRect.setWidth(lineNumberAreaWidth);
@@ -130,7 +130,7 @@ int SearchResultTreeItemDelegate::drawLineNumber(QPainter *painter, const QStyle
         option.palette.brush(cg, QPalette::Highlight) :
         option.palette.color(cg, QPalette::Base).darker(111)));
 
-    QStyleOptionViewItemV3 opt = option;
+    QStyleOptionViewItem opt = option;
     opt.displayAlignment = Qt::AlignRight | Qt::AlignVCenter;
     opt.palette.setColor(cg, QPalette::Text, Qt::darkGray);
 
@@ -165,8 +165,8 @@ void SearchResultTreeItemDelegate::drawText(QPainter *painter,
     // clip searchTermLength to end of line
     searchTermLength = qMin(searchTermLength, text.length() - searchTermStart);
     const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin) + 1;
-    int searchTermStartPixels = painter->fontMetrics().width(text.left(searchTermStart));
-    int searchTermLengthPixels = painter->fontMetrics().width(text.mid(searchTermStart, searchTermLength));
+    int searchTermStartPixels = painter->fontMetrics().horizontalAdvance(text.left(searchTermStart));
+    int searchTermLengthPixels = painter->fontMetrics().horizontalAdvance(text.mid(searchTermStart, searchTermLength));
 
     // rects
     QRect beforeHighlightRect(rect);

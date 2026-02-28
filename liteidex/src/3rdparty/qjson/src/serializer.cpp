@@ -24,6 +24,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
+#include <QIODevice>
 
 #include <cmath>
 

@@ -39,7 +39,7 @@
 #include <QTextStream>
 #include <QApplication>
 #include <QToolTip>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QToolButton>
 
 //lite_memory_check_begin
@@ -59,11 +59,14 @@ static QString formatInfo(const QString &info)
     if (!info.startsWith("type")) {
         return info;
     }
-    QRegExp re("([\\w\\s\\.]+)\\{(.+)\\}");
-    if (re.indexIn(info) == 0) {
-        if (re.matchedLength() == info.length()) {
-            QString str = re.cap(1)+" {\n";
-            foreach (QString item, re.cap(2).split(";",qtSkipEmptyParts)) {
+    QRegularExpression re("([\\w\\s\\.]+)\\{(.+)\\}");
+	QRegularExpressionMatch match = re.match(info);
+
+		if (match.hasMatch() && match.capturedStart() == 0) {
+    	if (match.capturedLength() == info.length()) {
+        	QString str = match.captured(1) + " {\n";
+			QStringList parts = match.captured(2).split(";", Qt::SkipEmptyParts);
+			for (const QString &item : parts) {
                 str += "\t"+item.trimmed()+"\n";
             }
             str += "}";
@@ -854,12 +857,23 @@ void GolangEdit::findDefFinish(int code,QProcess::ExitStatus status)
 
     QStringList infos = QString::fromUtf8(data).trimmed().split("\n");
     QString info = infos.at(0);
-    QRegExp reg(":(\\d+):(\\d+)");
-    int pos = reg.lastIndexIn(info);
-    if (pos >= 0) {
-        //:fname:fpath:dir
-        if(info.length() > (pos+reg.matchedLength()) ) {
-            QStringList extra = info.mid(pos+reg.matchedLength()).split("::",qtSkipEmptyParts);
+    QRegularExpression reg(":(\\d+):(\\d+)");
+	QRegularExpressionMatchIterator it = reg.globalMatch(info);
+
+	QRegularExpressionMatch lastMatch;
+		while (it.hasNext()) {
+    		lastMatch = it.next();
+		}
+
+	QRegularExpressionMatch match = reg.match(info);
+
+	if (match.hasMatch()) {
+    	int pos = match.capturedStart();
+
+		    QStringList extra =
+		        info.mid(pos + match.capturedLength())
+		            .split("::", Qt::SkipEmptyParts);
+		
             if (extra.size() == 3) {
                 QString targetOpenDir = extra[2];
                 QString targetOpenDirInfo = QString(tr("Below files in package %1").arg(extra[1]));
@@ -877,10 +891,10 @@ void GolangEdit::findDefFinish(int code,QProcess::ExitStatus status)
                     }
                 }
             }
-        }
+        
         QString fileName = info.left(pos);
-        int line = reg.cap(1).toInt();
-        int col = reg.cap(2).toInt();
+        int line = lastMatch.captured(1).toInt();
+        int col = lastMatch.captured(2).toInt();
         col = byteOffsetToColumn(fileName,line,col);
         LiteApi::gotoLine(m_liteApp,fileName,line-1,col-1,true,true);
     }
@@ -956,7 +970,7 @@ static QStringList FindSourceInfo(LiteApi::IApplication *app, const QString &fil
         QFile f(fileName);
         if (f.open(QFile::ReadOnly)) {
             QTextStream stream(&f);
-            stream.setCodec("utf-8");
+            stream.setEncoding(QStringConverter::Utf8);
             int curLine = 0;
             QString text;
             while(!stream.atEnd() && (curLine < (line+maxLine)) ) {
@@ -986,7 +1000,7 @@ static QString FindSourceBlock(LiteApi::IApplication *app, const QString &fileNa
         QFile f(fileName);
         if (f.open(QFile::ReadOnly)) {
             QTextStream stream(&f);
-            stream.setCodec("utf-8");
+            stream.setEncoding(QStringConverter::Utf8);
             int curLine = 0;
             QString text;
             while(!stream.atEnd()) {
@@ -1027,18 +1041,31 @@ void GolangEdit::findLinkFinish(int code,QProcess::ExitStatus)
             if (info.size() >= 2) {
                 if (info[0] != "-") {
                     QString fileInfo = info[0];
-                    QRegExp reg(":(\\d+):(\\d+)");
-                    int pos = reg.lastIndexIn(fileInfo);
-                    if (pos >= 0) {
-                        QString fileName = fileInfo.left(pos);
-                        int line = reg.cap(1).toInt();
-                        int col = reg.cap(2).toInt();
-                        col = byteOffsetToColumn(fileName,line,col);
+                    QRegularExpression reg(":(\\d+):(\\d+)");
+		    QRegularExpressionMatchIterator it = reg.globalMatch(fileInfo);
 
+		    QRegularExpressionMatch lastMatch;
+		    while (it.hasNext()) {
+			lastMatch = it.next();
+		    }
+
+		    if (lastMatch.hasMatch()) {
+
+			int pos = lastMatch.capturedStart();
+
+			QString fileName = fileInfo.left(pos);
+
+			int line = lastMatch.captured(1).toInt();
+			int col  = lastMatch.captured(2).toInt();
+
+			col = byteOffsetToColumn(fileName, line, col);
                         bool importExtra = false;
                         //parser import line extra info
-                        if(fileInfo.length() > (pos+reg.matchedLength()) ) {
-                            QStringList extra = fileInfo.mid(pos+reg.matchedLength()).split("::",qtSkipEmptyParts);
+			if (fileInfo.length() > (pos + lastMatch.capturedLength())) {
+
+			    QStringList extra =
+			    fileInfo.mid(pos + lastMatch.capturedLength())
+			    .split("::", Qt::SkipEmptyParts);
                             //:fname:fpath:dir
                             if (extra.size() == 3) {
                                 importExtra = true;
@@ -1130,7 +1157,7 @@ void GolangEdit::sourceQueryFinished(int code, QProcess::ExitStatus /*status*/)
         //-: modes: [callees callers callstack definition describe implements pointsto referrers]
         if (line.startsWith("-: modes:")) {
             QString mode = line.mid(9);
-           // mode.remove(QRegExp("\\s?\\breferrers\\b"));
+           // mode.remove(QRegularExpression("\\s?\\breferrers\\b"));
             if (mode.contains("implements")) {
                 mode.replace("implements","implements implements_GOPATH");
             }
@@ -1152,7 +1179,7 @@ void GolangEdit::sourcequeryError(QProcess::ProcessError code)
 //void GolangEdit::updateOracleInfo(const QString &action, const QString &text)
 //{
 //    //if (action == "what") {
-//        QRegExp reg("((?:[a-zA-Z]:)?[\\w\\d_\\-\\\\/\\.]+):(\\d+)[\\.:]?(\\d+)?\\-?(\\d+)?\\.?(\\d+)?\\b");
+//        QRegularExpression reg("((?:[a-zA-Z]:)?[\\w\\d_\\-\\\\/\\.]+):(\\d+)[\\.:]?(\\d+)?\\-?(\\d+)?\\.?(\\d+)?\\b");
 //        foreach (QString line, text.split("\n")) {
 //            if (reg.indexIn(line) >= 0) {
 //                //qDebug() << reg.capturedTexts();
@@ -1175,8 +1202,9 @@ void GolangEdit::dbclickSourceQueryOutput(const QTextCursor &cursor)
     }
 
     bool hasGotoLine = false;
-    QRegExp reg("((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\\\/\\.]+):(\\d+)[\\.:]?(\\d+)?\\-?(\\d+)?\\.?(\\d+)?\\b");
-    if (reg.indexIn(text) >= 0) {
+    QRegularExpression reg("((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\\\/\\.]+):(\\d+)[\\.:]?(\\d+)?\\-?(\\d+)?\\.?(\\d+)?\\b");
+	QRegularExpressionMatch match = reg.match(text);
+	if (match.hasMatch())  {
         hasGotoLine = true;
     }
 
@@ -1196,7 +1224,12 @@ void GolangEdit::dbclickSourceQueryOutput(const QTextCursor &cursor)
         return;
     }
 
-    QStringList capList = reg.capturedTexts();
+	//QRegularExpressionMatch match = reg.match(text);
+	QStringList capList;
+
+	if (match.hasMatch()) {
+	    capList = match.capturedTexts();
+	}
     if (capList.count() < 5) {
         return;
     }

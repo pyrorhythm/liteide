@@ -39,7 +39,7 @@
 #include <QUrl>
 #include <QMimeData>
 #include <QTextBlock>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QFileInfo>
 #include <QSplitter>
 #include <QDebug>

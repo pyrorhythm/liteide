@@ -33,8 +33,10 @@
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QDebug>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -369,7 +371,7 @@ void DlvRpcDebugger::createWatch(const QString &var)
         return;
     }
     updateWatch(state.pCurrentThread->GoroutineID);
-//    QString cmd = "vars "+QRegExp::escape(var);
+//    QString cmd = "vars "+QRegularExpression::escape(var);
 //    m_updateCmdHistroy.push_back(cmd);
 //    command_helper(cmd.toUtf8(),true);
 }
@@ -561,7 +563,7 @@ void DlvRpcDebugger::readStdError()
     //Process 4084 has exited with status 0
     QString data = QString::fromUtf8(m_process->readAllStandardError());
    // qDebug() << data << m_processId;
-    //QRegExp reg;
+    //QRegularExpression reg;
     emit debugLog(LiteApi::DebugConsoleLog,data);
     foreach (QString line, data.split("\n",qtSkipEmptyParts)) {
         if (line.startsWith("Process "+m_processId)) {
@@ -599,39 +601,38 @@ void DlvRpcDebugger::handleResponse(const QByteArray &buff)
     //> [bk1584098684] main.(*My[go.shape.int]).Test1() c:/dev/demo/main.go:16 (hits goroutine(1):1 total:1) (PC: 0x4daa88)
     if (buff.contains("> ")) {
         // [bk] main.test[shape]() file:line
-        static QRegExp reg(">(\\s+\\[[\\w\\d]+\\])?\\s+([\\w\\d_\\-\\.\\%\\*\\[\\]\\(\\)\\/]+)\\(\\)\\s+((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\/\\.\\\\]+):(\\d+)\\s?(.*)\\s?(\\(PC:\\s+.*)");
+        static QRegularExpression reg(">(\\s+\\[[\\w\\d]+\\])?\\s+([\\w\\d_\\.\\%\\*\\[\\]\\(\\)\\/]+)\\(\\)\\s+((?:[a-zA-Z]:)?[\\w\\d_@\\s\\-\\/\\.\\\\]+):(\\d+)\\s?(.*)\\s?(\\(PC:\\s+.*)");
 
-        int n = reg.indexIn(QString::fromUtf8(buff));
-        if (n < 0) {
-            return;
-        }
-        QString fileName = reg.cap(3);
-        if (fileName.startsWith("./")) {
-            fileName = QDir::cleanPath(m_process->workingDirectory()+"/"+fileName);
-        }
-        QString line = reg.cap(4);
+	QRegularExpressionMatch match = reg.match(QString::fromUtf8(buff));
+	QString fileName = match.captured(3);
+	QString line = match.captured(4);
+	if (match.hasMatch()) {
+		if (fileName.startsWith("./")) {
+            		fileName = QDir::cleanPath(m_process->workingDirectory()+"/"+fileName);
+		}
 
-        if (!fileName.isEmpty() && !line.isEmpty()) {
-            bool ok = false;
-            int n = line.toInt(&ok);
-            if (ok) {
-                m_lastFileName = fileName;
-                m_lastFileLine = n-1;
-                //check step out
-                emit setCurrentLine(fileName,n-1);
-            }
-        }
+		if (!fileName.isEmpty() && !line.isEmpty()) {
+            	bool ok = false;
+            	int n = line.toInt(&ok);
+            		if (ok) {
+                	m_lastFileName = fileName;
+                	m_lastFileLine = n-1;
+                	//check step out
+                	emit setCurrentLine(fileName,n-1);
+			}
+		}
+	}
         m_handleState.setStopped(true);
 
         m_asyncItem->removeRows(0,m_asyncItem->rowCount());
         m_asyncItem->setText("stopped");
-        QString func = reg.cap(2).trimmed();
+        QString func = match.captured(2).trimmed();
         //hack
         if (func.contains("%")) {
             func.replace("%2e",".");
         }
-        QString hits = reg.cap(5).trimmed();
-        QString pc = reg.cap(6).trimmed();
+        QString hits = match.captured(5).trimmed();
+        QString pc = match.captured(6).trimmed();
         int pos = pc.indexOf('\n');
         if (pos != -1) {
             pc.truncate(pos);
@@ -684,7 +685,7 @@ void DlvRpcDebugger::initDebug()
     //get thread id
     m_processId.clear();
 
-    QMapIterator<QString,int> i(m_initBks);
+    QMultiMapIterator<QString, int> i(m_initBks);
 
     while (i.hasNext()) {
         i.next();
@@ -735,7 +736,7 @@ static QString valueToolTip(const QString &value)
             toolTip += text[i];
         } else if (text[i] == ',') {
             toolTip += text[i];
-            int pos = text.lastIndexOf(QRegExp("\\{|\\[|\\]|\\}"),i-1);
+            int pos = text.lastIndexOf(QRegularExpression("\\{|\\[|\\]|\\}"),i-1);
             if (pos != -1 && text[pos] == '[') {
                 continue;
             }
@@ -885,9 +886,9 @@ void DlvRpcDebugger::readStdOutput()
                 QMap<QString,QString>::iterator it = m_checkVarsMap.find(name);
                 if (it != m_checkVarsMap.end() && it.value() != value) {
 #if QT_VERSION >= 0x050000
-        valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+        valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-        valueItem->setData(Qt::red,Qt::TextColorRole);
+        valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
                 }
                 m_varsModel->appendRow(QList<QStandardItem*>() << nameItem << valueItem);
@@ -911,15 +912,15 @@ void DlvRpcDebugger::readStdOutput()
                             find = true;
                             if (m_watchNameMap.value(name) == value) {
 #if QT_VERSION >= 0x050000
-                                valueItem->setData(QColor(Qt::black),Qt::TextColorRole);
+                                valueItem->setData(QColor(Qt::black),Qt::ForegroundRole);
 #else
-                                valueItem->setData(Qt::black,Qt::TextColorRole);
+                                valueItem->setData(Qt::black,Qt::ForegroundRole);
 #endif
                             } else {
 #if QT_VERSION >= 0x050000
-                                valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+                                valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-                                valueItem->setData(Qt::red,Qt::TextColorRole);
+                                valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
                                 valueItem->setText(value);
                             }
@@ -1001,9 +1002,9 @@ void DlvRpcDebugger::updateWatch(int id)
         item->setData(name,VarNameRole);
         QStandardItem *type = new QStandardItem("not find");
 #if QT_VERSION >= 0x050000
-            type->setData(QColor(Qt::red),Qt::TextColorRole);
+            type->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-            type->setData(Qt::red,Qt::TextColorRole);
+            type->setData(Qt::red,Qt::ForegroundRole);
 #endif
         m_watchModel->appendRow(QList<QStandardItem*>() << item << type);
     }
@@ -1061,7 +1062,7 @@ static bool threadIdThan(const Thread &s1, const Thread &s2)
 void DlvRpcDebugger::updateThreads(const QList<Thread> &threads)
 {
     QList<Thread> ths = threads;
-    qSort(ths.begin(),ths.end(),threadIdThan);
+    std::sort(ths.begin(),ths.end(),threadIdThan);
     emit beginUpdateModel(LiteApi::THREADS_MODEL);
     m_threadsModel->removeRows(0,m_threadsModel->rowCount());
     foreach (Thread t, ths) {
@@ -1193,9 +1194,9 @@ void DlvRpcDebugger::updateRegisters(int threadid, bool includeFp)
         QMap<QString,QString>::const_iterator it = m_checkRegsMap.find(r.Name);
         if (it != m_checkRegsMap.end() && it.value() != r.Value) {
 #if QT_VERSION >= 0x050000
-            valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+            valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-            valueItem->setData(Qt::red,Qt::TextColorRole);
+            valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
         }
         saveMap.insert(r.Name,r.Value);
@@ -1271,9 +1272,9 @@ void DlvRpcDebugger::updateVariableHelper(const QList<Variable> &vars, QStandard
         QMap<QString,QString>::const_iterator it = checkMap.find(checkName);
         if (it != checkMap.end() && it.value() != var.Value) {
 #if QT_VERSION >= 0x050000
-            valueItem->setData(QColor(Qt::red),Qt::TextColorRole);
+            valueItem->setData(QColor(Qt::red),Qt::ForegroundRole);
 #else
-            valueItem->setData(Qt::red,Qt::TextColorRole);
+            valueItem->setData(Qt::red,Qt::ForegroundRole);
 #endif
         }
         saveMap.insert(checkName,var.Value);
@@ -1320,18 +1321,18 @@ static void buildMap(QStandardItem *item, const QMap<QString, QVariant> &m)
         QString key = i.key();
         QVariant value = i.value();
         if (!key.isEmpty() && value.isValid()) {
-            if (value.type() == QVariant::Map) {
+            if (value.typeId() == QMetaType::QVariantMap) {
                 QStandardItem *child = new QStandardItem(key);
                 buildMap(child,value.toMap());
                 item->appendRow(child);
-            } else if (value.type() == QVariant::List) {
+            } else if (value.typeId() == QMetaType::QVariantList) {
                 QStandardItem *child = new QStandardItem(key);
                 item->appendRow(child);
                 int index = 0;
                 foreach (QVariant v, value.toList()) {
                     QStandardItem *aitem = new QStandardItem(QString("[%1]").arg(index++));
                     child->appendRow(aitem);
-                    if (v.type() == QVariant::Map) {
+                    if (v.typeId() == QMetaType::QVariantMap) {
                         buildMap(aitem,v.toMap());
                     } else {
                         aitem->appendColumn(QList<QStandardItem*>() << new QStandardItem(v.toString()));

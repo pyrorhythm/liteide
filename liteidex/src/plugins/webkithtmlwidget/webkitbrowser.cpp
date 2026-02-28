@@ -33,7 +33,7 @@
 #include <QStatusBar>
 #include <QProgressBar>
 #include <QRegExp>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QFileDialog>
 #include <QDebug>
 //lite_memory_check_begin

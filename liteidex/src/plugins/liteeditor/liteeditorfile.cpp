@@ -26,11 +26,12 @@
 #include "editorutil/checkdata.h"
 #include <QFile>
 #include <QTextDocument>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDir>
 #include <QDebug>
+#include <QRegularExpression>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC
@@ -237,7 +238,7 @@ bool LiteEditorFile::loadFileHelper(const QString &fileName, const QString &mime
     } else if (lf == 0) {
         m_lineTerminatorMode = LFLineTerminator;
     } else {
-        lf = outText.indexOf(QRegExp("[^\r]\n"),lf-1);
+        lf = outText.indexOf(QRegularExpression("[^\r]\n"),lf-1);
         if (lf >= 0) {
             m_lineTerminatorMode = LFLineTerminator;
         } else {

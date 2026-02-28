@@ -31,7 +31,8 @@
 #include <QScrollBar>
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
-#include <QDesktopWidget>
+#include <QScreen>
+#include <QGuiApplication>
 #include <QItemDelegate>
 #include <QLabel>
 #include <QDebug>
@@ -159,7 +160,7 @@ public:
         : FakeToolTip(parent), m_label(new QLabel(this))
     {
         QVBoxLayout *layout = new QVBoxLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0,0,0,0);
         layout->setSpacing(0);
         layout->addWidget(m_label);
 
@@ -178,14 +179,17 @@ public:
     // Workaround QTCREATORBUG-11653
     void calculateMaximumWidth()
     {
-        const QDesktopWidget *desktopWidget = QApplication::desktop();
-        const int desktopWidth = desktopWidget->isVirtualDesktop()
-                ? desktopWidget->width()
-                : desktopWidget->availableGeometry(desktopWidget->primaryScreen()).width();
+	QScreen *screen = this->screen(); 
+	if (!screen) {
+	    screen = QGuiApplication::primaryScreen();
+	}
+
+	QRect screenGeometry = screen->availableGeometry();
         const QMargins widgetMargins = contentsMargins();
         const QMargins layoutMargins = layout()->contentsMargins();
         const int margins = widgetMargins.left() + widgetMargins.right()
                 + layoutMargins.left() + layoutMargins.right();
+	int desktopWidth = screenGeometry.width();
         m_label->setMaximumWidth(desktopWidth - this->pos().x() - margins);
     }
 
@@ -217,7 +221,8 @@ QSize CodeCompleterListView::calculateSize() const
     const int visibleItems = qMin(model()->rowCount(), maxVisibleItems);
     const int firstVisibleRow = verticalScrollBar()->value();
 
-    const QStyleOptionViewItem &option = viewOptions();
+    QStyleOptionViewItem option;
+	initViewItemOption(&option);
     QSize shint;
     for (int i = 0; i < visibleItems; ++i) {
         QSize tmp = itemDelegate()->sizeHint(option, model()->index(i + firstVisibleRow, 0));
@@ -522,9 +527,9 @@ int CodeCompleterProxyModel::filter(const QString &filter, int cs, LiteApi::Comp
                 }
             }
         }
-        qStableSort(best.begin(), best.end(), ContentLessThan(filter));
-        qStableSort(second.begin(), second.end(), ContentLessThan(filter));
-        qStableSort(other.begin(), other.end(), ContentLessThan(filter));
+        std::stable_sort(best.begin(), best.end(), ContentLessThan(filter));
+        std::stable_sort(second.begin(), second.end(), ContentLessThan(filter));
+        std::stable_sort(other.begin(), other.end(), ContentLessThan(filter));
         m_items.append(best);
         m_items.append(second);
         m_items.append(other);
@@ -543,7 +548,7 @@ int CodeCompleterProxyModel::filter(const QString &filter, int cs, LiteApi::Comp
             QStandardItem *item = m_model->itemFromIndex(index);
             m_items.append(item->clone());
         }
-        qStableSort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
+        std::stable_sort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
         return m_items.size();
     }
 
@@ -561,23 +566,24 @@ int CodeCompleterProxyModel::filter(const QString &filter, int cs, LiteApi::Comp
             keyRegExp += "[0-9a-z_]*";
         }
 
-        QRegExp regExp(keyRegExp);
-        regExp.setCaseSensitivity(Qt::CaseInsensitive);
+        QRegularExpression regExp(keyRegExp);
+        regExp.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
 
         int count = m_model->rowCount(parentIndex);
         QList<QStandardItem*> otherItems;
         for (int i = 0; i < count; i++) {
             QModelIndex index = m_model->index(i,0,parentIndex);
             QStandardItem *item = m_model->itemFromIndex(index);
-            int n = regExp.indexIn(item->text());
+			QRegularExpressionMatch match = regExp.match(item->text());
+			int n = match.hasMatch() ? match.capturedStart() : -1;
             if (n == 0) {
                 m_items.append(item->clone());
             } else if (n > 0) {
                 otherItems.append(item->clone());
             }
         }
-        qStableSort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
-        qStableSort(otherItems.begin(), otherItems.end(), ContentLessThan(prefix));
+        std::stable_sort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
+        std::stable_sort(otherItems.begin(), otherItems.end(), ContentLessThan(prefix));
         m_items.append(otherItems);
         return m_items.size();
     }
@@ -594,11 +600,11 @@ int CodeCompleterProxyModel::filter(const QString &filter, int cs, LiteApi::Comp
             keyRegExp += QLatin1String("(?:");
             if (!first)
                 keyRegExp += uppercaseWordContinuation;
-            keyRegExp += QRegExp::escape(c.toUpper());
+            keyRegExp += QRegularExpression::escape(c.toUpper());
             keyRegExp += QLatin1Char('|');
             if (!first)
                 keyRegExp += lowercaseWordContinuation;
-            keyRegExp += QRegExp::escape(c.toLower());
+            keyRegExp += QRegularExpression::escape(c.toLower());
             keyRegExp += QLatin1Char(')');
         } else {
             if (!first) {
@@ -607,23 +613,24 @@ int CodeCompleterProxyModel::filter(const QString &filter, int cs, LiteApi::Comp
                 else
                     keyRegExp += lowercaseWordContinuation;
             }
-            keyRegExp += QRegExp::escape(c);
+            keyRegExp += QRegularExpression::escape(c);
         }
 
         first = false;
     }
 
-    QRegExp regExp(keyRegExp);
+    QRegularExpression regExp(keyRegExp);
 
     int count = m_model->rowCount(parentIndex);
     for (int i = 0; i < count; i++) {
         QModelIndex index = m_model->index(i,0,parentIndex);
         QStandardItem *item = m_model->itemFromIndex(index);
-        if (regExp.indexIn(item->text()) == 0) {
+		QRegularExpressionMatch m = regExp.match(item->text());
+		if (m.hasMatch() && m.capturedStart() == 0) {
             m_items.append(item->clone());
         }
     }
-    qStableSort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
+    std::stable_sort(m_items.begin(), m_items.end(), ContentLessThan(prefix));
 
     return m_items.size();
 }
@@ -767,7 +774,7 @@ void CodeCompleterEx::complete(const QRect &rect)
         return;
     }
 
-    const QRect screen = QApplication::desktop()->availableGeometry(m_widget);
+    const QRect screen = m_widget->screen()->availableGeometry();
     Qt::LayoutDirection dir = m_widget->layoutDirection();
     QPoint pos;
     int rh, w;

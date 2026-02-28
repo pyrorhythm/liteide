@@ -24,8 +24,9 @@
 #include "golangapi.h"
 #include <QFile>
 #include <QSet>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextStream>
+#include <QStringConverter>
 #include <QFile>
 #include <QDebug>
 //lite_memory_check_begin
@@ -50,7 +51,7 @@ bool GolangApi::load(const QString &fileName)
         return false;
     }
     QTextStream stream(&file);
-    stream.setCodec("utf-8");
+	stream.setEncoding(QStringConverter::Utf8);
     return loadStream(&stream);
 }
 
@@ -88,23 +89,28 @@ bool GolangApi::loadStream(QTextStream *stream)
     //pkg container/heap, type Interface interface { Len, Less, Pop, Push, Swap }
     //pkg container/heap, type Interface interface, Len() int
 
-    QRegExp reg("^pkg\\s([\\w\\-\\.\\/]+)(\\s\\(([\\w\\-]+)\\))?,\\s(\\w+)");
-    QRegExp regm("\\(\\*?([\\w\\-]+)\\)\\s*(\\w+)");
+	static const QRegularExpression reg(
+    	R"(^pkg\s([\w\-\./]+)(\s\(([\w\-]+)\))?,\s(\w+))"
+		);
+
+	static const QRegularExpression regm(
+    	R"(\(\*?([\w\-]+)\)\s*(\w+))"
+		);
     Package *lastPkg = 0;
     Type *lastType = 0;
     while (!stream->atEnd()) {
         QString line = stream->readLine();
-        int pos = reg.indexIn(line);
-        if (pos < 0) {
+		QRegularExpressionMatch m = reg.match(line);
+		if (m.hasMatch()) {
             continue;
         }
         // 1 pkgname
         // 2 ? (system)
         // 3 ? system
         // 4 const|func|method|var|type
-        QString pkgName = reg.cap(1);
-//        if (!reg.cap(3).isEmpty()) {
-//            pkg = reg.cap(2)+"."+pkg;
+        QString pkgName = m.captured(1);
+//        if (!m.captured(3).isEmpty()) {
+//            pkg = m.captured(2)+"."+pkg;
 //        }
         if (!lastPkg || lastPkg->name != pkgName) {
             lastPkg = m_pkgs.findPackage(pkgName);
@@ -114,8 +120,8 @@ bool GolangApi::loadStream(QTextStream *stream)
                 lastType = 0;
             }
         }
-        QString right = line.mid(reg.cap().length()).trimmed();
-        QString flag = reg.cap(4);
+        QString right = line.mid(m.captured().length()).trimmed();
+        QString flag = m.captured(4);
         if (flag == "var") {
             ///pkg archive/tar, var ErrFieldTooLong error
             int pos = right.indexOf(" ");
@@ -141,11 +147,11 @@ bool GolangApi::loadStream(QTextStream *stream)
             //pkg archive/tar, method (*Reader) Next() (*Header, error)
             //pkg archive/zip, method (*File) Open() (io.ReadCloser, error)
             //pkg bufio, method (ReadWriter) Available() int
-            int pos = regm.indexIn(right);
-            if (pos != -1) {
-                QString typeName = regm.cap(1);
-                QString name = regm.cap(2);
-                QString exp = right.mid(regm.cap().length()).trimmed();
+			auto mm = regm.match(line);
+			if (mm.hasMatch()) {
+    			const QString typeName = mm.captured(1);
+    			const QString name     = mm.captured(2);
+                QString exp = right.mid(mm.captured().length()).trimmed();
                 if (lastType == 0 || lastType->name != typeName || lastType->typ == StructApi) {
                     lastType = lastPkg->findType(typeName);
                     if (!lastType) {
@@ -238,20 +244,20 @@ bool GolangApi::loadStream(QTextStream *stream)
 //        // 5 ? (method-type)
 //        // 6 ? method-type
 //        // 7 value
-//        int pos = reg.indexIn(line);
+//        int pos = reg.match(line);
 //        if (pos != -1) {
 //            QString typeVar;
-//            int next = reg2.indexIn(line.right(line.length()-reg.cap().length()).trimmed());
+//            int next = reg2.match(line.right(line.length()-m.captured().length()).trimmed());
 //            if (next != -1) {
-//                typeVar = reg2.cap(2);
+//                typeVar = reg2.captured(2);
 //            }
 
-//            //qDebug() << reg.cap() << reg.captureCount();
-//            QString pkg = reg.cap(1);
-//            //QString sys = reg.cap(3);
-//            QString flag = reg.cap(4);
-//            QString method_type = reg.cap(6);
-//            QString value = reg.cap(7);
+//            //qDebug() << m.captured() << reg.captureCount();
+//            QString pkg = m.captured(1);
+//            //QString sys = m.captured(3);
+//            QString flag = m.captured(4);
+//            QString method_type = m.captured(6);
+//            QString value = m.captured(7);
 
 //            QMap<QString,Package>::iterator it = pkgMap.find(pkg);
 //            if (it == pkgMap.end()) {

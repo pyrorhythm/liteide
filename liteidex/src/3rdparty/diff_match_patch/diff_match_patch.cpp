@@ -21,6 +21,13 @@
 
 // Code known to compile and run with Qt 4.3.3 and Qt 4.4.0.
 #include <QtCore>
+#include <QRegularExpression>
+#include <QtCore/QChar>
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include "liteapi/liteqt.h"
 #include "diff_match_patch.h"
 
@@ -65,7 +72,7 @@ QString Diff::strOperation(Operation op) {
 QString Diff::toString() const {
   QString prettyText = text;
   // Replace linebreaks with Pilcrow signs.
-  prettyText.replace('\n', L'\u00b6');
+  prettyText.replace('\n', u'\u00b6');
   //qDebug(qPrintable(QString("Diff(") + strOperation(operation) + QString(",\"")
   //    + prettyText + QString("\")")));
   return QString("Diff(") + strOperation(operation) + QString(",\"")
@@ -907,10 +914,10 @@ int diff_match_patch::diff_cleanupSemanticScore(const QString &one,
           || two[0].category() == QChar::Other_Control) {
         score++;
         // Four points for blank lines.
-        QRegExp blankLineEnd("\\n\\r?\\n$");
-        QRegExp blankLineStart("^\\r?\\n\\r?\\n");
-        if (blankLineEnd.indexIn(one) != -1
-            || blankLineStart.indexIn(two) != -1) {
+        QRegularExpression blankLineEnd("\\n\\r?\\n$");
+        QRegularExpression blankLineStart("^\\r?\\n\\r?\\n");
+        if (blankLineEnd.match(one).hasMatch() 
+			|| blankLineStart.match(two).hasMatch()) {
           score++;
         }
       }
@@ -1966,35 +1973,36 @@ QList<Patch> diff_match_patch::patch_fromText(const QString &textline) {
   }
   QStringList text = textline.split("\n", qtSkipEmptyParts);
   Patch patch;
-  QRegExp patchHeader("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$");
+  QRegularExpression patchHeader("^@@ -(\\d+),?(\\d*) \\+(\\d+),?(\\d*) @@$");
   char sign;
   QString line;
   while (!text.isEmpty()) {
-    if (!patchHeader.exactMatch(text.front())) {
+	QRegularExpressionMatch match = patchHeader.match(text.front());
+    if (!match.hasMatch() || match.capturedLength() != text.front().length()) {
       throw QString("Invalid patch string: %1").arg(text.front());
     }
 
     patch = Patch();
-    patch.start1 = patchHeader.cap(1).toInt();
-    if (patchHeader.cap(2).isEmpty()) {
+    patch.start1 = match.captured(1).toInt();
+    if (match.captured(2).isEmpty()) {
       patch.start1--;
       patch.length1 = 1;
-    } else if (patchHeader.cap(2) == "0") {
+    } else if (match.captured(2) == "0") {
       patch.length1 = 0;
     } else {
       patch.start1--;
-      patch.length1 = patchHeader.cap(2).toInt();
+      patch.length1 = match.captured(2).toInt();
     }
 
-    patch.start2 = patchHeader.cap(3).toInt();
-    if (patchHeader.cap(4).isEmpty()) {
+    patch.start2 = match.captured(3).toInt();
+    if (match.captured(4).isEmpty()) {
       patch.start2--;
       patch.length2 = 1;
-    } else if (patchHeader.cap(4) == "0") {
+    } else if (match.captured(4) == "0") {
       patch.length2 = 0;
     } else {
       patch.start2--;
-      patch.length2 = patchHeader.cap(4).toInt();
+      patch.length2 = match.captured(4).toInt();
     }
     text.removeFirst();
 

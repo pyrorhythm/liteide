@@ -26,6 +26,7 @@
 
 #include "liteapi/liteapi.h"
 #include "editorutil/libucd.h"
+#include <QtCore5Compat/QTextCodec>
 
 class QTextDocument;
 class LiteEditorFile : public LiteApi::IFile

@@ -145,7 +145,7 @@ private:
     int m_offset;
     int m_length;
     QStringList m_captures;
-    QRegExp m_expression;
+    QRegularExpression m_expression;
 };
 
 class KeywordRule : public Rule

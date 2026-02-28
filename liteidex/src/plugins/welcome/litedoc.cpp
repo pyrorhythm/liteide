@@ -29,7 +29,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QFile>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QFileInfo>
 #include <QDir>
 #include <QPlainTextEdit>

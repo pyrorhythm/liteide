@@ -274,7 +274,7 @@ void GolangHighlighter::highlightBlockHelper(const QString &text)
         } else if (highlightCurrentWordAsPreprocessor &&
                    (tk.isKeyword() || tk.is(T_IDENTIFIER)) && isPPKeyword(text.midRef(tk.begin(), tk.length()))) {
             setFormat(tk.begin(), tk.length(), m_creatorFormats[SyntaxHighlighter::PreprocessorFormat]);
-            const QStringRef ppKeyword = text.midRef(tk.begin(), tk.length());
+            const QStringView ppKeyword = text.midRef(tk.begin(), tk.length());
             if (ppKeyword == QLatin1String("error")
                     || ppKeyword == QLatin1String("warning")
                     || ppKeyword == QLatin1String("pragma")) {
@@ -429,7 +429,7 @@ void GolangHighlighter::setFoldingIndent(const QTextBlock &block, int indent)
     }
 }
 
-bool GolangHighlighter::isPPKeyword(const QStringRef &text) const
+bool GolangHighlighter::isPPKeyword(const QStringView &text) const
 {
     switch (text.length())
     {
@@ -584,7 +584,7 @@ void GolangHighlighter::highlightCommentLine(const QString &text, int position, 
     }
 }
 
-void GolangHighlighter::highlightWord(QStringRef word, int position, int length)
+void GolangHighlighter::highlightWord(QStringView word, int position, int length)
 {
     // try to highlight Qt 'identifiers' like QObject and Q_PROPERTY
 

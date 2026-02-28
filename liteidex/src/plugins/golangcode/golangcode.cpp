@@ -30,7 +30,8 @@
 #include <QTextDocument>
 #include <QAbstractItemView>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QGuiApplication>
+#include <QScreen>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QPlainTextEdit>
@@ -402,7 +403,7 @@ QStringList GolangCode::parserCgoInEditor(int nmax)
     maxNumber += nmax;
 
     QStringList all;
-    QRegExp rx("C\\.([\\w\\-\\_]+)");
+    QRegularExpression rx("C\\.([\\w\\-\\_]+)");
     while (block.isValid()) {
         if (block.blockNumber() >= maxNumber) {
             break;
@@ -412,14 +413,12 @@ QStringList GolangCode::parserCgoInEditor(int nmax)
             continue;
         }
         QString line = block.text().trimmed();
-        if (!line.isEmpty())  {
-             int pos = 0;
-             while ((pos = rx.indexIn(line, pos)) != -1) {
-                 QString cap = rx.cap(1);
-                 all.push_back(cap);
-                 pos += rx.matchedLength();
-             }
-        }
+		int pos = 0;
+		QRegularExpressionMatch match;
+		while ((match = rx.match(line, pos)).hasMatch()) {
+			QString cap = match.captured(1);
+			pos = match.capturedEnd(); // This points to the start of the next match
+}
         block = block.next();
     }
     all.removeDuplicates();
@@ -810,7 +809,7 @@ ImportPkgTip::ImportPkgTip(LiteApi::IApplication *app, QObject *parent)
     m_infoLabel = new QLabel;
     m_pkgLabel = new QLabel;
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
     layout->addWidget(m_infoLabel);
     layout->addWidget(m_pkgLabel);
     m_popup->setLayout(layout);
@@ -829,7 +828,8 @@ void ImportPkgTip::showPkgHint(int startpos, const QStringList &pkg, QPlainTextE
 #ifdef Q_WS_MAC
     const QRect screen = desktop->availableGeometry(desktop->screenNumber(ed));
 #else
-    const QRect screen = desktop->screenGeometry(desktop->screenNumber(ed));
+    QScreen *screen = QGuiApplication::primaryScreen();
+	QRect rc = screen->availableGeometry();
 #endif
     m_pkg = pkg;
     m_startPos = startpos;
@@ -842,8 +842,8 @@ void ImportPkgTip::showPkgHint(int startpos, const QStringList &pkg, QPlainTextE
     QPoint pos = ed->cursorRect(cur).topLeft();
     pos.setY(pos.y() - sz.height() - 1);
     pos = ed->mapToGlobal(pos);
-    if (pos.x() + sz.width() > screen.right())
-        pos.setX(screen.right() - sz.width());
+    if (pos.x() + sz.width() > screen->geometry().right())
+    pos.setX(screen->geometry().right() - sz.width());
     m_infoLabel->setText(tr("warning, pkg not find, please enter to import :"));
     if (m_pkg.size() == 1) {
         m_pkgLabel->setText(m_pkg[0]);

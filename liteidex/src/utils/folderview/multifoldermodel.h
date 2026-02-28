@@ -48,6 +48,8 @@ public:
     QList<QModelIndex> rootIndexs() const;
     QStringList rootPathList() const;
 
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+
     QString filePath(const QModelIndex &index) const;
     QString fileName(const QModelIndex &index) const;
     QFileInfo fileInfo(const QModelIndex &index) const;

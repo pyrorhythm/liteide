@@ -281,7 +281,7 @@ static inline QVariant convertArgument(const QJsonValue &argument,
 {
     if (argument.isUndefined())
 #if QT_VERSION >= 0x050000
-        return QVariant(info.type, Q_NULLPTR);
+        return QVariant(QMetaType(info.type), nullptr);
 #else
         return QVariant(info.type, (const void *) NULL);
 #endif
@@ -368,7 +368,7 @@ QJsonValue QJsonRpcServicePrivate::convertReturnValue(QVariant &returnValue)
 static inline QByteArray methodName(const QJsonRpcMessage &request)
 {
     const QString &methodPath(request.method());
-    return methodPath.midRef(methodPath.lastIndexOf('.') + 1).toLatin1();
+    return methodPath.mid(methodPath.lastIndexOf('.') + 1).toLatin1();
 }
 
 QJsonRpcMessage QJsonRpcService::dispatch(const QJsonRpcMessage &request)
@@ -405,7 +405,7 @@ QJsonRpcMessage QJsonRpcService::dispatch(const QJsonRpcMessage &request)
             returnType = static_cast<QMetaType::Type>(info.returnType);
 #if QT_VERSION >= 0x050000
             returnValue = (returnType == QMetaType::Void) ?
-                QVariant() : QVariant(returnType, Q_NULLPTR);
+				QVariant() : QVariant(QMetaType(returnType), nullptr);
 #else
             returnValue = (returnType == QMetaType::Void) ?
                 QVariant() : QVariant(returnType, (const void *) NULL);

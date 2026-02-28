@@ -100,8 +100,7 @@ INTERNAL void *vterm_allocator_malloc(VTerm *vt, size_t size)
 
 INTERNAL void vterm_allocator_free(VTerm *vt, void *ptr)
 {
-  if (ptr)
-    (*vt->allocator->free)(ptr, vt->allocdata);
+  (*vt->allocator->free)(ptr, vt->allocdata);
 }
 
 void vterm_get_size(const VTerm *vt, int *rowsp, int *colsp)

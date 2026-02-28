@@ -30,6 +30,7 @@
 #define CPLUSPLUS_BACKWARDSSCANNER_H
 
 #include "SimpleLexer.h"
+#include <QStringView>
 
 #include <QTextBlock>
 
@@ -56,7 +57,7 @@ public:
     QString mid(int index) const;
 
     QString text(int index) const;
-    QStringRef textRef(int index) const;
+    QStringView textRef(int index) const;
     // 1-based
     Token LA(int index) const;
 

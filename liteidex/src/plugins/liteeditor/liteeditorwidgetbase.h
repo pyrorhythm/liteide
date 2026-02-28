@@ -26,6 +26,7 @@
 
 #include <QPlainTextEdit>
 #include <QTextBlock>
+#include <QRegularExpression>
 #include "liteeditorapi/liteeditorapi.h"
 #include "qtc_texteditor/autocompleter.h"
 #include "qtc_texteditor/basetextblockselection.h"
@@ -333,8 +334,8 @@ protected:
     QColor  m_currentLineBackground;
     QColor  m_matchBracketsBackground;
     QColor  m_visualizeWhitespaceForeground;
-    QRegExp m_selectionExpression;
-    QRegExp m_findExpression;
+    QRegularExpression m_selectionExpression;
+    QRegularExpression m_findExpression;
     QTextDocument::FindFlags m_findFlags;
     LiteApi::Link       m_currentLink;
     QString m_mimeType;

@@ -24,7 +24,7 @@ public:
     }
     int m_sid;
 protected:
-    virtual void setupChildProcess();
+    virtual void setupChildProcessModifier();
 
 private:
     int m_handleMaster, m_handleSlave;

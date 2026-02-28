@@ -57,7 +57,7 @@
 #include <QPrintDialog>
 #include <QPrintPreviewDialog>
 #include <QPageSetupDialog>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
 #include <QDebug>
 #include <QPalette>
 #include <QTimer>
@@ -67,6 +67,8 @@
 #include <QInputDialog>
 #include <QToolButton>
 #include <QFileSystemModel>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
@@ -104,7 +106,7 @@ LiteEditor::LiteEditor(LiteApi::IApplication *app)
     m_editorWidget->setContextMenu(m_contextMenu);
 
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
 /*
     m_toolBar->setStyleSheet("QToolBar {border: 1px ; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #eeeeee, stop: 1 #ababab); }"\
@@ -113,7 +115,7 @@ LiteEditor::LiteEditor(LiteApi::IApplication *app)
                              "QToolBar::separator {width:2px; margin-left:2px; margin-right:2px; background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #dedede, stop: 1 #a0a0a0);}");
 */
     QHBoxLayout *toolLayout = new QHBoxLayout;
-    toolLayout->setMargin(0);
+    toolLayout->setContentsMargins(0,0,0,0);
     toolLayout->setSpacing(0);
     toolLayout->addWidget(m_editToolBar);
     //toolLayout->addWidget(m_editNavBar);
@@ -547,7 +549,7 @@ void LiteEditor::createActions()
 void LiteEditor::findCodecs()
  {
      QMap<QString, QTextCodec *> codecMap;
-     QRegExp iso8859RegExp("ISO[- ]8859-([0-9]+).*");
+     QRegularExpression iso8859RegExp("ISO[- ]8859-([0-9]+).*");
 
      foreach (int mib, QTextCodec::availableMibs()) {
          QTextCodec *codec = QTextCodec::codecForMib(mib);
@@ -559,8 +561,10 @@ void LiteEditor::findCodecs()
              rank = 1;
          } else if (sortKey.startsWith("UTF-16")) {
              rank = 2;
-         } else if (iso8859RegExp.exactMatch(sortKey)) {
-             if (iso8859RegExp.cap(1).size() == 1)
+         } 
+		QRegularExpressionMatch isoMatch = iso8859RegExp.match(sortKey);
+		if (isoMatch.hasMatch() && isoMatch.capturedLength() == sortKey.length()) {
+		   if (isoMatch.captured(1).size() == 1) // Use match object instead of reg.cap(1)
                  rank = 3;
              else
                  rank = 4;
@@ -1248,7 +1252,7 @@ void LiteEditor::filePrint()
     QPrinter printer(QPrinter::HighResolution);
     QPrintDialog *dlg = new QPrintDialog(&printer, m_widget);
     if (m_editorWidget->textCursor().hasSelection())
-        dlg->addEnabledOption(QAbstractPrintDialog::PrintSelection);
+	dlg->setOption(QAbstractPrintDialog::PrintSelection, true);
     dlg->setWindowTitle(tr("Print Document"));
     if (dlg->exec() == QDialog::Accepted) {
         QPlainTextEdit::LineWrapMode mode = m_editorWidget->lineWrapMode();
@@ -1499,15 +1503,14 @@ void LiteEditor::selectNextParam()
     }
     QTextBlock block = cur.block();
     int offset = pos-block.position();
-    QRegExp reg("[\\,\\(\\)\\.\\s](\\s*)([\"\'\\w]+)");
-    int index = reg.indexIn(block.text().mid(offset));
-    if (index >= 0) {
-        //qDebug() << reg.capturedTexts();
-        int start = block.position()+offset+index+1+reg.cap(1).length();
-        cur.setPosition(start);
-        cur.movePosition(QTextCursor::Right,QTextCursor::KeepAnchor,reg.cap(2).length());
-        m_editorWidget->setTextCursor(cur);
-    }
+    QRegularExpression reg("[\\,\\(\\)\\.\\s](\\s*)([\"\'\\w]+)");
+	QRegularExpressionMatch m = reg.match(block.text().mid(offset));
+	if (m.hasMatch()) {
+		int index = m.capturedStart(); 
+		int start = block.position() + offset + index + 1 + m.captured(1).length();
+    
+		cur.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, m.captured(2).length());
+	}
 }
 
 void LiteEditor::increaseFontSize()
@@ -1660,10 +1663,10 @@ void LiteEditor::loadColorStyleScheme()
     const ColorStyle *matchBrackets = colorScheme->findStyle("MatchBrackets");
     const ColorStyle *visualWhitespace = colorScheme->findStyle("VisualWhitespace");
     if (extra) {
-        m_editorWidget->setExtraColor(extra->foregound(),extra->background());
+        m_editorWidget->setExtraColor(extra->foreground(),extra->background());
     }
     if (indentLine) {
-        m_editorWidget->setIndentLineColor(indentLine->foregound());
+        m_editorWidget->setIndentLineColor(indentLine->foreground());
     }
     if (currentLine) {
         m_editorWidget->setCurrentLineColor(currentLine->background());
@@ -1672,21 +1675,21 @@ void LiteEditor::loadColorStyleScheme()
         m_editorWidget->setMatchBracketsColor(matchBrackets->background());
     }
     if (visualWhitespace) {
-        m_editorWidget->setVisualizeWhitespaceColor(visualWhitespace->foregound());
+        m_editorWidget->setVisualizeWhitespaceColor(visualWhitespace->foreground());
     }
     QPalette p = m_defEditorPalette;
     if (text) {
-        if (text->foregound().isValid()) {
-            p.setColor(QPalette::Text,text->foregound());
-            p.setColor(QPalette::Foreground, text->foregound());
+        if (text->foreground().isValid()) {
+            p.setColor(QPalette::Text,text->foreground());
+            p.setColor(QPalette::WindowText, text->foreground());
         }
         if (text->background().isValid()) {
             p.setColor(QPalette::Base, text->background());
         }
     }
     if (selection) {
-        if (selection->foregound().isValid()) {
-            p.setColor(QPalette::HighlightedText, selection->foregound());
+        if (selection->foreground().isValid()) {
+            p.setColor(QPalette::HighlightedText, selection->foreground());
         }
         if (selection->background().isValid()) {
             p.setColor(QPalette::Highlight, selection->background());

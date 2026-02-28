@@ -40,8 +40,8 @@ public:
 public slots:
     void stop();
 protected:
-    void findDir(const QRegExp &reg, const QString &path);
-    void findFile(const QRegExp &reg, const QString &fileName);
+    void findDir(const QRegularExpression &reg, const QString &path);
+    void findFile(const QRegularExpression &reg, const QString &fileName);
 signals:
     void findResult(const LiteApi::FileSearchResult &result);
 public:

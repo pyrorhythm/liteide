@@ -28,7 +28,7 @@
 #include "liteapi/liteapi.h"
 
 #include <QTextCharFormat>
-#include <QRegExp>
+#include <QRegularExpression>
 
 class GolangHighlighter : public TextEditor::SyntaxHighlighter
 {
@@ -41,12 +41,12 @@ public:
 private:
     void highlightBlockHelper(const QString &text);
     void setFoldingIndent(const QTextBlock &block, int indent);
-    void highlightWord(QStringRef word, int position, int length);
+    void highlightWord(QStringView word, int position, int length);
     void highlightLine(const QString &line, int position, int length,
                        const QTextCharFormat &format);
     void highlightCommentLine(const QString &line, int position, int length);
 
-    bool isPPKeyword(const QStringRef &text) const;
+    bool isPPKeyword(const QStringView &text) const;
 protected:
     QStringList m_todoList;
     QStringList m_gotagList;

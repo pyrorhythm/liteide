@@ -43,7 +43,8 @@
 #include <QStatusBar>
 #include <QToolButton>
 #include <QComboBox>
-#include <QTextCodec>
+#include <QtCore5Compat/QTextCodec>
+#include <QActionGroup>
 #include <QClipboard>
 #include <QLabel>
 #include <QStandardItemModel>
@@ -115,7 +116,7 @@ bool EditorManager::initWithApp(IApplication *app)
 
     //m_editorTabWidget->tabBar()->setIconSize(LiteApi::getToolBarIconSize());
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
 //    QToolBar *toolBar = m_editorTabWidget->headerToolBar();
@@ -136,7 +137,11 @@ bool EditorManager::initWithApp(IApplication *app)
     m_tabContextFileMenu = new QMenu;
     m_tabContextNofileMenu = new QMenu;
     m_tabContextIndex = -1;
-    QAction *closeAct = new QAction(tr("Close"),this);
+	for (IEditor *editor : editorList()) {
+    	QString text = editor->name() + "\t" + editor->filePath();
+    	QAction *act = new QAction(text, m_listGroup);
+	}
+	QAction *closeAct = new QAction(tr("Close"), this);
     closeAct->setShortcut(QKeySequence("Ctrl+W"));
     QAction *closeOthersAct = new QAction(tr("Close Others"),this);
     QAction *closeAllAct = new QAction(tr("Close All"),this);
@@ -368,9 +373,9 @@ bool EditorManager::eventFilter(QObject *target, QEvent *event)
                 if (m_tabContextIndex >= 0) {
                     QString filePath = tabContextFilePath();
                     if (filePath.isEmpty()) {
-                        m_tabContextNofileMenu->popup(ev->globalPos());
+                        m_tabContextNofileMenu->popup(ev->globalPosition().toPoint());
                     } else {
-                        m_tabContextFileMenu->popup(ev->globalPos());
+                        m_tabContextFileMenu->popup(ev->globalPosition().toPoint());
                     }
                 }
             } else if (ev->button() == Qt::MiddleButton) {

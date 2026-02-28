@@ -34,7 +34,6 @@
 #include <QPushButton>
 #include <QPlainTextEdit>
 #include <QProcess>
-#include <QTextCodec>
 #include <QDesktopServices>
 #include <QFileInfo>
 #include <QDir>
@@ -100,8 +99,7 @@ GoplayBrowser::GoplayBrowser(LiteApi::IApplication *app, QObject *parent)
     m_widget->setLayout(layout);
 
     m_process = new ProcessEx(this);
-    m_codec = QTextCodec::codecForName("utf-8");
-
+    
     LiteApi::IActionContext *actionContext = m_liteApp->actionManager()->getActionContext(m_liteApp,"App");
     actionContext->regAction(run,"GoplayRun","Ctrl+R");
 
@@ -188,7 +186,7 @@ void GoplayBrowser::stop()
 
 void GoplayBrowser::runOutput(const QByteArray &data,bool)
 {
-    m_output->append(m_codec->toUnicode(data));
+    m_output->append(QString::fromUtf8(data));
 }
 
 void GoplayBrowser::runFinish(bool err,int code,const QString &msg)

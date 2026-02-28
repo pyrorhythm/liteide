@@ -36,11 +36,12 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QMenu>
 #include <QMessageBox>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QStandardPaths>
 #include <QFileSystemWatcher>
 #include <QMessageBox>
 #include <QTimer>
@@ -120,7 +121,7 @@ bool FileManager::initWithApp(IApplication *app)
 
     m_folderWidget = new QWidget;
     m_layout = new QVBoxLayout;
-    m_layout->setMargin(0);
+    m_layout->setContentsMargins(0,0,0,0);
     m_folderWidget->setLayout(m_layout);
     m_layout->addWidget(m_folderWindow->widget());
 
@@ -660,7 +661,7 @@ void FileManager::checkForReload()
 
     int lastReloadRet = QMessageBox::Yes;
     int lastCloseRet = QMessageBox::Yes;
-    QStringList files = m_changedFiles.toList();
+    QStringList files = m_changedFiles.values();
     m_changedFiles.clear();
     foreach (QString fileName, files) {
         if (!QFile::exists(fileName)) {

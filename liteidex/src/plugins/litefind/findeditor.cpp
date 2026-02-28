@@ -33,7 +33,8 @@
 #include <QTextBlock>
 #include <QTextBrowser>
 #include <QStatusBar>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QTextDocument>
 #include <QDebug>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
@@ -87,11 +88,11 @@ FindEditor::FindEditor(LiteApi::IApplication *app, QObject *parent) :
     connect(close,SIGNAL(clicked()),this,SLOT(hideFind()));
 
     QGridLayout *layout = new QGridLayout;
-    layout->setMargin(0);
+    layout->setContentsMargins(0,0,0,0);
     layout->setVerticalSpacing(1);
 
     QHBoxLayout *optLayout = new QHBoxLayout;
-    optLayout->setMargin(0);    
+    optLayout->setContentsMargins(0,0,0,0);    
 
     optLayout->addWidget(m_matchWordCheckBox);
     optLayout->addWidget(m_matchCaseCheckBox);
@@ -261,6 +262,14 @@ void FindEditor::getFindOption(FindOption *opt, bool backWard)
     opt->backWard = backWard;
 }
 
+static inline QRegularExpression makeReWithCase(const QString &pattern, Qt::CaseSensitivity cs)
+{
+    const auto opts = (cs == Qt::CaseInsensitive)
+        ? QRegularExpression::CaseInsensitiveOption
+        : QRegularExpression::NoPatternOption;
+    return QRegularExpression(pattern, opts);
+}
+
 QTextCursor FindEditor::findEditor(QTextDocument *doc, const QTextCursor &cursor, FindOption *opt, bool wrap)
 {
     int from = cursor.position();
@@ -276,7 +285,7 @@ QTextCursor FindEditor::findEditor(QTextDocument *doc, const QTextCursor &cursor
 
 QTextCursor FindEditor::findEditorHelper(QTextDocument *doc, int from, FindOption *opt, bool wrap)
 {
-    QTextDocument::FindFlags flags = 0;
+    QTextDocument::FindFlags flags{};
     if (opt->backWard) {
         flags |= QTextDocument::FindBackward;
     }
@@ -293,7 +302,8 @@ QTextCursor FindEditor::findEditorHelper(QTextDocument *doc, int from, FindOptio
 
     QTextCursor find;
     if (opt->useRegexp) {
-        find = doc->find(QRegExp(opt->findText,cs),from,flags);
+        QRegularExpression re = makeReWithCase(opt->findText, cs);
+        find = doc->find(re, from, flags);
     } else {
         find = doc->find(opt->findText,from,flags);
     }
@@ -305,7 +315,8 @@ QTextCursor FindEditor::findEditorHelper(QTextDocument *doc, int from, FindOptio
             from = 0;
         }
         if (opt->useRegexp) {
-            find = doc->find(QRegExp(opt->findText,cs),from,flags);
+			QRegularExpression re = makeReWithCase(opt->findText, cs);
+			find = doc->find(re, from, flags);
         } else {
             find = doc->find(opt->findText,from,flags);
         }
@@ -334,7 +345,7 @@ void FindEditor::replaceHelper(LiteApi::ITextEditor *editor, FindOption *opt, in
     if ( cursor.hasSelection() ) {
 //        QString text = cursor.selectedText();
 //        if (opt->useRegexp) {
-//            if (text.indexOf(QRegExp(opt->findText,cs),0) != -1) {
+//            if (text.indexOf(QRegularExpression(opt->findText,cs),0) != -1) {
 //                find = cursor;
 //            }
 //        } else {
@@ -358,9 +369,13 @@ void FindEditor::replaceHelper(LiteApi::ITextEditor *editor, FindOption *opt, in
                 startColumn -= text.length();
             }
             if (opt->useRegexp) {
-                text.replace(QRegExp(opt->findText,cs),opt->replaceText);
+				QRegularExpression re = makeReWithCase(opt->findText, cs);
+				text.replace(re, opt->replaceText);
             } else {
-                text.replace(QRegExp(opt->findText,cs,QRegExp::FixedString),opt->replaceText);
+				// Qt6: QRegularExpression::FixedString is gone.
+				// Use an escaped pattern for literal matching, and apply case sensitivity via options.
+				QRegularExpression re = makeReWithCase(QRegularExpression::escape(opt->findText), cs);
+				text.replace(re, opt->replaceText);
             }
             find.removeSelectedText();
             from = find.position()+ text.length();
@@ -471,7 +486,7 @@ void FindEditor::findOptionChanged()
     getFindOption(&m_option,false);
     m_status->setText(tr("Ready"));
     if (m_option.useRegexp) {
-        QRegExp reg(m_option.findText);
+        QRegularExpression reg(m_option.findText);
         if (!reg.isValid()) {
             m_status->setText(reg.errorString());
         }
