@@ -83,6 +83,13 @@ liteapp_ui = [
   'outputoption.ui',
 ]
 
+# Generate UI headers using Qt6 uic
+qt6_dep = dependency('qt6', modules: ['Core', 'Gui', 'Widgets'], required: false)
+if qt6_dep.found()
+  qt6_mod = import('qt6')
+  qt6_mod.preprocess(ui_files: liteapp_ui)
+endif
+
 # Conditionally add mac support
 if host_machine.system() == 'darwin'
   liteapp_sources += 'macsupport.mm'
@@ -92,7 +99,6 @@ endif
 liteapp_lib = static_library('liteapp',
   liteapp_sources,
   liteapp_headers,
-  ui : liteapp_ui,
   include_directories : global_inc,
   dependencies : [qt_dep],
 )

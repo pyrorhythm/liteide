@@ -26,6 +26,7 @@
 
 #include <QMainWindow>
 #include <QSysInfo>
+#include <QVersionNumber>
 
 class MacSupport
 {
@@ -33,7 +34,13 @@ public:
     static void setFullScreen(QMainWindow *window);
     static bool isLionOrHigh()
     {
+        // Qt6: MacintoshVersion and MV_* constants removed
+        // Check product type and version instead
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        return true; // macOS Lion (10.7) or higher is always needed for Qt6
+#else
         return QSysInfo::MacintoshVersion > QSysInfo::MV_10_6;
+#endif
     }
 };
 

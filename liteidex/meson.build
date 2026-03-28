@@ -1,10 +1,11 @@
 project('liteide', ['cpp', 'objcpp'],
   version : '1.0',
   default_options : ['warning_level=1', 'cpp_std=c++17'],
-  meson_version : '>=0.55')
+  meson_version : '>=0.57')
 
-# Suppress __yield warning on ARM macOS with Qt6
-add_project_arguments(['-Wno-implicit-function-declaration'], language: 'c')
+# Fix Qt6 __yield issue on ARM macOS - don't treat implicit function decl as error
+add_project_arguments(['-Wno-error=implicit-function-declaration'], language: 'c')
+add_project_arguments(['-Wno-error=implicit-function-declaration'], language: 'cpp')
 
 # Qt dependency - use individual modules since qt6 meta-package doesn't exist on macOS Homebrew
 qt_version = get_option('qt_version')
@@ -29,8 +30,14 @@ endif
 # Combined dependency for backward compatibility
 qt_dep = declare_dependency(dependencies: qt_deps)
 
-# Global include path for src/, src/api, src/utils and generated UI headers
-global_inc = include_directories('src', 'src/api', 'src/utils', 'ui_gen')
+# Global include paths - src/, src/api, src/utils, src/3rdparty and generated UI
+global_inc = include_directories(
+  'src',
+  'src/api',
+  'src/utils',
+  'src/3rdparty',
+  'ui_gen'
+)
 
 subdir('src')
 

@@ -24,7 +24,7 @@ plugin_resources = [
 plugin_lib = static_library('imageeditor',
   plugin_sources,
   plugin_headers,
-  qt_resources : plugin_resources,
   include_directories : [global_inc],
-  dependencies : [qt_dep, liteapp_lib],
+  dependencies : [qt_dep],
+  link_with : [liteapp_lib],
 )

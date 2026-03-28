@@ -22,7 +22,7 @@ plugin_ui = [
 plugin_lib = static_library('fakevimedit',
   plugin_sources,
   plugin_headers,
-  ui : plugin_ui,
   include_directories : [global_inc],
-  dependencies : [qt_dep, liteapp_lib],
+  dependencies : [qt_dep],
+  link_with : [liteapp_lib],
 )

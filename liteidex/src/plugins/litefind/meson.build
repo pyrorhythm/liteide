@@ -21,5 +21,6 @@ plugin_lib = static_library('litefind',
   plugin_sources,
   plugin_headers,
   include_directories : [global_inc],
-  dependencies : [qt_dep, liteapp_lib],
+  dependencies : [qt_dep],
+  link_with : [liteapp_lib],
 )
