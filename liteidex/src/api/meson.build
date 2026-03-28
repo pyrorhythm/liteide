@@ -13,6 +13,7 @@ api_subdirs = [
   'golangastapi',
   'quickopenapi',
   'terminalapi',
+  'acpapi',
 ]
 
 foreach api : api_subdirs

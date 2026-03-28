@@ -26,6 +26,7 @@ plugin_subdirs = [
   'bookmarks',
   'imageeditor',
   'terminal',
+  'acp',
 ]
 
 foreach plugin : plugin_subdirs
