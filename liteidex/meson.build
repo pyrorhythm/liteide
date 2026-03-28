@@ -4,11 +4,10 @@ project('liteide', 'cpp',
 
 # Qt dependency
 qt_version = get_option('qt_version')
-qt_dep = qt_dep = dependency('qt6', modules: ['core', 'gui', 'widgets', 'xml', '5compat'],
-             required: qt_version == '6')
-if not qt_dep.found()
-  qt_dep = dependency('qt5', modules: ['core', 'gui', 'widgets', 'xml'],
-             required: qt_version == '5')
+if qt_version == '6'
+  qt_dep = dependency('qt6', modules: ['core', 'gui', 'widgets', 'xml', '5compat'], required: true)
+else
+  qt_dep = dependency('qt5', modules: ['core', 'gui', 'widgets', 'xml'], required: true)
 endif
 
 # Global include path for src/
