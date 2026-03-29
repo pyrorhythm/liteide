@@ -27,6 +27,7 @@
 #include "fileutil/fileutil.h"
 #include <QTextBlock>
 #include <qalgorithms.h>
+#include <QRegularExpression>
 
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
@@ -166,6 +167,8 @@ void GoplsFileSearch::findUsagesStarted()
 {
 }
 
+QRegularExpression reg(R"(:(\d+):(\d+)-(\d*))");
+
 void GoplsFileSearch::findUsagesOutput(QByteArray data, bool bStdErr)
 {
     if (bStdErr) {
@@ -174,16 +177,16 @@ void GoplsFileSearch::findUsagesOutput(QByteArray data, bool bStdErr)
         m_liteApp->appendLog("find usage error",info,true);
         return;
     }
-    QRegExp reg(":(\\d+):(\\d+)-(\\d*)");
+
     foreach (QByteArray line, data.split('\n')) {
         QString info = QString::fromUtf8(line).trimmed();
-        int pos = reg.lastIndexIn(info);
-        if (pos >= 0) {
+        QRegularExpressionMatch match = reg.match(info);
+        if (match.hasMatch()) {
             gopls_resinfo res;
-            res.fileName = info.left(pos);
-            res.line = reg.cap(1).toInt();
-            res.column = reg.cap(2).toInt();
-            res.columnEnd = reg.cap(3).toInt();
+            res.fileName = info.left(match.capturedStart());
+            res.line = match.captured(1).toInt();
+            res.column = match.captured(2).toInt();
+            res.columnEnd = match.captured(3).toInt();
             m_results.append(res);
         }
     }
@@ -206,7 +209,7 @@ struct resultComp
 void GoplsFileSearch::findUsagesFinish(bool b, int, QString)
 {
     if (!m_results.isEmpty()) {
-        qSort(m_results.begin(),m_results.end(),resultComp());
+        std::sort(m_results.begin(), m_results.end(), resultComp());
     }
     QFile file;
     int lastLine = 0;

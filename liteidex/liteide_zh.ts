@@ -60,12 +60,12 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="249"/>
-        <source>Source Code:</source>
+        <source>Source </source>
         <translation>源代码:</translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="263"/>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
         <translation>支持LiteIDE:</translation>
     </message>
@@ -372,7 +372,7 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="239"/>
-        <source>New Name:</source>
+        <source>New </source>
         <translation>新名称:</translation>
     </message>
     <message>
@@ -639,8 +639,8 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/litebuild/buildconfigdialog.cpp" line="293"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>选择目录添加到 GOPATH:</translation>
+        <source>Choose directory to add to </source>
+        <translation>选择目录添加到 </translation>
     </message>
 </context>
 <context>
@@ -657,7 +657,7 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="98"/>
-        <source>Dir Name:</source>
+        <source>Dir </source>
         <translation>目录名:</translation>
     </message>
     <message>
@@ -686,7 +686,7 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="48"/>
-        <source>File Name:</source>
+        <source>File </source>
         <translation>文件名称:</translation>
     </message>
     <message>
@@ -786,7 +786,7 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/dlvdebugger/dlvdebuggeroption.ui" line="20"/>
-        <source>delve debug pass flags: (example --check-go-version=false)</source>
+        <source>delve debug pass (example --check-go-version=false)</source>
         <translation>delve debug pass flags:（示例 --check go version=false）</translation>
     </message>
 </context>
@@ -1061,17 +1061,17 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5719"/>
-        <source>Unknown option:</source>
+        <source>Unknown </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5730"/>
-        <source>Invalid argument:</source>
+        <source>Invalid </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5733"/>
-        <source>Trailing characters:</source>
+        <source>Trailing </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1408,7 +1408,7 @@ Do you want to load?</oldsource>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="314"/>
         <location filename="src/liteapp/filemanager.cpp" line="332"/>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
         <translation>选择目录:</translation>
     </message>
@@ -1574,7 +1574,7 @@ Do you want to reload the file from disk?</source>
     <name>FileSearchManager</name>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="50"/>
-        <source>Search Item:</source>
+        <source>Search </source>
         <translation>搜索项目：</translation>
     </message>
     <message>
@@ -1754,7 +1754,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="320"/>
-        <source>New Name:</source>
+        <source>New </source>
         <translation>新名称:</translation>
     </message>
     <message>
@@ -2051,7 +2051,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="58"/>
-        <source>Replace With:</source>
+        <source>Replace </source>
         <translation>替换:</translation>
     </message>
     <message>
@@ -2088,13 +2088,13 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="103"/>
-        <source>Find What:</source>
+        <source>Find </source>
         <translation>查找:</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="115"/>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>选项:</translation>
     </message>
     <message>
@@ -2455,7 +2455,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/golangdoc/golangdoc.cpp" line="111"/>
-        <source>Find Package:</source>
+        <source>Find </source>
         <translation>查找包:</translation>
     </message>
 </context>
@@ -2726,8 +2726,8 @@ Want to replace to all the search items to whitespace?</source>
     <name>GolangPackageOption</name>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.cpp" line="304"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>选择目录添加到 GOPATH:</translation>
+        <source>Choose directory to add to </source>
+        <translation>选择目录添加到 </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.ui" line="14"/>
@@ -2944,7 +2944,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="247"/>
-        <source>Select a file to load:</source>
+        <source>Select a file to </source>
         <translation>选择文件并加载:</translation>
     </message>
     <message>
@@ -2954,7 +2954,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
-        <source>New File Name:</source>
+        <source>New File </source>
         <translation>新文件名:</translation>
     </message>
 </context>
@@ -3083,7 +3083,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/golangcode/golangcode.cpp" line="847"/>
         <source>warning, pkg not find, please enter to import :</source>
-        <translation>警告，包未发现，按回车导入:</translation>
+        <translation>警告，包未发现，</translation>
     </message>
 </context>
 <context>
@@ -3260,8 +3260,8 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="318"/>
         <location filename="src/liteapp/liteappoption.ui" line="357"/>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
         <translation>最大记录数:</translation>
     </message>
     <message>
@@ -3668,7 +3668,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/litebuild/litebuildoption.ui" line="27"/>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation>编译命令配置文件 [*]</translation>
     </message>
 </context>
@@ -4393,7 +4393,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="318"/>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
         <translation>代码完成前缀长度:</translation>
     </message>
@@ -4451,7 +4451,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="20"/>
-        <source>Environment definition files:</source>
+        <source>Environment definition </source>
         <translation>环境定义文件:</translation>
     </message>
     <message>
@@ -4521,7 +4521,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="231"/>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
         <translation>选择Markdown文件所在目录:</translation>
     </message>
@@ -4532,7 +4532,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="290"/>
-        <source>Select the folder to contain separated markdown exports:</source>
+        <source>Select the folder to contain separated markdown </source>
         <translation>选择处理markdown文件导出目录:</translation>
     </message>
     <message>
@@ -4600,7 +4600,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="106"/>
-        <source>Export Folder:</source>
+        <source>Export </source>
         <translation>输出目录:</translation>
     </message>
     <message>
@@ -4891,13 +4891,13 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="280"/>
-        <source>File template details:</source>
+        <source>File template </source>
         <translation>文件模板详细信息:</translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="282"/>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
         <translation>项目模板详细信息:</translation>
     </message>
     <message>
@@ -5092,7 +5092,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="299"/>
-        <source>File Name:</source>
+        <source>File </source>
         <translation>文件名称:</translation>
     </message>
     <message>
@@ -5476,7 +5476,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="35"/>
-        <source>Max files count:</source>
+        <source>Max files </source>
         <translation>最大文件数:</translation>
     </message>
     <message>
@@ -5537,7 +5537,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.ui" line="46"/>
-        <source>Working directory:</source>
+        <source>Working </source>
         <translation>工作目录:</translation>
     </message>
     <message>
@@ -5547,7 +5547,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="92"/>
-        <source>Select the working directory:</source>
+        <source>Select the working </source>
         <oldsource>Select Working Directory</oldsource>
         <translation>选择工作目录:</translation>
     </message>

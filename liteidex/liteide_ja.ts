@@ -60,14 +60,14 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="249"/>
-        <source>Source Code:</source>
+        <source>Source </source>
         <translation>ソースコード:</translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="263"/>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
-        <translation>LiteIDE をサポート:</translation>
+        <translation>LiteIDE </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="297"/>
@@ -372,7 +372,7 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="239"/>
-        <source>New Name:</source>
+        <source>New </source>
         <translation type="unfinished">新しい名前</translation>
     </message>
     <message>
@@ -639,7 +639,7 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/plugins/litebuild/buildconfigdialog.cpp" line="293"/>
-        <source>Choose directory to add to GOPATH:</source>
+        <source>Choose directory to add to </source>
         <translation type="unfinished">GOPATHに追加するディレクトリを選択:</translation>
     </message>
 </context>
@@ -657,7 +657,7 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="98"/>
-        <source>Dir Name:</source>
+        <source>Dir </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -686,7 +686,7 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="48"/>
-        <source>File Name:</source>
+        <source>File </source>
         <translation>ファイル名:</translation>
     </message>
     <message>
@@ -786,7 +786,7 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/plugins/dlvdebugger/dlvdebuggeroption.ui" line="20"/>
-        <source>delve debug pass flags: (example --check-go-version=false)</source>
+        <source>delve debug pass (example --check-go-version=false)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1061,17 +1061,17 @@ LiteIDE はシンプルでオープンソース、クロスプラットフォー
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5719"/>
-        <source>Unknown option:</source>
+        <source>Unknown </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5730"/>
-        <source>Invalid argument:</source>
+        <source>Invalid </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5733"/>
-        <source>Trailing characters:</source>
+        <source>Trailing </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1399,7 +1399,7 @@ Do you want to load?</oldsource>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="314"/>
         <location filename="src/liteapp/filemanager.cpp" line="332"/>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
         <translation>フォルダを選択:</translation>
     </message>
@@ -1561,7 +1561,7 @@ Do you want to reload the file from disk?</source>
     <name>FileSearchManager</name>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="50"/>
-        <source>Search Item:</source>
+        <source>Search </source>
         <translation>検索対象</translation>
     </message>
     <message>
@@ -1739,7 +1739,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="320"/>
-        <source>New Name:</source>
+        <source>New </source>
         <translation>新しい名前</translation>
     </message>
     <message>
@@ -2036,7 +2036,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="58"/>
-        <source>Replace With:</source>
+        <source>Replace </source>
         <translation>置換:</translation>
     </message>
     <message>
@@ -2073,13 +2073,13 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="103"/>
-        <source>Find What:</source>
+        <source>Find </source>
         <translation>検索:</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="115"/>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>オプション:</translation>
     </message>
     <message>
@@ -2440,7 +2440,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/golangdoc/golangdoc.cpp" line="111"/>
-        <source>Find Package:</source>
+        <source>Find </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2711,7 +2711,7 @@ Want to replace to all the search items to whitespace?</source>
     <name>GolangPackageOption</name>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.cpp" line="304"/>
-        <source>Choose directory to add to GOPATH:</source>
+        <source>Choose directory to add to </source>
         <translation type="unfinished">GOPATHに追加するディレクトリを選択:</translation>
     </message>
     <message>
@@ -2929,7 +2929,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="247"/>
-        <source>Select a file to load:</source>
+        <source>Select a file to </source>
         <translation>読み込むファイルを選択:</translation>
     </message>
     <message>
@@ -2939,7 +2939,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
-        <source>New File Name:</source>
+        <source>New File </source>
         <translation>新しいファイルの名前:</translation>
     </message>
 </context>
@@ -3240,8 +3240,8 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="318"/>
         <location filename="src/liteapp/liteappoption.ui" line="357"/>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
         <translation>最大個数:</translation>
     </message>
     <message>
@@ -3654,7 +3654,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/litebuild/litebuildoption.ui" line="27"/>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation type="unfinished">ビルドコマンドの設定ファイル:</translation>
     </message>
 </context>
@@ -4379,7 +4379,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="318"/>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
         <translation>コード補完を行う文字数:</translation>
     </message>
@@ -4437,7 +4437,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="20"/>
-        <source>Environment definition files:</source>
+        <source>Environment definition </source>
         <translation>環境定義ファイル:</translation>
     </message>
     <message>
@@ -4507,7 +4507,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="231"/>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
         <translation>Markdownファイルがあるフォルダを選択</translation>
     </message>
@@ -4518,7 +4518,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="290"/>
-        <source>Select the folder to contain separated markdown exports:</source>
+        <source>Select the folder to contain separated markdown </source>
         <translation>分割してエクスポートされたmarkdownが含まれるフォルダを選択:</translation>
     </message>
     <message>
@@ -4586,7 +4586,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="106"/>
-        <source>Export Folder:</source>
+        <source>Export </source>
         <translation>エクスポートフォルダ:</translation>
     </message>
     <message>
@@ -4879,13 +4879,13 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="280"/>
-        <source>File template details:</source>
+        <source>File template </source>
         <translation>ファイルテンプレートの詳細:</translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="282"/>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
         <translation>新規プロジェクトウィザード:</translation>
     </message>
     <message>
@@ -5080,7 +5080,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="299"/>
-        <source>File Name:</source>
+        <source>File </source>
         <translation type="unfinished">ファイル名:</translation>
     </message>
     <message>
@@ -5464,7 +5464,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="35"/>
-        <source>Max files count:</source>
+        <source>Max files </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5525,7 +5525,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.ui" line="46"/>
-        <source>Working directory:</source>
+        <source>Working </source>
         <translation>作業ディレクトリ:</translation>
     </message>
     <message>
@@ -5535,7 +5535,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="92"/>
-        <source>Select the working directory:</source>
+        <source>Select the working </source>
         <oldsource>Select Working Directory</oldsource>
         <translation>作業ディレクトリを選択</translation>
     </message>

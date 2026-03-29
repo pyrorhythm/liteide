@@ -1,6 +1,6 @@
 # golangast - plugin
 
-plugin_sources = [
+golangast_sources = [
   'golangastplugin.cpp',
   'golangast.cpp',
   'golangasticon.cpp',
@@ -10,7 +10,7 @@ plugin_sources = [
   'golangastoptionfactory.cpp',
 ]
 
-plugin_headers = [
+golangast_headers = [
   'golangastplugin.h',
   'golangast_global.h',
   'golangast.h',
@@ -22,18 +22,20 @@ plugin_headers = [
   'golangastoptionfactory.h',
 ]
 
-plugin_ui = [
-  'golangastoption.ui',
-]
+golangast_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangast_headers,
+  ui_files: 'golangastoption.ui',
+  qresources: 'golangast.qrc',
+)
 
-plugin_resources = [
-  'golangast.qrc',
-]
-
-plugin_lib = static_library('golangast',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangast',
+  golangast_sources,
+  golangast_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

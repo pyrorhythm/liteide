@@ -33,7 +33,7 @@
 
 #include "tabsettings.h"
 
-#include <utils/settingsutils.h>
+#include "utils/settingsutils.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>

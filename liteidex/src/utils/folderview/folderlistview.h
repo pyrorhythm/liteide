@@ -24,7 +24,7 @@
 #ifndef FOLDERLISTVIEW_H
 #define FOLDERLISTVIEW_H
 
-#include "basefoldeview.h"
+#include "basefolderview.h"
 #include "folderlistmodel.h"
 #include <QFileInfo>
 

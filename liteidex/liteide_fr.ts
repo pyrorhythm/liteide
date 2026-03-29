@@ -60,14 +60,14 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="249"/>
-        <source>Source Code:</source>
-        <translation>Code source :</translation>
+        <source>Source </source>
+        <translation>Code </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="263"/>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
-        <translation>Support LiteIDE :</translation>
+        <translation>Support </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="297"/>
@@ -372,8 +372,8 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="239"/>
-        <source>New Name:</source>
-        <translation>Nouveau nom :</translation>
+        <source>New </source>
+        <translation>Nouveau </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="246"/>
@@ -639,8 +639,8 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/litebuild/buildconfigdialog.cpp" line="293"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>Choisir un répertoire à ajouter à GOPATH :</translation>
+        <source>Choose directory to add to </source>
+        <translation>Choisir un répertoire à ajouter à </translation>
     </message>
 </context>
 <context>
@@ -657,8 +657,8 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="98"/>
-        <source>Dir Name:</source>
-        <translation>Nom du répertoire :</translation>
+        <source>Dir </source>
+        <translation>Nom du </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="106"/>
@@ -686,8 +686,8 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="48"/>
-        <source>File Name:</source>
-        <translation>Nom du fichier :</translation>
+        <source>File </source>
+        <translation>Nom du </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="56"/>
@@ -786,7 +786,7 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/dlvdebugger/dlvdebuggeroption.ui" line="20"/>
-        <source>delve debug pass flags: (example --check-go-version=false)</source>
+        <source>delve debug pass (example --check-go-version=false)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1061,18 +1061,18 @@ LiteIDE is a simple, open source, cross-platform IDE.</oldsource>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5719"/>
-        <source>Unknown option:</source>
-        <translation>Option inconnue :</translation>
+        <source>Unknown </source>
+        <translation>Option </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5730"/>
-        <source>Invalid argument:</source>
-        <translation>Argument invalide :</translation>
+        <source>Invalid </source>
+        <translation>Argument </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5733"/>
-        <source>Trailing characters:</source>
-        <translation>Caractères de fin :</translation>
+        <source>Trailing </source>
+        <translation>Caractères de </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5816"/>
@@ -1404,9 +1404,9 @@ Voulez-vous le charger ?</translation>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="314"/>
         <location filename="src/liteapp/filemanager.cpp" line="332"/>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
-        <translation>Sélectionner le répertoire :</translation>
+        <translation>Sélectionner le </translation>
     </message>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="679"/>
@@ -1582,8 +1582,8 @@ Voulez-vous recharger le fichier depuis le disque ?</translation>
     <name>FileSearchManager</name>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="50"/>
-        <source>Search Item:</source>
-        <translation>Rechercher l&apos;élément :</translation>
+        <source>Search </source>
+        <translation>Rechercher l&apos;</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="69"/>
@@ -1762,8 +1762,8 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="320"/>
-        <source>New Name:</source>
-        <translation>Nouveau nom :</translation>
+        <source>New </source>
+        <translation>Nouveau </translation>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="327"/>
@@ -1853,7 +1853,7 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="180"/>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="441"/>
         <source>Replace with:</source>
-        <translation>Remplacer par :</translation>
+        <translation>Remplacer </translation>
     </message>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="186"/>
@@ -1885,7 +1885,7 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="318"/>
         <source>Revert with:</source>
-        <translation>Revenir à :</translation>
+        <translation>Revenir </translation>
     </message>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="319"/>
@@ -2062,8 +2062,8 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="58"/>
-        <source>Replace With:</source>
-        <translation>Remplacer par :</translation>
+        <source>Replace </source>
+        <translation>Remplacer </translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="59"/>
@@ -2099,13 +2099,13 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="103"/>
-        <source>Find What:</source>
-        <translation>Trouver ceci :</translation>
+        <source>Find </source>
+        <translation>Trouver </translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="115"/>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>Options :</translation>
     </message>
     <message>
@@ -2466,8 +2466,8 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     </message>
     <message>
         <location filename="src/plugins/golangdoc/golangdoc.cpp" line="111"/>
-        <source>Find Package:</source>
-        <translation>Trouver le package :</translation>
+        <source>Find </source>
+        <translation>Trouver le </translation>
     </message>
 </context>
 <context>
@@ -2737,8 +2737,8 @@ Souhaitez-vous supprimer toutes les correspondances par des espaces ?</translati
     <name>GolangPackageOption</name>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.cpp" line="304"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>Choisir le répertoire à ajouter à GOPATH :</translation>
+        <source>Choose directory to add to </source>
+        <translation>Choisir le répertoire à ajouter à </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.ui" line="14"/>
@@ -2955,8 +2955,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="247"/>
-        <source>Select a file to load:</source>
-        <translation>Sélectionner le fichier à charger :</translation>
+        <source>Select a file to </source>
+        <translation>Sélectionner le fichier à </translation>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
@@ -2965,8 +2965,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
-        <source>New File Name:</source>
-        <translation>Nouveau nom du fichier :</translation>
+        <source>New File </source>
+        <translation>Nouveau nom du </translation>
     </message>
 </context>
 <context>
@@ -3094,7 +3094,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/golangcode/golangcode.cpp" line="847"/>
         <source>warning, pkg not find, please enter to import :</source>
-        <translation>Avertissement, pkg introuvable, veuillez entrer pour importer :</translation>
+        <translation>Avertissement, pkg introuvable, veuillez entrer pour </translation>
     </message>
 </context>
 <context>
@@ -3266,9 +3266,9 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="318"/>
         <location filename="src/liteapp/liteappoption.ui" line="357"/>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
-        <translation>Nombre max :</translation>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
+        <translation>Nombre </translation>
     </message>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="229"/>
@@ -3680,7 +3680,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/litebuild/litebuildoption.ui" line="27"/>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation>Fichers de configuration des commandes de compilation [*]</translation>
     </message>
 </context>
@@ -4405,9 +4405,9 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="318"/>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
-        <translation>Longueur du préfixe de la complétion de code :</translation>
+        <translation>Longueur du préfixe de la complétion de </translation>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="402"/>
@@ -4463,8 +4463,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="20"/>
-        <source>Environment definition files:</source>
-        <translation>Fichier de définition d&apos;environnement :</translation>
+        <source>Environment definition </source>
+        <translation>Fichier de définition d&apos;</translation>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="33"/>
@@ -4533,9 +4533,9 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="231"/>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
-        <translation>Sélectionner le répertoire de vos fichiers Markdown :</translation>
+        <translation>Sélectionner le répertoire de vos fichiers </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="242"/>
@@ -4544,8 +4544,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="290"/>
-        <source>Select the folder to contain separated markdown exports:</source>
-        <translation>Sélectionner le répertoire pour contenir vos fichiers Markdown séparés :</translation>
+        <source>Select the folder to contain separated markdown </source>
+        <translation>Sélectionner le répertoire pour contenir vos fichiers Markdown </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="303"/>
@@ -4612,7 +4612,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="106"/>
-        <source>Export Folder:</source>
+        <source>Export </source>
         <translation>Répertoire d&apos;export :</translation>
     </message>
     <message>
@@ -4905,19 +4905,19 @@ Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="280"/>
-        <source>File template details:</source>
-        <translation>Détails du canevas de fichier :</translation>
+        <source>File template </source>
+        <translation>Détails du canevas de </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="282"/>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
-        <translation>Dialogue de nouveau projet :</translation>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
+        <translation>Dialogue de nouveau </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="362"/>
         <source>Choose a directory for the new content:</source>
-        <translation>Choisir un répertoire pour le nouveau contenu :</translation>
+        <translation>Choisir un répertoire pour le nouveau </translation>
     </message>
 </context>
 <context>
@@ -5106,8 +5106,8 @@ Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="299"/>
-        <source>File Name:</source>
-        <translation>Nom du fichier :</translation>
+        <source>File </source>
+        <translation>Nom du </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="310"/>
@@ -5490,8 +5490,8 @@ Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="35"/>
-        <source>Max files count:</source>
-        <translation>Nombre de fichiers max :</translation>
+        <source>Max files </source>
+        <translation>Nombre de fichiers </translation>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="73"/>
@@ -5551,8 +5551,8 @@ Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.ui" line="46"/>
-        <source>Working directory:</source>
-        <translation>Répertoire de travail :</translation>
+        <source>Working </source>
+        <translation>Répertoire de </translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="82"/>
@@ -5561,9 +5561,9 @@ Voulez-vous le remplacer ?</translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="92"/>
-        <source>Select the working directory:</source>
+        <source>Select the working </source>
         <oldsource>Select Working Directory</oldsource>
-        <translation>Sélectionner le répertoire de travail :</translation>
+        <translation>Sélectionner le répertoire de </translation>
     </message>
 </context>
 <context>

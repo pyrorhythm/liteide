@@ -1,6 +1,6 @@
 # litefind - plugin
 
-plugin_sources = [
+litefind_sources = [
   'litefindplugin.cpp',
   'filesearch.cpp',
   'findeditor.cpp',
@@ -8,7 +8,7 @@ plugin_sources = [
   'replacedocument.cpp',
 ]
 
-plugin_headers = [
+litefind_headers = [
   'litefindplugin.h',
   'litefind_global.h',
   'filesearch.h',
@@ -17,10 +17,18 @@ plugin_headers = [
   'replacedocument.h',
 ]
 
-plugin_lib = static_library('litefind',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+litefind_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: litefind_headers,
+)
+
+shared_module('litefind',
+  litefind_sources,
+  litefind_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

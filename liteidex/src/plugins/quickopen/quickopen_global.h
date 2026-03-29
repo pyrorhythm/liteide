@@ -26,12 +26,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(QUICKOPEN_LIBRARY)
-#  define QUICKOPENSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define QUICKOPENSHARED_EXPORT Q_DECL_IMPORT
-#endif
-
+#define QUICKOPENSHARED_EXPORT Q_DECL_IMPORT
 #define OPTION_QUICKOPEN "option/quickopen"
 #define QUICKOPEN_FILES_MAXCOUNT "quickopen/filesmaxcount"
 #define QUICKOPNE_FILES_MATCHCASE "quickopen/filesmatchscase"

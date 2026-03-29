@@ -584,7 +584,7 @@ IEditor *EditorManager::currentEditor() const
 void EditorManager::updateEditorMenu(IEditContext *context)
 {
     if (context && context->focusMenu()) {
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
         // dirty trick to show the correct edit menu at the first time on Mac OS X
         m_editMenu->setEnabled(false);
 #endif

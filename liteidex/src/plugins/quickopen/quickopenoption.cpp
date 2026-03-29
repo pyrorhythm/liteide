@@ -34,7 +34,7 @@
 #endif
 //lite_memory_check_end
 
-QuickOpenOption::QuickOpenOption(LiteApi::IApplication *app,QObject *parent) :
+QuickOpenOption::QuickOpenOption(LiteApi::IApplication *app, QObject *parent) :
     LiteApi::IOption(parent),
     m_liteApp(app),
     m_widget(new QWidget),

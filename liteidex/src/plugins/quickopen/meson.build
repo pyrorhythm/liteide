@@ -1,6 +1,6 @@
 # quickopen - plugin
 
-plugin_sources = [
+quickopen_sources = [
   'quickopenplugin.cpp',
   'quickopenwidget.cpp',
   'quickopenmanager.cpp',
@@ -16,7 +16,7 @@ plugin_sources = [
   'quickopenfilesystem.cpp',
 ]
 
-plugin_headers = [
+quickopen_headers = [
   'quickopenplugin.h',
   'quickopen_global.h',
   'quickopenwidget.h',
@@ -33,14 +33,19 @@ plugin_headers = [
   'quickopenfilesystem.h',
 ]
 
-plugin_ui = [
-  'quickopenoption.ui',
-]
+quickopen_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: quickopen_headers,
+  ui_files: 'quickopenoption.ui',
+)
 
-plugin_lib = static_library('quickopen',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('quickopen',
+  quickopen_sources,
+  quickopen_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

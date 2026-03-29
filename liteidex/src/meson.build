@@ -1,4 +1,6 @@
+subdir('3rdparty')
 subdir('api')
+subdir('utils')
 subdir('liteapp')
 subdir('liteide')
 subdir('plugins')

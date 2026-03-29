@@ -83,11 +83,17 @@ liteapp_ui = [
   'outputoption.ui',
 ]
 
-# Generate UI headers using Qt6 uic
+# Generate UI headers using Qt6 uic and MOC for Q_OBJECT classes
 qt6_dep = dependency('qt6', modules: ['Core', 'Gui', 'Widgets'], required: false)
 if qt6_dep.found()
   qt6_mod = import('qt6')
-  qt6_mod.preprocess(ui_files: liteapp_ui)
+  # Generate both UI headers and MOC files for Q_OBJECT
+  moc_gen = qt6_mod.preprocess(
+    ui_files: liteapp_ui,
+    moc_headers: liteapp_headers
+  )
+  # Add generated sources to compilation
+  liteapp_generated = [moc_gen]
 endif
 
 # Conditionally add mac support
@@ -99,6 +105,8 @@ endif
 liteapp_lib = static_library('liteapp',
   liteapp_sources,
   liteapp_headers,
+  liteapp_generated,
   include_directories : global_inc,
   dependencies : [qt_dep],
+  cpp_args : ['-DLITEAPP_LIBRARY'],
 )

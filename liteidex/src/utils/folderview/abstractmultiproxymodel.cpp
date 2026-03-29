@@ -28,15 +28,6 @@
 #include <QStringList>
 #include <QDebug>
 
-//detects the deletion of the source model
-void AbstractMultiProxyModelPrivate::_q_sourceModelDestroyed()
-{
-    //model = QAbstractItemModelPrivate::staticEmptyModel();
-    Q_Q(AbstractMultiProxyModel);
-    QAbstractItemModel *sourceModel = (QAbstractItemModel*)sender();
-    q->removeSourceModel(sourceModel);
-}
-
 /*!
     Constructs a proxy model with the given \a parent.
 */
@@ -429,7 +420,6 @@ Qt::DropActions AbstractMultiProxyModel::supportedDropActions() const
     return d->indexList[0].model->supportedDropActions();
 }
 
-#include "moc_abstractmultiproxymodel.cpp"
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
      #define _CRTDBG_MAP_ALLOC

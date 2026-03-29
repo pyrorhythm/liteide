@@ -1,26 +1,31 @@
 # welcome - plugin
 
-plugin_sources = [
+welcome_sources = [
   'welcomeplugin.cpp',
   'welcomebrowser.cpp',
   'litedoc.cpp',
 ]
 
-plugin_headers = [
+welcome_headers = [
   'welcomeplugin.h',
   'welcome_global.h',
   'welcomebrowser.h',
   'litedoc.h',
 ]
 
-plugin_resources = [
-  'welcome.qrc',
-]
+welcome_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: welcome_headers,
+  qresources: 'welcome.qrc',
+)
 
-plugin_lib = static_library('welcome',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('welcome',
+  welcome_sources,
+  welcome_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

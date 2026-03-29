@@ -1,6 +1,6 @@
 # imageeditor - plugin
 
-plugin_sources = [
+imageeditor_sources = [
   'imageeditor.cpp',
   'imageeditorfactory.cpp',
   'imageeditorfile.cpp',
@@ -8,7 +8,7 @@ plugin_sources = [
   'imageeditorwidget.cpp',
 ]
 
-plugin_headers = [
+imageeditor_headers = [
   'imageeditor.h',
   'imageeditor_global.h',
   'imageeditorfactory.h',
@@ -17,14 +17,19 @@ plugin_headers = [
   'imageeditorwidget.h',
 ]
 
-plugin_resources = [
-  'imageeditor.qrc',
-]
+imageeditor_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: imageeditor_headers,
+  qresources: 'imageeditor.qrc',
+)
 
-plugin_lib = static_library('imageeditor',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('imageeditor',
+  imageeditor_sources,
+  imageeditor_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

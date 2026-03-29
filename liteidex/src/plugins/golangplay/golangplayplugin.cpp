@@ -22,7 +22,7 @@
 // Creator: visualfc <visualfc@gmail.com>
 
 #include "golangplayplugin.h"
-#include "goplaybrowser.h"
+#include "GoPlayBrowser.h"
 #include "liteapi/liteobj.h"
 #include <QAction>
 //lite_memory_check_begin
@@ -35,14 +35,12 @@
 #endif
 //lite_memory_check_end
 
-GolangPlayPlugin::GolangPlayPlugin()
-{
-}
+GolangPlayPlugin::GolangPlayPlugin() = default;
 
 bool GolangPlayPlugin::load(LiteApi::IApplication *app)
 {
-    GoplayBrowser *gopaly = new GoplayBrowser(app,this);
-    QAction *act = app->editorManager()->registerBrowser(gopaly);
+    auto *goPlay = new GoPlayBrowser(app,this);
+    QAction *act = app->editorManager()->registerBrowser(goPlay);
     act->setIcon(QIcon("icon:images/gopher.png"));
     app->actionManager()->insertViewMenu(LiteApi::ViewMenuBrowserPos,act);
     return true;

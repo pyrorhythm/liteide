@@ -41,7 +41,7 @@ bool FileUtil::hasTrash()
 bool FileUtil::moveToTrash(const QString &fileName)
 {
 #ifdef Q_OS_MACOS // desktop macOS has a trash can
-    QMacAutoReleasePool pool;
+    NSAutoreleasePool *pool;
 
     QFileInfo info(fileName);
     NSString *filepath = info.filePath().toNSString();

@@ -1,6 +1,6 @@
 # golangedit - plugin
 
-plugin_sources = [
+golangedit_sources = [
   'golangeditplugin.cpp',
   'golangedit.cpp',
   'golangfilesearch.cpp',
@@ -14,7 +14,7 @@ plugin_sources = [
   'goremovetagsdialog.cpp',
 ]
 
-plugin_headers = [
+golangedit_headers = [
   'golangeditplugin.h',
   'golangedit_global.h',
   'golangedit.h',
@@ -29,16 +29,19 @@ plugin_headers = [
   'goremovetagsdialog.h',
 ]
 
-plugin_ui = [
-  'golangeditoption.ui',
-  'goaddtagsdialog.ui',
-  'goremovetagsdialog.ui',
-]
+golangedit_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangedit_headers,
+  ui_files: ['golangeditoption.ui', 'goaddtagsdialog.ui', 'goremovetagsdialog.ui'],
+)
 
-plugin_lib = static_library('golangedit',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangedit',
+  golangedit_sources,
+  golangedit_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

@@ -1,13 +1,13 @@
 # filebrowser - plugin
 
-plugin_sources = [
+filebrowser_sources = [
   'filebrowserplugin.cpp',
   'filebrowser.cpp',
   'filebrowseroptionfactory.cpp',
   'filebrowseroption.cpp',
 ]
 
-plugin_headers = [
+filebrowser_headers = [
   'filebrowserplugin.h',
   'filebrowser_global.h',
   'filebrowser.h',
@@ -15,18 +15,20 @@ plugin_headers = [
   'filebrowseroption.h',
 ]
 
-plugin_ui = [
-  'filebrowseroption.ui',
-]
+filebrowser_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: filebrowser_headers,
+  ui_files: 'filebrowseroption.ui',
+  qresources: 'filebrowser.qrc',
+)
 
-plugin_resources = [
-  'filebrowser.qrc',
-]
-
-plugin_lib = static_library('filebrowser',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('filebrowser',
+  filebrowser_sources,
+  filebrowser_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

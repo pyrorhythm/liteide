@@ -24,7 +24,7 @@
 #ifndef MULTIFOLDERVIEW_H
 #define MULTIFOLDERVIEW_H
 
-#include "basefoldeview.h"
+#include "basefolderview.h"
 #include "multifoldermodel.h"
 
 class MultiFolderView : public BaseFolderView

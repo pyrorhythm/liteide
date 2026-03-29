@@ -278,7 +278,7 @@ void SplitFolderWindow::addFolderImpl(const QString &_folder)
     if (!QDir(folder).exists()) {
         return;
     }
-    FolderView *view = new FolderView(true,m_liteApp);
+    auto *view = new FolderView(true,m_liteApp);
     view->setFilter(m_filters);
     view->setShowDetails(m_bShowDetails);
     view->setRootPath(folder);

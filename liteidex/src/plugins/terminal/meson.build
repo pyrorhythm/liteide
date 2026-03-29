@@ -1,13 +1,13 @@
 # terminal - plugin
 
-plugin_sources = [
+terminal_sources = [
   'terminalplugin.cpp',
   'terminal.cpp',
   'terminaloption.cpp',
   'terminaloptionfactory.cpp',
 ]
 
-plugin_headers = [
+terminal_headers = [
   'terminalplugin.h',
   'terminal_global.h',
   'terminal.h',
@@ -15,14 +15,19 @@ plugin_headers = [
   'terminaloptionfactory.h',
 ]
 
-plugin_ui = [
-  'terminaloption.ui',
-]
+terminal_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: terminal_headers,
+  ui_files: 'terminaloption.ui',
+)
 
-plugin_lib = static_library('terminal',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('terminal',
+  terminal_sources,
+  terminal_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

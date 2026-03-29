@@ -1,6 +1,6 @@
 # golangpackage - plugin
 
-plugin_sources = [
+golangpackage_sources = [
   'golangpackageplugin.cpp',
   'filepathmodel.cpp',
   'golangpackageoption.cpp',
@@ -12,7 +12,7 @@ plugin_sources = [
   'packageprojectfactory.cpp',
 ]
 
-plugin_headers = [
+golangpackage_headers = [
   'golangpackageplugin.h',
   'golangpackage_global.h',
   'filepathmodel.h',
@@ -25,14 +25,19 @@ plugin_headers = [
   'packageprojectfactory.h',
 ]
 
-plugin_ui = [
-  'golangpackageoption.ui',
-]
+golangpackage_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangpackage_headers,
+  ui_files: 'golangpackageoption.ui',
+)
 
-plugin_lib = static_library('golangpackage',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangpackage',
+  golangpackage_sources,
+  golangpackage_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

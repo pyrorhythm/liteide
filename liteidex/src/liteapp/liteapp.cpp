@@ -789,13 +789,13 @@ void LiteApp::createActions()
     actionContext->regAction(m_fullScreent,"FullScreen","Ctrl+Shift+F11");
 
     m_aboutAct = new QAction(tr("About LiteIDE"),m_mainwindow);
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
     m_aboutAct->setMenuRole(QAction::AboutRole);
 #endif
     actionContext->regAction(m_aboutAct,"About","");
 
     m_aboutPluginsAct = new QAction(tr("About Plugins"),m_mainwindow);
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
     m_aboutPluginsAct->setMenuRole(QAction::ApplicationSpecificRole);
 #endif
     actionContext->regAction(m_aboutPluginsAct,"AboutPlugins","");
@@ -1079,11 +1079,6 @@ void LiteApp::dbclickLogOutput(QTextCursor cur)
     if (text.length() < 9) {
         return;
     }
-    QReglarExpression rep("(\\w?\\:?[\\w\\d\\_\\-\\\\/\\.]+):(\\d+):");
-    int index = rep.match(text.mid(8));
-    if (index < 0)
-        return;
-    QStringList capList = rep.capturedTexts();
 
     // file:line:  (skip leading timestamp like "08:38:49")
     static const QRegularExpression rep(

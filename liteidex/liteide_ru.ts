@@ -15,7 +15,7 @@
     </message>
     <message>
         <source>Welcome:</source>
-        <translation>Добро пожаловать:</translation>
+        <translation>Добро </translation>
     </message>
     <message>
         <source>Welcome to LiteIDE X! LiteIDE is a simple, open source, cross-platform IDE.</source>
@@ -50,13 +50,13 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>На основе Qt</translation>
     </message>
     <message>
-        <source>Source Code:</source>
-        <translation>Исходный код:</translation>
+        <source>Source </source>
+        <translation>Исходный </translation>
     </message>
     <message>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
-        <translation>Поддержка LiteIDE:</translation>
+        <translation>Поддержка </translation>
     </message>
     <message>
         <source>Developers</source>
@@ -254,8 +254,8 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>Переименование файла</translation>
     </message>
     <message>
-        <source>New Name:</source>
-        <translation>Новое имя:</translation>
+        <source>New </source>
+        <translation>Новое </translation>
     </message>
     <message>
         <source>Failed to rename the file!</source>
@@ -474,7 +474,7 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>Сбросить всё в исходное состояние</translation>
     </message>
     <message>
-        <source>Choose directory to add to GOPATH:</source>
+        <source>Choose directory to add to </source>
         <translation>Выбор каталога для добавления в GOPATH</translation>
     </message>
     <message>
@@ -521,8 +521,8 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>Каталог:</translation>
     </message>
     <message>
-        <source>Dir Name:</source>
-        <translation>Имя каталога:</translation>
+        <source>Dir </source>
+        <translation>Имя </translation>
     </message>
     <message>
         <source>Create</source>
@@ -545,8 +545,8 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>Каталог:</translation>
     </message>
     <message>
-        <source>File Name:</source>
-        <translation>Имя файла:</translation>
+        <source>File </source>
+        <translation>Имя </translation>
     </message>
     <message>
         <source>Create</source>
@@ -626,7 +626,7 @@ LiteIDE это простая кросплатформенная среда ра
         <translation></translation>
     </message>
     <message>
-        <source>delve debug pass flags: (example --check-go-version=false)</source>
+        <source>delve debug pass (example --check-go-version=false)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -852,16 +852,16 @@ LiteIDE это простая кросплатформенная среда ра
         <translation>Не реализовано в FakeVim.</translation>
     </message>
     <message>
-        <source>Unknown option:</source>
-        <translation>Неизвестный параметр:</translation>
+        <source>Unknown </source>
+        <translation>Неизвестный </translation>
     </message>
     <message>
-        <source>Invalid argument:</source>
-        <translation>Неверный аргумент:</translation>
+        <source>Invalid </source>
+        <translation>Неверный </translation>
     </message>
     <message>
-        <source>Trailing characters:</source>
-        <translation>Завершающие символы:</translation>
+        <source>Trailing </source>
+        <translation>Завершающие </translation>
     </message>
     <message>
         <source>Move lines into themselves.</source>
@@ -1128,7 +1128,7 @@ Do you want to load?</oldsource>
         <translation>Все поддерживаемые (%1)</translation>
     </message>
     <message>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
         <translation>Выбор папки</translation>
     </message>
@@ -1285,8 +1285,8 @@ Do you want to reload the file from disk?</source>
 <context>
     <name>FileSearchManager</name>
     <message>
-        <source>Search Item:</source>
-        <translation>Искать элемент:</translation>
+        <source>Search </source>
+        <translation>Искать </translation>
     </message>
     <message>
         <source>Only golang file changes can be revert!</source>
@@ -1424,8 +1424,8 @@ Want to replace to all the search items to whitespace?</source>
         <translation>Не удалось создать файл!</translation>
     </message>
     <message>
-        <source>New Name:</source>
-        <translation>Новое имя:</translation>
+        <source>New </source>
+        <translation>Новое </translation>
     </message>
     <message>
         <source>Failed to rename the file!</source>
@@ -1495,7 +1495,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <source>Replace with:</source>
-        <translation>Заменить на:</translation>
+        <translation>Заменить </translation>
     </message>
     <message>
         <source>Replace all occurrences</source>
@@ -1511,7 +1511,7 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <source>Revert with:</source>
-        <translation>Откатить на:</translation>
+        <translation>Откатить </translation>
     </message>
     <message>
         <source>Revert</source>
@@ -1667,8 +1667,8 @@ Want to replace to all the search items to whitespace?</source>
         <translation>Найти предыдущее</translation>
     </message>
     <message>
-        <source>Replace With:</source>
-        <translation>Заменить на:</translation>
+        <source>Replace </source>
+        <translation>Заменить </translation>
     </message>
     <message>
         <source>Replace</source>
@@ -1691,12 +1691,12 @@ Want to replace to all the search items to whitespace?</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <source>Find What:</source>
+        <source>Find </source>
         <translation>Искать:</translation>
     </message>
     <message>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>Параметры:</translation>
     </message>
     <message>
@@ -1968,8 +1968,8 @@ Want to replace to all the search items to whitespace?</source>
         <translation>Поиск в Godoc</translation>
     </message>
     <message>
-        <source>Find Package:</source>
-        <translation>Найти пакет:</translation>
+        <source>Find </source>
+        <translation>Найти </translation>
     </message>
     <message>
         <source>Go Doc Search</source>
@@ -2190,7 +2190,7 @@ Want to replace to all the search items to whitespace?</source>
 <context>
     <name>GolangPackageOption</name>
     <message>
-        <source>Choose directory to add to GOPATH:</source>
+        <source>Choose directory to add to </source>
         <translation type="unfinished">Выбор каталога для добавления в GOPATH</translation>
     </message>
     <message>
@@ -2366,16 +2366,16 @@ Success: %2.</oldsource>
         <translation>Загрузка файла</translation>
     </message>
     <message>
-        <source>Select a file to load:</source>
-        <translation>Выберите файл:</translation>
+        <source>Select a file to </source>
+        <translation>Выберите </translation>
     </message>
     <message>
         <source>Save File</source>
         <translation>Сохранение файла</translation>
     </message>
     <message>
-        <source>New File Name:</source>
-        <translation>Имя файла:</translation>
+        <source>New File </source>
+        <translation>Имя </translation>
     </message>
 </context>
 <context>
@@ -2478,7 +2478,7 @@ Success: %2.</oldsource>
     <name>ImportPkgTip</name>
     <message>
         <source>warning, pkg not find, please enter to import :</source>
-        <translation>предупреждение: пакет не найден, нажмите enter для импорта: </translation>
+        <translation>предупреждение: пакет не найден, нажмите enter для </translation>
     </message>
 </context>
 <context>
@@ -2609,9 +2609,9 @@ Success: %2.</oldsource>
         <translation>Недавние файлы</translation>
     </message>
     <message>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
-        <translation>Не более:</translation>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
+        <translation>Не </translation>
     </message>
     <message>
         <source>Monitoring files for modifications</source>
@@ -2950,7 +2950,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation>Конфигурационные файлы команды сборки [*]</translation>
     </message>
 </context>
@@ -3498,9 +3498,9 @@ Success: %2.</oldsource>
         <translation>Регистрозависимое дополнение кода</translation>
     </message>
     <message>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
-        <translation>Длина слова для дополнения кода:</translation>
+        <translation>Длина слова для дополнения </translation>
     </message>
     <message>
         <source>Display</source>
@@ -3573,8 +3573,8 @@ Success: %2.</oldsource>
         <translation></translation>
     </message>
     <message>
-        <source>Environment definition files:</source>
-        <translation>Файлы определения среды:</translation>
+        <source>Environment definition </source>
+        <translation>Файлы определения </translation>
     </message>
     <message>
         <source>Environment changes will take effect after switching environments.</source>
@@ -3631,7 +3631,7 @@ Success: %2.</oldsource>
         <translation>Все файлы (*)</translation>
     </message>
     <message>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
         <translation>Выбор папки, содержащей файлы Markdown</translation>
     </message>
@@ -3640,7 +3640,7 @@ Success: %2.</oldsource>
         <translation>Выбор файлов Markdown</translation>
     </message>
     <message>
-        <source>Select the folder to contain separated markdown exports:</source>
+        <source>Select the folder to contain separated markdown </source>
         <translation>Выбор папки для раздельных файлов Markdown</translation>
     </message>
     <message>
@@ -3696,8 +3696,8 @@ Success: %2.</oldsource>
         <translation>Параметры</translation>
     </message>
     <message>
-        <source>Export Folder:</source>
-        <translation>Папка экспорта:</translation>
+        <source>Export </source>
+        <translation>Папка </translation>
     </message>
     <message>
         <source>Browse...</source>
@@ -3941,13 +3941,13 @@ Do you want to replace it?</source>
         <translation>Не удалось создать файлы.</translation>
     </message>
     <message>
-        <source>File template details:</source>
-        <translation>Детали шаблона файла:</translation>
+        <source>File template </source>
+        <translation>Детали шаблона </translation>
     </message>
     <message>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
-        <translation>Детали шаблона проекта:</translation>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
+        <translation>Детали шаблона </translation>
     </message>
     <message>
         <source>Choose a directory for the new content:</source>
@@ -4114,8 +4114,8 @@ Do you want to replace it?</source>
         <translation>Не удалось открыть %1 для записи.</translation>
     </message>
     <message>
-        <source>File Name:</source>
-        <translation>Имя файла:</translation>
+        <source>File </source>
+        <translation>Имя </translation>
     </message>
 </context>
 <context>
@@ -4414,8 +4414,8 @@ Do you want to replace it?</source>
         <translation>Регистрозависимый поиск</translation>
     </message>
     <message>
-        <source>Max files count:</source>
-        <translation>Файлов не более:</translation>
+        <source>Max files </source>
+        <translation>Файлов не </translation>
     </message>
     <message>
         <source>QuickOpenEditor</source>
@@ -4464,15 +4464,15 @@ Do you want to replace it?</source>
         <translation>Аргументы:</translation>
     </message>
     <message>
-        <source>Working directory:</source>
-        <translation>Рабочий каталог:</translation>
+        <source>Working </source>
+        <translation>Рабочий </translation>
     </message>
     <message>
         <source>Select Executable</source>
         <translation>Выбор программы</translation>
     </message>
     <message>
-        <source>Select the working directory:</source>
+        <source>Select the working </source>
         <oldsource>Select Working Directory</oldsource>
         <translation>Выбор рабочего каталога</translation>
     </message>

@@ -37,6 +37,7 @@
 #include "progressdata.h"
 #include "reuse.h"
 #include <QDebug>
+#include <QRegularExpressionMatch>
 
 #include <QtCore/QLatin1Char>
 
@@ -220,10 +221,24 @@ void RegExprRule::setPattern(const QString &pattern)
 }
 
 void RegExprRule::setInsensitive(const QString &insensitive)
-{ m_expression.setCaseSensitivity(toCaseSensitivity(!toBool(insensitive))); }
+{
+    QRegularExpression::PatternOptions opts = m_expression.patternOptions();
+    if (toBool(insensitive))
+        opts |= QRegularExpression::CaseInsensitiveOption;
+    else
+        opts &= ~QRegularExpression::CaseInsensitiveOption;
+    m_expression.setPatternOptions(opts);
+}
 
 void RegExprRule::setMinimal(const QString &minimal)
-{ m_expression.setMinimal(toBool(minimal)); }
+{
+    QRegularExpression::PatternOptions opts = m_expression.patternOptions();
+    if (toBool(minimal))
+        opts |= QRegularExpression::InvertedGreedinessOption;
+    else
+        opts &= ~QRegularExpression::InvertedGreedinessOption;
+    m_expression.setPatternOptions(opts);
+}
 
 void RegExprRule::doReplaceExpressions(const QStringList &captures)
 {
@@ -266,9 +281,16 @@ bool RegExprRule::doMatchSucceed(const QString &text,
             return true;
     }
 
-    m_offset = m_expression.indexIn(text, offset, QRegExp::CaretAtOffset);
-    m_length = m_expression.matchedLength();
-    m_captures = m_expression.capturedTexts();
+    QRegularExpressionMatch match = m_expression.match(text, offset);
+    if (match.hasMatch() && match.capturedStart() >= offset) {
+        m_offset = static_cast<int>(match.capturedStart());
+        m_length = static_cast<int>(match.capturedLength());
+        m_captures = match.capturedTexts();
+    } else {
+        m_offset = -1;
+        m_length = 0;
+        m_captures.clear();
+    }
 
     if (isExactMatch(progress))
         return true;

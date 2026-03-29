@@ -1,20 +1,28 @@
 # golangplay - plugin
 
-plugin_sources = [
+golangplay_sources = [
   'golangplayplugin.cpp',
-  'goplaybrowser.cpp',
+  'GoPlayBrowser.cpp',
 ]
 
-plugin_headers = [
+golangplay_headers = [
   'golangplayplugin.h',
   'golangplay_global.h',
-  'goplaybrowser.h',
+  'GoPlayBrowser.h',
 ]
 
-plugin_lib = static_library('golangplay',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+golangplay_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangplay_headers,
+)
+
+shared_module('golangplay',
+  golangplay_sources,
+  golangplay_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

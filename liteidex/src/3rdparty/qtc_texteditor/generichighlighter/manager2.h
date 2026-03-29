@@ -34,56 +34,61 @@
 #ifndef MANAGER2_H
 #define MANAGER2_H
 
-#include "highlightdefinitionmetadata.h"
 #include "highlightdefinition.h"
+#include "highlightdefinitionmetadata.h"
 
-#include <QtCore/QString>
-#include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtCore/QUrl>
-#include <QtCore/QList>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QHash>
+#include <QtCore/QList>
+#include <QtCore/QSet>
+#include <QtCore/QSharedPointer>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
 
 QT_BEGIN_NAMESPACE
 class QFileInfo;
-class QStringList;
 class QIODevice;
 template <class> class QFutureInterface;
 template <class> class QSharedPointer;
 QT_END_NAMESPACE
 
-namespace TextEditor {
-namespace Internal {
+namespace TextEditor::Internal {
 
 // This is the generic highlighter manager. It is not thread-safe.
 
-class Manager2 : public QObject
-{
-    Q_OBJECT
+class Manager2 : public QObject {
+  Q_OBJECT
 public:
-    static Manager2 *instance();
-    void loadPath(const QStringList &definitionsPaths);
-public:
-    QSharedPointer<HighlightDefinitionMetaData> parseMetadata(const QFileInfo &fileInfo);
-    QString definitionIdByName(const QString &name) const;
-    QString definitionIdByMimeType(const QString &mimeType) const;
-    QString definitionIdByAnyMimeType(const QStringList &mimeTypes) const;
+  static Manager2 *instance();
+  void loadPath(const QStringList &definitionsPaths);
 
-    QSharedPointer<HighlightDefinition> definition(const QString &id);
-    QSharedPointer<HighlightDefinitionMetaData> definitionMetaData(const QString &id) const;
-    bool isBuildingDefinition(const QString &id) const;
 public:
-    QStringList mimeTypes() const;
+  QSharedPointer<HighlightDefinitionMetaData>
+  parseMetadata(const QFileInfo &fileInfo);
+  [[nodiscard]] QString definitionIdByName(const QString &name) const;
+  [[nodiscard]] QString definitionIdByMimeType(const QString &mimeType) const;
+  [[nodiscard]] QString
+  definitionIdByAnyMimeType(const QStringList &mimeTypes) const;
+
+  QSharedPointer<HighlightDefinition> definition(const QString &id);
+  [[nodiscard]] QSharedPointer<HighlightDefinitionMetaData>
+  definitionMetaData(const QString &id) const;
+  [[nodiscard]] bool isBuildingDefinition(const QString &id) const;
+
+public:
+  [[nodiscard]] QStringList mimeTypes() const;
+
 protected:
-    QHash<QString, QString> m_idByName;
-    QHash<QString, QString> m_idByMimeType;
-    QHash<QString, QSharedPointer<TextEditor::Internal::HighlightDefinition> > m_definitions;
-    QHash<QString, QSharedPointer<TextEditor::Internal::HighlightDefinitionMetaData> > m_definitionsMetaData;
-    QSet<QString> m_isBuilding;
+  QHash<QString, QString> m_idByName;
+  QHash<QString, QString> m_idByMimeType;
+  QHash<QString, QSharedPointer<TextEditor::Internal::HighlightDefinition>>
+      m_definitions;
+  QHash<QString,
+        QSharedPointer<TextEditor::Internal::HighlightDefinitionMetaData>>
+      m_definitionsMetaData;
+  QSet<QString> m_isBuilding;
 };
 
-} // namespace Internal
-} // namespace TextEditor
+} // namespace TextEditor::Internal
 
 #endif // MANAGER2_H

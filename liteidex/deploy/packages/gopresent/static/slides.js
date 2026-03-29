@@ -140,7 +140,7 @@ function getSlideEl(no) {
   } else {
     return slideEls[no];
   }
-};
+}
 
 function updateSlideClass(slideNo, className) {
   var el = getSlideEl(slideNo);
@@ -158,7 +158,7 @@ function updateSlideClass(slideNo, className) {
       el.classList.remove(SLIDE_CLASSES[i]);
     }
   }
-};
+}
 
 function updateSlides() {
   for (var i = 0; i < slideEls.length; i++) {
@@ -196,7 +196,7 @@ function updateSlides() {
   enableSlideFrames(curSlide + 2);
 
   updateHash();
-};
+}
 
 function prevSlide() {
   if (curSlide > 0) {
@@ -204,7 +204,7 @@ function prevSlide() {
 
     updateSlides();
   }
-};
+}
 
 function nextSlide() {
   if (curSlide < slideEls.length - 1) {
@@ -212,7 +212,7 @@ function nextSlide() {
 
     updateSlides();
   }
-};
+}
 
 /* Slide events */
 
@@ -232,7 +232,7 @@ function triggerEnterEvent(no) {
   evt.slideNumber = no + 1; // Make it readable
 
   el.dispatchEvent(evt);
-};
+}
 
 function triggerLeaveEvent(no) {
   var el = getSlideEl(no);
@@ -250,7 +250,7 @@ function triggerLeaveEvent(no) {
   evt.slideNumber = no + 1; // Make it readable
 
   el.dispatchEvent(evt);
-};
+}
 
 /* Touch events */
 
@@ -265,7 +265,7 @@ function handleTouchStart(event) {
     document.body.addEventListener('touchmove', handleTouchMove, true);
     document.body.addEventListener('touchend', handleTouchEnd, true);
   }
-};
+}
 
 function handleTouchMove(event) {
   if (event.touches.length > 1) {
@@ -275,7 +275,7 @@ function handleTouchMove(event) {
     touchDY = event.touches[0].pageY - touchStartY;
     event.preventDefault();
   }
-};
+}
 
 function handleTouchEnd(event) {
   var dx = Math.abs(touchDX);
@@ -290,12 +290,12 @@ function handleTouchEnd(event) {
   }
 
   cancelTouch();
-};
+}
 
 function cancelTouch() {
   document.body.removeEventListener('touchmove', handleTouchMove, true);
   document.body.removeEventListener('touchend', handleTouchEnd, true);
-};
+}
 
 /* Preloading frames */
 
@@ -309,7 +309,7 @@ function disableSlideFrames(no) {
   for (var i = 0, frame; frame = frames[i]; i++) {
     disableFrame(frame);
   }
-};
+}
 
 function enableSlideFrames(no) {
   var el = getSlideEl(no);
@@ -321,11 +321,11 @@ function enableSlideFrames(no) {
   for (var i = 0, frame; frame = frames[i]; i++) {
     enableFrame(frame);
   }
-};
+}
 
 function disableFrame(frame) {
   frame.src = 'about:blank';
-};
+}
 
 function enableFrame(frame) {
   var src = frame._src;
@@ -333,7 +333,7 @@ function enableFrame(frame) {
   if (frame.src != src && src != 'about:blank') {
     frame.src = src;
   }
-};
+}
 
 function setupFrames() {
   var frames = document.querySelectorAll('iframe');
@@ -345,7 +345,7 @@ function setupFrames() {
   enableSlideFrames(curSlide);
   enableSlideFrames(curSlide + 1);
   enableSlideFrames(curSlide + 2);
-};
+}
 
 function setupInteraction() {
   /* Clicking and tapping */
@@ -377,11 +377,11 @@ function getCurSlideFromHash() {
   } else {
     curSlide = 0;
   }
-};
+}
 
 function updateHash() {
   location.replace('#' + (curSlide + 1));
-};
+}
 
 /* Event listeners */
 
@@ -419,11 +419,11 @@ function handleBodyKeyDown(event) {
       event.preventDefault();
       break;
   }
-};
+}
 
 function addEventListeners() {
   document.addEventListener('keydown', handleBodyKeyDown, false);
-};
+}
 
 /* Initialization */
 
@@ -435,7 +435,7 @@ function addFontStyle() {
             'Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono';
 
   document.body.appendChild(el);
-};
+}
 
 function addGeneralStyle() {
   var el = document.createElement('link');
@@ -453,7 +453,7 @@ function addGeneralStyle() {
   el.name = 'apple-mobile-web-app-capable';
   el.content = 'yes';
   document.querySelector('head').appendChild(el);
-};
+}
 
 function addPrintStyle() {
   var el = document.createElement('link');
@@ -462,7 +462,7 @@ function addPrintStyle() {
   el.media = "print";
   el.href = PERMANENT_URL_PREFIX + 'print.css';
   document.body.appendChild(el);
-};
+}
 
 function handleDomLoaded() {
   slideEls = document.querySelectorAll('section.slides > article');
@@ -479,7 +479,7 @@ function handleDomLoaded() {
   setupInteraction();
 
   document.body.classList.add('loaded');
-};
+}
 
 function initialize() {
   getCurSlideFromHash();

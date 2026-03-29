@@ -27,7 +27,7 @@
 #include <QTreeView>
 #include <QFileSystemModel>
 #include <QFileInfo>
-#include "basefoldeview.h"
+#include "basefolderview.h"
 
 class QSortFilterProxyModel;
 class FileSystemModelEx;
@@ -37,27 +37,29 @@ class FolderView : public BaseFolderView
     Q_OBJECT
 public:
     explicit FolderView(bool proxyMode, LiteApi::IApplication *app, QWidget *parent = 0);
-    virtual ~FolderView();
+
+    ~FolderView() override;
     void setRootPath(const QString &path);
-    QString rootPath() const;
+    [[nodiscard]] QString rootPath() const;
     void setFilter(QDir::Filters filters);
-    QDir::Filters filter() const;
+    [[nodiscard]] QDir::Filters filter() const;
     void setNameFilters(const QStringList &filters);
-    QStringList nameFilters() const;
-    QFileInfo fileInfo(const QModelIndex &index) const;
-    QModelIndex indexForPath(const QString &fileName) const;
+    [[nodiscard]] QStringList nameFilters() const;
+    [[nodiscard]] QFileInfo fileInfo(const QModelIndex &index) const override;
+    [[nodiscard]] QModelIndex indexForPath(const QString &fileName) const;
     void reload();
-    bool isShowDetails() const;
-    virtual QModelIndex findIndexForContext(const QString &filePath) const;
-    virtual void removeIndex(const QModelIndex &index);
+    [[nodiscard]] bool isShowDetails() const;
+
+    [[nodiscard]] QModelIndex findIndexForContext(const QString &filePath) const override;
+    void removeIndex(const QModelIndex &index) override;
 public slots:
     void setShowDetails(bool b);
 public slots:
-    void customContextMenuRequested(const QPoint &pos);    
-    virtual void removeFolder();
-    virtual void removeFile();
+    void customContextMenuRequested(const QPoint &pos);
+    void removeFolder() override;
+    void removeFile() override;
 protected:
-    virtual QModelIndexList selectionCopyOrRemoveList() const;
+    [[nodiscard]] QModelIndexList selectionCopyOrRemoveList() const override;
     QSortFilterProxyModel *m_proxy;
     FileSystemModelEx *m_model;
     QMenu             *m_contextMenu;

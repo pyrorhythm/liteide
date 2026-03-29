@@ -1,6 +1,6 @@
 # litebuild - plugin
 
-plugin_sources = [
+litebuild_sources = [
   'litebuildplugin.cpp',
   'litebuild.cpp',
   'build.cpp',
@@ -10,7 +10,7 @@ plugin_sources = [
   'buildconfigdialog.cpp',
 ]
 
-plugin_headers = [
+litebuild_headers = [
   'litebuildplugin.h',
   'litebuild_global.h',
   'litebuild.h',
@@ -21,19 +21,20 @@ plugin_headers = [
   'buildconfigdialog.h',
 ]
 
-plugin_ui = [
-  'litebuildoption.ui',
-  'buildconfigdialog.ui',
-]
+litebuild_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: litebuild_headers,
+  ui_files: ['litebuildoption.ui', 'buildconfigdialog.ui'],
+  qresources: 'litebuild.qrc',
+)
 
-plugin_resources = [
-  'litebuild.qrc',
-]
-
-plugin_lib = static_library('litebuild',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('litebuild',
+  litebuild_sources,
+  litebuild_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

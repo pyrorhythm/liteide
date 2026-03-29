@@ -1,20 +1,28 @@
 # rustedit - plugin
 
-plugin_sources = [
+rustedit_sources = [
   'rusteditplugin.cpp',
   'rustedit.cpp',
 ]
 
-plugin_headers = [
+rustedit_headers = [
   'rusteditplugin.h',
   'rustedit_global.h',
   'rustedit.h',
 ]
 
-plugin_lib = static_library('rustedit',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+rustedit_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: rustedit_headers,
+)
+
+shared_module('rustedit',
+  rustedit_sources,
+  rustedit_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

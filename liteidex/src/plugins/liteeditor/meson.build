@@ -1,6 +1,6 @@
 # liteeditor - plugin
 
-plugin_sources = [
+liteeditor_sources = [
   'liteeditorplugin.cpp',
   'liteeditor.cpp',
   'liteeditorfile.cpp',
@@ -23,7 +23,7 @@ plugin_sources = [
   'katetextlexer.cpp',
 ]
 
-plugin_headers = [
+liteeditor_headers = [
   'liteeditorplugin.h',
   'liteeditor_global.h',
   'liteeditor.h',
@@ -47,18 +47,20 @@ plugin_headers = [
   'katetextlexer.h',
 ]
 
-plugin_ui = [
-  'liteeditoroption.ui',
-]
+liteeditor_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: liteeditor_headers,
+  ui_files: 'liteeditoroption.ui',
+  qresources: 'liteeditor.qrc',
+)
 
-plugin_resources = [
-  'liteeditor.qrc',
-]
-
-plugin_lib = static_library('liteeditor',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('liteeditor',
+  liteeditor_sources,
+  liteeditor_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

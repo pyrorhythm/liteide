@@ -1,20 +1,28 @@
 # jsonedit - plugin
 
-plugin_sources = [
+jsonedit_sources = [
   'jsoneditplugin.cpp',
   'jsonedit.cpp',
 ]
 
-plugin_headers = [
+jsonedit_headers = [
   'jsoneditplugin.h',
   'jsonedit_global.h',
   'jsonedit.h',
 ]
 
-plugin_lib = static_library('jsonedit',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+jsonedit_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: jsonedit_headers,
+)
+
+shared_module('jsonedit',
+  jsonedit_sources,
+  jsonedit_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

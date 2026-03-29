@@ -1247,7 +1247,7 @@ void LiteBuild::loadBuildType(const QString &mimeType)
         menu = info->buildMenu;
     }
     if (menu) {
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
         // dirty trick to show the correct build menu at the first time on Mac OS X
         m_buildMenu->setEnabled(false);
 #endif

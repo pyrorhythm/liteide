@@ -14,7 +14,8 @@
 ** Lesser General Public License for more details.
 **
 ** In addition, as a special exception,  that plugins developed for LiteIDE,
-** are allowed to remain closed sourced and can be distributed under any license .
+** are allowed to remain closed sourced and can be distributed under any license
+*.
 ** These rights are included in the file LGPL_EXCEPTION.txt in this package.
 **
 **************************************************************************/
@@ -24,50 +25,49 @@
 #ifndef LITEFINDPLUGIN_H
 #define LITEFINDPLUGIN_H
 
-#include "litefind_global.h"
 #include "liteapi/liteapi.h"
+#include "litefind_global.h"
 #include <QtPlugin>
 
 class FindEditor;
 class FindEditor;
 class FileSearch;
-class LiteFindPlugin : public LiteApi::IPlugin
-{
-    Q_OBJECT
+class LiteFindPlugin : public LiteApi::IPlugin {
+  Q_OBJECT
 public:
-    LiteFindPlugin();
-    virtual ~LiteFindPlugin();
-    virtual bool load(LiteApi::IApplication *app);
+  LiteFindPlugin();
+  virtual ~LiteFindPlugin();
+  virtual bool load(LiteApi::IApplication *app);
 public slots:
-    void find();
-    void replace();
-    void hideFind();
+  void find();
+  void replace();
+  void hideFind();
+
 protected:
-    LiteApi::IApplication *m_liteApp;
-    FindEditor *m_findEditor;
-    QAction *m_findAct;
-    QAction *m_findNextAct;
-    QAction *m_findPrevAct;
-    QAction *m_replaceAct;
-    QAction *m_fileSearchAct;
+  LiteApi::IApplication *m_liteApp;
+  FindEditor *m_findEditor;
+  QAction *m_findAct;
+  QAction *m_findNextAct;
+  QAction *m_findPrevAct;
+  QAction *m_replaceAct;
+  QAction *m_fileSearchAct;
 };
 
-class PluginFactory : public LiteApi::PluginFactoryT<LiteFindPlugin>
-{
-    Q_OBJECT
-    Q_INTERFACES(LiteApi::IPluginFactory)
+class PluginFactory : public LiteApi::PluginFactoryT<LiteFindPlugin> {
+  Q_OBJECT
+  Q_INTERFACES(LiteApi::IPluginFactory)
 #if QT_VERSION >= 0x050000
-    Q_PLUGIN_METADATA(IID "liteidex.LiteFindPlugin")
+  Q_PLUGIN_METADATA(IID "liteidex.LiteFindPlugin")
 #endif
 public:
-    PluginFactory() {
-        m_info->setId("plugin/LiteFind");
-        m_info->setName("LiteFind");
-        m_info->setAuthor("visualfc");
-        m_info->setVer("X38.3");
-        m_info->setInfo("Core Find/Replace");
-        m_info->setMustLoad(true);
-    }
+  PluginFactory() {
+    m_info->setId("plugin/LiteFind");
+    m_info->setName("LiteFind");
+    m_info->setAuthor("visualfc");
+    m_info->setVer("X38.3");
+    m_info->setInfo("Core Find/Replace");
+    m_info->setMustLoad(true);
+  }
 };
 
 #endif // LITEFINDPLUGIN_H

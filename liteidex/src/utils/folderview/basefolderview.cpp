@@ -21,7 +21,7 @@
 // Module: basefolderview.cpp
 // Creator: visualfc <visualfc@gmail.com>
 
-#include "basefoldeview.h"
+#include "basefolderview.h"
 #include "liteenvapi/liteenvapi.h"
 #include "terminalapi/terminalapi.h"
 #include "fileutil/fileutil.h"

@@ -1,30 +1,32 @@
 # golangpresent - plugin
 
-plugin_sources = [
+golangpresent_sources = [
   'golangpresentedit.cpp',
   'golangpresentplugin.cpp',
   'exportdialog.cpp',
 ]
 
-plugin_headers = [
+golangpresent_headers = [
   'golangpresent_global.h',
   'golangpresentedit.h',
   'golangpresentplugin.h',
   'exportdialog.h',
 ]
 
-plugin_ui = [
-  'exportdialog.ui',
-]
+golangpresent_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangpresent_headers,
+  ui_files: 'exportdialog.ui',
+  qresources: 'golangpresent.qrc',
+)
 
-plugin_resources = [
-  'golangpresent.qrc',
-]
-
-plugin_lib = static_library('golangpresent',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangpresent',
+  golangpresent_sources,
+  golangpresent_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

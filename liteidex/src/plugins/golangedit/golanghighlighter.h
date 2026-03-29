@@ -30,29 +30,36 @@
 #include <QTextCharFormat>
 #include <QRegularExpression>
 
-class GolangHighlighter : public TextEditor::SyntaxHighlighter
-{
+class GolangHighligher : public TextEditor::SyntaxHighlighter {
     Q_OBJECT
 
 public:
-    GolangHighlighter(LiteApi::ITextEditor *editor, QTextDocument *document = 0);
-    virtual ~GolangHighlighter();
-    virtual void highlightBlock(const QString &text);
+    GolangHighligher(LiteApi::ITextEditor *editor, QTextDocument *document = 0);
+
+    ~GolangHighligher() override;
+
+    void highlightBlock(const QString &text) override;
+
 private:
     void highlightBlockHelper(const QString &text);
+
     void setFoldingIndent(const QTextBlock &block, int indent);
+
     void highlightWord(QStringView word, int position, int length);
+
     void highlightLine(const QString &line, int position, int length,
                        const QTextCharFormat &format);
+
     void highlightCommentLine(const QString &line, int position, int length);
 
-    bool isPPKeyword(const QStringView &text) const;
+    static bool isPPKeyword(const QStringView &text) ;
+
 protected:
     QStringList m_todoList;
     QStringList m_gotagList;
-    QRegExp     m_todoRegexp;
-    QString     m_currentTodo;
-    QMap<int,QString> m_todoInfoMap;
+    QRegularExpression m_todoRegexp;
+    QString m_currentTodo;
+    QMap<int, QString> m_todoInfoMap;
 };
 
 #endif // GOLANGHIGHLIGHTER_H

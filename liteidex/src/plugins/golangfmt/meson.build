@@ -1,13 +1,13 @@
 # golangfmt - plugin
 
-plugin_sources = [
+golangfmt_sources = [
   'golangfmtplugin.cpp',
   'golangfmt.cpp',
   'golangfmtoptionfactory.cpp',
   'golangfmtoption.cpp',
 ]
 
-plugin_headers = [
+golangfmt_headers = [
   'golangfmtplugin.h',
   'golangfmt_global.h',
   'golangfmt.h',
@@ -15,18 +15,20 @@ plugin_headers = [
   'golangfmtoption.h',
 ]
 
-plugin_ui = [
-  'golangfmtoption.ui',
-]
+golangfmt_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangfmt_headers,
+  ui_files: 'golangfmtoption.ui',
+  qresources: 'golangfmt.qrc',
+)
 
-plugin_resources = [
-  'golangfmt.qrc',
-]
-
-plugin_lib = static_library('golangfmt',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangfmt',
+  golangfmt_sources,
+  golangfmt_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

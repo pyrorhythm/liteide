@@ -46,9 +46,10 @@
 
 #include <QtCore/QObject>
 #include <QtGui/QTextLayout>
+#include <QtGui/QTextDocument>
+#include <QtGui/QTextBlock>
 
 QT_BEGIN_NAMESPACE
-class QTextDocument;
 class QSyntaxHighlighterPrivate;
 class QTextCharFormat;
 class QFont;

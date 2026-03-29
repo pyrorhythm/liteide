@@ -1,26 +1,31 @@
 # bookmarks - plugin
 
-plugin_sources = [
+bookmarks_sources = [
   'bookmarksplugin.cpp',
   'bookmarkmanager.cpp',
   'bookmarkmodel.cpp',
 ]
 
-plugin_headers = [
+bookmarks_headers = [
   'bookmarksplugin.h',
   'bookmarks_global.h',
   'bookmarkmanager.h',
   'bookmarkmodel.h',
 ]
 
-plugin_resources = [
-  'bookmarks.qrc',
-]
+bookmarks_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: bookmarks_headers,
+  qresources: 'bookmarks.qrc',
+)
 
-plugin_lib = static_library('bookmarks',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('bookmarks',
+  bookmarks_sources,
+  bookmarks_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

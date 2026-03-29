@@ -1,6 +1,6 @@
 # golangdoc - plugin
 
-plugin_sources = [
+golangdoc_sources = [
   'golangdocplugin.cpp',
   'golangdoc.cpp',
   'golangdocoptionfactory.cpp',
@@ -9,7 +9,7 @@ plugin_sources = [
   'findapiwidget.cpp',
 ]
 
-plugin_headers = [
+golangdoc_headers = [
   'golangdocplugin.h',
   'golangdoc_global.h',
   'golangdoc.h',
@@ -19,14 +19,19 @@ plugin_headers = [
   'findapiwidget.h',
 ]
 
-plugin_ui = [
-  'golangdocoption.ui',
-]
+golangdoc_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: golangdoc_headers,
+  ui_files: 'golangdocoption.ui',
+)
 
-plugin_lib = static_library('golangdoc',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('golangdoc',
+  golangdoc_sources,
+  golangdoc_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

@@ -61,12 +61,12 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="249"/>
-        <source>Source Code:</source>
-        <translation>Kaynak Kod:</translation>
+        <source>Source </source>
+        <translation>Kaynak </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="263"/>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
         <translation>LiteIDE&apos;yi destekle::</translation>
     </message>
@@ -363,8 +363,8 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="232"/>
-        <source>New Name:</source>
-        <translation>Yrni İsim:</translation>
+        <source>New </source>
+        <translation>Yrni </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="239"/>
@@ -630,8 +630,8 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/plugins/litebuild/buildconfigdialog.cpp" line="293"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>GOPATH&apos;a eklenecek dizini seçin:</translation>
+        <source>Choose directory to add to </source>
+        <translation>GOPATH&apos;a eklenecek dizini </translation>
     </message>
 </context>
 <context>
@@ -648,8 +648,8 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="98"/>
-        <source>Dir Name:</source>
-        <translation>Klasör Adı:</translation>
+        <source>Dir </source>
+        <translation>Klasör </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="106"/>
@@ -677,8 +677,8 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="48"/>
-        <source>File Name:</source>
-        <translation>Dosya Adı:</translation>
+        <source>File </source>
+        <translation>Dosya </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="56"/>
@@ -1042,18 +1042,18 @@ LiteIDE sade, açık kaynaklı ve platform bağımsız bir geliştirme ortamıd�
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5719"/>
-        <source>Unknown option:</source>
-        <translation>Bilinmeyen seçenek:</translation>
+        <source>Unknown </source>
+        <translation>Bilinmeyen </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5730"/>
-        <source>Invalid argument:</source>
-        <translation>Geçersiz argüman:</translation>
+        <source>Invalid </source>
+        <translation>Geçersiz </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5733"/>
-        <source>Trailing characters:</source>
-        <translation>Sondaki karakterler:</translation>
+        <source>Trailing </source>
+        <translation>Sondaki </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5816"/>
@@ -1370,9 +1370,9 @@ Do you want to load?</oldsource>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="314"/>
         <location filename="src/liteapp/filemanager.cpp" line="332"/>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
-        <translation>Klasör Seç:</translation>
+        <translation>Klasör </translation>
     </message>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="679"/>
@@ -1558,8 +1558,8 @@ Diskteki dosyayı yeniden yüklemek istermisiniz?</translation>
     <name>FileSearchManager</name>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="50"/>
-        <source>Search Item:</source>
-        <translation>Arama Öğesi:</translation>
+        <source>Search </source>
+        <translation>Arama </translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="69"/>
@@ -1738,8 +1738,8 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="320"/>
-        <source>New Name:</source>
-        <translation>Yeni İsim:</translation>
+        <source>New </source>
+        <translation>Yeni </translation>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="327"/>
@@ -1861,7 +1861,7 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="318"/>
         <source>Revert with:</source>
-        <translation>Şununla geri dön:</translation>
+        <translation>Şununla geri </translation>
     </message>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="319"/>
@@ -2035,7 +2035,7 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="58"/>
-        <source>Replace With:</source>
+        <source>Replace </source>
         <translation>Değiştir:</translation>
     </message>
     <message>
@@ -2072,13 +2072,13 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="103"/>
-        <source>Find What:</source>
+        <source>Find </source>
         <translation>Aranan:</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="115"/>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>Ayarlar:</translation>
     </message>
     <message>
@@ -2439,8 +2439,8 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     </message>
     <message>
         <location filename="src/plugins/golangdoc/golangdoc.cpp" line="111"/>
-        <source>Find Package:</source>
-        <translation>Aranan Paket:</translation>
+        <source>Find </source>
+        <translation>Aranan </translation>
     </message>
 </context>
 <context>
@@ -2710,8 +2710,8 @@ Tüm arama öğelerini boşluk karkteri yapmak mı istiyorsunuz?</translation>
     <name>GolangPackageOption</name>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.cpp" line="304"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>GOPATH&apos;a eklenecek dizini seçin:</translation>
+        <source>Choose directory to add to </source>
+        <translation>GOPATH&apos;a eklenecek dizini </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.ui" line="14"/>
@@ -2928,8 +2928,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="247"/>
-        <source>Select a file to load:</source>
-        <translation>Yüklenecek dosya seç:</translation>
+        <source>Select a file to </source>
+        <translation>Yüklenecek dosya </translation>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
@@ -2938,8 +2938,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
-        <source>New File Name:</source>
-        <translation>Yeni Dosya Adı:</translation>
+        <source>New File </source>
+        <translation>Yeni Dosya </translation>
     </message>
 </context>
 <context>
@@ -3067,7 +3067,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/golangcode/golangcode.cpp" line="847"/>
         <source>warning, pkg not find, please enter to import :</source>
-        <translation>uyarı, paket bulunamıyor, lütfen içe aktarmak için girin:</translation>
+        <translation>uyarı, paket bulunamıyor, lütfen içe aktarmak için </translation>
     </message>
 </context>
 <context>
@@ -3239,9 +3239,9 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="318"/>
         <location filename="src/liteapp/liteappoption.ui" line="357"/>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
-        <translation>En Fazla:</translation>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
+        <translation>En </translation>
     </message>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="229"/>
@@ -3653,7 +3653,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/litebuild/litebuildoption.ui" line="27"/>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation>Komutla yapılandırma dosyalarını oluşturun [*]</translation>
     </message>
 </context>
@@ -4378,9 +4378,9 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="318"/>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
-        <translation>Kod tamamlama önek uzunluğu:</translation>
+        <translation>Kod tamamlama önek </translation>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="402"/>
@@ -4436,8 +4436,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="20"/>
-        <source>Environment definition files:</source>
-        <translation>Ortam değişkeni tanımlama dosyası:</translation>
+        <source>Environment definition </source>
+        <translation>Ortam değişkeni tanımlama </translation>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="33"/>
@@ -4506,9 +4506,9 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="232"/>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
-        <translation>Markdown dosyalarınızı içeren klasörü seçin:</translation>
+        <translation>Markdown dosyalarınızı içeren klasörü </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="243"/>
@@ -4517,8 +4517,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="291"/>
-        <source>Select the folder to contain separated markdown exports:</source>
-        <translation>Markdown aktarımlarını içeren klasörü seçin:</translation>
+        <source>Select the folder to contain separated markdown </source>
+        <translation>Markdown aktarımlarını içeren klasörü </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="304"/>
@@ -4585,8 +4585,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="106"/>
-        <source>Export Folder:</source>
-        <translation>Klasörü Dışa Aktar:</translation>
+        <source>Export </source>
+        <translation>Klasörü Dışa </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="116"/>
@@ -4878,19 +4878,19 @@ Değiştirmek istiyor musun?</translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="279"/>
-        <source>File template details:</source>
-        <translation>Dosya taslak ayrıntıları:</translation>
+        <source>File template </source>
+        <translation>Dosya taslak </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="281"/>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
-        <translation>Proje taslak ayrıntıları:</translation>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
+        <translation>Proje taslak </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="361"/>
         <source>Choose a directory for the new content:</source>
-        <translation>Yeni içerik için klasör seçin:</translation>
+        <translation>Yeni içerik için klasör </translation>
     </message>
 </context>
 <context>
@@ -5079,8 +5079,8 @@ Değiştirmek istiyor musun?</translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="299"/>
-        <source>File Name:</source>
-        <translation>Dosya Adı:</translation>
+        <source>File </source>
+        <translation>Dosya </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/packageproject.cpp" line="310"/>
@@ -5462,8 +5462,8 @@ Değiştirmek istiyor musun?</translation>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="35"/>
-        <source>Max files count:</source>
-        <translation>En Fazla Dosya Sayısı:</translation>
+        <source>Max files </source>
+        <translation>En Fazla Dosya </translation>
     </message>
     <message>
         <location filename="src/plugins/quickopen/quickopenoption.ui" line="73"/>
@@ -5523,8 +5523,8 @@ Değiştirmek istiyor musun?</translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.ui" line="46"/>
-        <source>Working directory:</source>
-        <translation>Çalışma Klasörü:</translation>
+        <source>Working </source>
+        <translation>Çalışma </translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="82"/>
@@ -5533,9 +5533,9 @@ Değiştirmek istiyor musun?</translation>
     </message>
     <message>
         <location filename="src/plugins/litedebug/selectexternaldialog.cpp" line="92"/>
-        <source>Select the working directory:</source>
+        <source>Select the working </source>
         <oldsource>Select Working Directory</oldsource>
-        <translation>Çalışma klasörü seçimi:</translation>
+        <translation>Çalışma klasörü </translation>
     </message>
 </context>
 <context>

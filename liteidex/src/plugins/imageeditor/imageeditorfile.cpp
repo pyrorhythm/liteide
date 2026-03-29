@@ -31,64 +31,47 @@
 #include <QPixmap>
 #include <QtSvgWidgets/QGraphicsSvgItem>
 
-#ifndef QT_NO_SVG
-#include <QtSvg>
 //lite_memory_check_begin
 #if defined(WIN32) && defined(_MSC_VER) &&  defined(_DEBUG)
-     #define _CRTDBG_MAP_ALLOC
-     #include <stdlib.h>
-     #include <crtdbg.h>
-     #define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
-     #define new DEBUG_NEW
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define DEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
+#define new DEBUG_NEW
 #endif
 //lite_memory_check_end
-#endif
 
 ImageEditorFile::ImageEditorFile(LiteApi::IApplication *app, QObject *parent)
-    : QObject(parent), m_liteApp(app)
-{
+    : QObject(parent), m_liteApp(app), m_pixmap(nullptr) {
     m_movie = 0;
     m_item = 0;
     m_type = Invalid;
     m_isPaused = true;
 }
 
-ImageEditorFile::~ImageEditorFile()
-{
+ImageEditorFile::~ImageEditorFile() {
     clear();
 }
 
-bool ImageEditorFile::open(const QString &filePath, const QString &mimeType)
-{
+bool ImageEditorFile::open(const QString &filePath, const QString &mimeType) {
     QByteArray format = QImageReader::imageFormat(filePath);
     if (format.isEmpty()) {
         m_liteApp->appendLog("ImageViewer", QString("Image format not supported. %1").arg(filePath));
-        return  false;
+        return false;
     }
-#ifndef QT_NO_SVG
-    else if (format.startsWith("svg")) {
-        QGraphicsItem *item = new QGraphicsSvgItem(filePath);
-        if (item->boundingRect().isEmpty()) {
-            delete  item;
-            m_liteApp->appendLog("ImageViewer", QString("SVG file invalid. %1").arg(filePath));
-            return  false;
-        }
-        m_item = item;
-        m_type = Svg;
-    }
-#endif
-     else if (QMovie::supportedFormats().contains(format)) {
-        m_movie = new QMovie(filePath,QByteArray(),this);
+
+    if (QMovie::supportedFormats().contains(format)) {
+        m_movie = new QMovie(filePath, QByteArray(), this);
         if (!m_movie->isValid()) {
-            delete  m_movie;
+            delete m_movie;
             m_liteApp->appendLog("ImageViewer", QString("Movie file invalid. %1").arg(filePath));
-            return  false;
+            return false;
         }
         m_movie->setCacheMode(QMovie::CacheAll);
         m_item = new GraphicsMovieItem(m_movie);
         m_type = Movie;
-        connect(m_movie,SIGNAL(finished()),m_movie,SLOT(start()));
-        connect(m_movie,SIGNAL(frameChanged(int)),this,SIGNAL(frameChanged(int)));
+        connect(m_movie,SIGNAL(finished()), m_movie,SLOT(start()));
+        connect(m_movie,SIGNAL(frameChanged(int)), this,SIGNAL(frameChanged(int)));
         m_movie->start();
         m_isPaused = false;
         setPaused(true);
@@ -96,19 +79,18 @@ bool ImageEditorFile::open(const QString &filePath, const QString &mimeType)
         QPixmap pixmap(filePath);
         if (pixmap.isNull()) {
             m_liteApp->appendLog("ImageViewer", QString("Pixmap file invalid. %1").arg(filePath));
-            return  false;
+            return false;
         }
         m_type = Pixmap;
         m_item = new QGraphicsPixmapItem(pixmap);
-        ((QGraphicsPixmapItem*)m_item)->setTransformationMode(Qt::SmoothTransformation);
+        ((QGraphicsPixmapItem *) m_item)->setTransformationMode(Qt::SmoothTransformation);
     }
     m_mimeType = mimeType;
     m_filePath = filePath;
-    return  true;
+    return true;
 }
 
-void ImageEditorFile::setPaused(bool paused)
-{
+void ImageEditorFile::setPaused(bool paused) {
     if (!m_movie || m_isPaused == paused)
         return;
     m_isPaused = paused;
@@ -116,89 +98,79 @@ void ImageEditorFile::setPaused(bool paused)
     emit isPausedChanged(m_isPaused);
 }
 
-QSize ImageEditorFile::imageSize() const
-{
+QSize ImageEditorFile::imageSize() const {
     if (m_item) {
         QRectF sz = m_item->boundingRect();
-        return  QSize(sz.width(),sz.height());
+        return QSize(sz.width(), sz.height());
     }
     return QSize();
 }
 
-int ImageEditorFile::frameCount() const
-{
+int ImageEditorFile::frameCount() const {
     if (m_type != Movie) {
         return 1;
     }
-    return  m_movie->frameCount();
+    return m_movie->frameCount();
 }
 
-int ImageEditorFile::currentFrame() const
-{
+int ImageEditorFile::currentFrame() const {
     if (m_type != Movie) {
-        return  0;
+        return 0;
     }
-    return  m_movie->currentFrameNumber();
+    return m_movie->currentFrameNumber();
 }
 
-bool ImageEditorFile::jumpToNextFrame()
-{
+bool ImageEditorFile::jumpToNextFrame() {
     if (m_type != Movie) {
-        return  false;
+        return false;
     }
     int cur = m_movie->currentFrameNumber();
     cur++;
     if (cur < m_movie->frameCount()) {
-        return  m_movie->jumpToFrame(cur);
+        return m_movie->jumpToFrame(cur);
     }
-    return  false;
+    return false;
 }
 
-bool ImageEditorFile::jumpToPrevFrame()
-{
+bool ImageEditorFile::jumpToPrevFrame() {
     if (m_type != Movie) {
-        return  false;
+        return false;
     }
     int cur = m_movie->currentFrameNumber();
     cur--;
     if (cur >= 0) {
         return m_movie->jumpToFrame(cur);
     }
-    return  false;
+    return false;
 }
 
-void ImageEditorFile::clear()
-{
+void ImageEditorFile::clear() {
     if (m_movie) {
-        delete  m_movie;
+        delete m_movie;
     }
     if (m_item) {
-        delete  m_item;
+        delete m_item;
     }
     m_filePath.clear();
     m_type = Invalid;
 }
 
 GraphicsMovieItem::GraphicsMovieItem(QMovie *movie)
-    : m_movie(movie)
-{
+    : m_movie(movie) {
     setPixmap(m_movie->currentPixmap());
-    connect(m_movie,SIGNAL(updated(QRect)),this,SLOT(movieUpdate(QRect)));
+    connect(m_movie,SIGNAL(updated(QRect)), this,SLOT(movieUpdate(QRect)));
 }
 
-void GraphicsMovieItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-{
+void GraphicsMovieItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     const bool smoothTransform = painter->worldTransform().m11() < 1;
     painter->setRenderHint(QPainter::SmoothPixmapTransform, smoothTransform);
     painter->drawPixmap(offset(), m_movie->currentPixmap());
 }
 
 QRectF GraphicsMovieItem::boundingRect() const {
-    QRect rc = m_movie->frameRect();
-    return  QRectF(rc);
+    return QRectF(m_movie->frameRect());
 }
 
-void GraphicsMovieItem::movieUpdate(const QRect &rc)
-{
-    QGraphicsPixmapItem::update(rc);
+void GraphicsMovieItem::movieUpdate(const QRect &rc) {
+    update(rc);
 }

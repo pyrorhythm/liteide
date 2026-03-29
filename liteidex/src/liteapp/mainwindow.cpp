@@ -77,7 +77,7 @@ MainWindow::MainWindow(IApplication *app, QWidget *parent)
     setCentralWidget(m_mainSplitter);
 
 #if QT_VERSION >= 0x050200
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     if (!s_macDocMenu) {
         s_macDocMenu = new QMenu;
         s_macDocMenu->setAsDockMenu();

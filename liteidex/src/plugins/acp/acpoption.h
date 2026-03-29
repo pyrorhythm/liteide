@@ -33,15 +33,15 @@ class ACPOption : public LiteApi::IOption {
     Q_OBJECT
 public:
     explicit ACPOption();
-    ~ACPOption();
+    ~ACPOption() override;
 
-    virtual QString name() const override;
-    virtual QString displayName() const override;
-    virtual IOption::Type type() const override;
-    virtual QWidget *widget() override;
-    virtual void save() override;
-    virtual void load() override;
-    virtual void reset() override;
+    [[nodiscard]] QString name() const override;
+    [[nodiscard]] virtual QString displayName() const;
+    [[nodiscard]] QString mimeType() const override;
+    QWidget *widget() override;
+    void save() override;
+    void load() override;
+    virtual void reset();
 
 protected:
     void loadAgents();
@@ -51,6 +51,7 @@ protected slots:
     void removeAgent();
 
 private:
+    QWidget* m_widget;
     QListWidget *m_agentList;
     QListWidget *m_sessionList;
     QVector<QString> m_agentPaths;

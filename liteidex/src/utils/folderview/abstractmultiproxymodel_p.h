@@ -14,7 +14,8 @@
 ** Lesser General Public License for more details.
 **
 ** In addition, as a special exception,  that plugins developed for LiteIDE,
-** are allowed to remain closed sourced and can be distributed under any license .
+** are allowed to remain closed sourced and can be distributed under any license
+*.
 ** These rights are included in the file LGPL_EXCEPTION.txt in this package.
 **
 **************************************************************************/
@@ -24,34 +25,31 @@
 #ifndef ABSTRACTMULTIPROXYMODEL_P_H
 #define ABSTRACTMULTIPROXYMODEL_P_H
 
-#include <QAbstractItemModel>
 #include "abstractmultiproxymodel.h"
+#include <QAbstractItemModel>
 
 class AbstractMultiProxyModel;
-class AbstractMultiProxyModelPrivate : public QObject //: public QAbstractItemModelPrivate
-{
-    Q_OBJECT
-    Q_DECLARE_PUBLIC(AbstractMultiProxyModel)
+class AbstractMultiProxyModelPrivate : public QObject {
+  Q_OBJECT
+  Q_DECLARE_PUBLIC(AbstractMultiProxyModel)
 public:
-    AbstractMultiProxyModelPrivate() {}
-    QList<SourceModelIndex> indexList;
-    inline bool indexValid(const QModelIndex &index) const {
-         return (index.row() >= 0) && (index.column() >= 0) && (index.model() == q_func());
+  AbstractMultiProxyModelPrivate() = default;
+  QList<SourceModelIndex> indexList;
+  [[nodiscard]] inline bool indexValid(const QModelIndex &index) const {
+    return (index.row() >= 0) && (index.column() >= 0) &&
+           (index.model() == q_func());
+  }
+  inline bool containsModel(QAbstractItemModel *model) {
+    foreach (SourceModelIndex index, indexList) {
+      if (index.model == model) {
+        return true;
+      }
     }
-    inline bool containsModel(QAbstractItemModel *model)
-    {
-        foreach (SourceModelIndex index, indexList) {
-            if (index.model == model) {
-                return true;
-            }
-        }
-        return false;
-    }
-public slots:
-    virtual void _q_sourceModelDestroyed();
+    return false;
+  }
+
 public:
-    QAbstractItemModel *q_ptr;
+  QAbstractItemModel *q_ptr{};
 };
 
 #endif // ABSTRACTMULTIPROXYMODEL_P_H
-

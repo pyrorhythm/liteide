@@ -416,6 +416,15 @@ void MultiFolderModel::sort(int column, Qt::SortOrder order)
     reloadAll();   // or whatever your model uses to refresh
 }
 
+void MultiFolderModel::setSorting(QDir::SortFlags sort)
+{
+    if (m_sorts == sort) {
+        return;
+    }
+    m_sorts = sort;
+    reloadAll();
+}
+
 QDir::SortFlags MultiFolderModel::sorting() const
 {
     return m_sorts;

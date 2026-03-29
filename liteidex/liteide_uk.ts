@@ -18,7 +18,7 @@
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="162"/>
         <source>Welcome:</source>
-        <translation>Ласкаво просимо:</translation>
+        <translation>Ласкаво </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="168"/>
@@ -61,14 +61,14 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="249"/>
-        <source>Source Code:</source>
-        <translation>Програмний код:</translation>
+        <source>Source </source>
+        <translation>Програмний </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="263"/>
-        <source>Support LiteIDE:</source>
+        <source>Support </source>
         <oldsource>Support</oldsource>
-        <translation>Підтримка LiteIDE:</translation>
+        <translation>Підтримка </translation>
     </message>
     <message>
         <location filename="src/liteapp/aboutdialog.ui" line="297"/>
@@ -373,8 +373,8 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="239"/>
-        <source>New Name:</source>
-        <translation>Нове ім&apos;я:</translation>
+        <source>New </source>
+        <translation>Нове ім&apos;</translation>
     </message>
     <message>
         <location filename="src/utils/folderview/basefolderview.cpp" line="246"/>
@@ -640,8 +640,8 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/plugins/litebuild/buildconfigdialog.cpp" line="293"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation>Додати обрану директорію в GOPATH:</translation>
+        <source>Choose directory to add to </source>
+        <translation>Додати обрану директорію в </translation>
     </message>
 </context>
 <context>
@@ -658,8 +658,8 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="98"/>
-        <source>Dir Name:</source>
-        <translation>Ім&apos;я директорії:</translation>
+        <source>Dir </source>
+        <translation>Ім&apos;я </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="106"/>
@@ -687,8 +687,8 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="48"/>
-        <source>File Name:</source>
-        <translation>Ім&apos;я файлу:</translation>
+        <source>File </source>
+        <translation>Ім&apos;я </translation>
     </message>
     <message>
         <location filename="src/utils/folderview/folderdialog.cpp" line="56"/>
@@ -787,7 +787,7 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/plugins/dlvdebugger/dlvdebuggeroption.ui" line="20"/>
-        <source>delve debug pass flags: (example --check-go-version=false)</source>
+        <source>delve debug pass (example --check-go-version=false)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1062,18 +1062,18 @@ LiteIDE - це проста кросплатформена IDE з відкрит
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5719"/>
-        <source>Unknown option:</source>
-        <translation>Невідома опція:</translation>
+        <source>Unknown </source>
+        <translation>Невідома </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5730"/>
-        <source>Invalid argument:</source>
-        <translation>Помилковий аргумент:</translation>
+        <source>Invalid </source>
+        <translation>Помилковий </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5733"/>
-        <source>Trailing characters:</source>
-        <translation type="unfinished">Кінцеві символи:</translation>
+        <source>Trailing </source>
+        <translation type="unfinished">Кінцеві </translation>
     </message>
     <message>
         <location filename="src/3rdparty/fakevim/fakevim/fakevimhandler.cpp" line="5816"/>
@@ -1410,9 +1410,9 @@ Do you want to load?</oldsource>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="314"/>
         <location filename="src/liteapp/filemanager.cpp" line="332"/>
-        <source>Select a folder:</source>
+        <source>Select a </source>
         <oldsource>Open Folder</oldsource>
-        <translation>Оберіть директорію:</translation>
+        <translation>Оберіть </translation>
     </message>
     <message>
         <location filename="src/liteapp/filemanager.cpp" line="679"/>
@@ -1530,7 +1530,7 @@ Do you want to reload the file from disk?</source>
     <message>
         <location filename="src/plugins/litefind/filesearch.cpp" line="241"/>
         <source>Search for:</source>
-        <translation>Шукати входження:</translation>
+        <translation>Шукати </translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/filesearch.cpp" line="243"/>
@@ -1588,7 +1588,7 @@ Do you want to reload the file from disk?</source>
     <name>FileSearchManager</name>
     <message>
         <location filename="src/plugins/litefind/filesearchmanager.cpp" line="50"/>
-        <source>Search Item:</source>
+        <source>Search </source>
         <translation type="unfinished">Шукаємо:</translation>
     </message>
     <message>
@@ -1768,8 +1768,8 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="320"/>
-        <source>New Name:</source>
-        <translation>Нове ім&apos;я:</translation>
+        <source>New </source>
+        <translation>Нове ім&apos;</translation>
     </message>
     <message>
         <location filename="src/utils/filesystem/filesystemwidget.cpp" line="327"/>
@@ -1859,7 +1859,7 @@ Want to replace to all the search items to whitespace?</source>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="180"/>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="441"/>
         <source>Replace with:</source>
-        <translation>Замінити на:</translation>
+        <translation>Замінити </translation>
     </message>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="186"/>
@@ -1891,7 +1891,7 @@ Want to replace to all the search items to whitespace?</source>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="318"/>
         <source>Revert with:</source>
-        <translation>Повернути на:</translation>
+        <translation>Повернути </translation>
     </message>
     <message>
         <location filename="src/3rdparty/qtc_searchresult/searchresultwidget.cpp" line="319"/>
@@ -2071,8 +2071,8 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="58"/>
-        <source>Replace With:</source>
-        <translation>Замінити на:</translation>
+        <source>Replace </source>
+        <translation>Замінити </translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="59"/>
@@ -2108,13 +2108,13 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="103"/>
-        <source>Find What:</source>
+        <source>Find </source>
         <translation>Знайти:</translation>
     </message>
     <message>
         <location filename="src/plugins/litefind/findeditor.cpp" line="115"/>
         <source>Options:</source>
-        <oldsource>Find Option:</oldsource>
+        <oldsource>Find </oldsource>
         <translation>Параметри:</translation>
     </message>
     <message>
@@ -2478,8 +2478,8 @@ Want to replace to all the search items to whitespace?</source>
     </message>
     <message>
         <location filename="src/plugins/golangdoc/golangdoc.cpp" line="111"/>
-        <source>Find Package:</source>
-        <translation type="unfinished">Знайти пакет:</translation>
+        <source>Find </source>
+        <translation type="unfinished">Знайти </translation>
     </message>
 </context>
 <context>
@@ -2705,7 +2705,7 @@ Want to replace to all the search items to whitespace?</source>
     <message>
         <location filename="src/plugins/golangfmt/golangfmtoption.ui" line="29"/>
         <source>Enable update imports line, adding missing ones and removing unreferenced ones.</source>
-        <translation>Оновлювати оголошення імпорту: додавати відсутні та видаляти невикористовувані.</translation>
+        <translation>Оновлювати оголошення додавати відсутні та видаляти невикористовувані.</translation>
     </message>
     <message>
         <location filename="src/plugins/golangfmt/golangfmtoption.ui" line="46"/>
@@ -2749,8 +2749,8 @@ Want to replace to all the search items to whitespace?</source>
     <name>GolangPackageOption</name>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.cpp" line="304"/>
-        <source>Choose directory to add to GOPATH:</source>
-        <translation type="unfinished">Додати обрану директорію в GOPATH:</translation>
+        <source>Choose directory to add to </source>
+        <translation type="unfinished">Додати обрану директорію в </translation>
     </message>
     <message>
         <location filename="src/plugins/golangpackage/golangpackageoption.ui" line="14"/>
@@ -2967,8 +2967,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="247"/>
-        <source>Select a file to load:</source>
-        <translation type="unfinished">Оберіть файл для завантаження:</translation>
+        <source>Select a file to </source>
+        <translation type="unfinished">Оберіть файл для </translation>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
@@ -2977,8 +2977,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/golangplay/goplaybrowser.cpp" line="263"/>
-        <source>New File Name:</source>
-        <translation type="unfinished">Назва нового файлу:</translation>
+        <source>New File </source>
+        <translation type="unfinished">Назва нового </translation>
     </message>
 </context>
 <context>
@@ -3106,7 +3106,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/golangcode/golangcode.cpp" line="847"/>
         <source>warning, pkg not find, please enter to import :</source>
-        <translation type="unfinished">увага, пакунок не знайдено, будь ласка введіть для імпорту:</translation>
+        <translation type="unfinished">увага, пакунок не знайдено, будь ласка введіть для </translation>
     </message>
 </context>
 <context>
@@ -3278,9 +3278,9 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="318"/>
         <location filename="src/liteapp/liteappoption.ui" line="357"/>
-        <source>Max Count:</source>
-        <oldsource>Max Recent:</oldsource>
-        <translation>Максимальна кількість:</translation>
+        <source>Max </source>
+        <oldsource>Max </oldsource>
+        <translation>Максимальна </translation>
     </message>
     <message>
         <location filename="src/liteapp/liteappoption.ui" line="229"/>
@@ -3692,7 +3692,7 @@ Success: %2.</oldsource>
     <message>
         <location filename="src/plugins/litebuild/litebuildoption.ui" line="27"/>
         <source>Build command configuration files [*]</source>
-        <oldsource>Build command configuration files:</oldsource>
+        <oldsource>Build command configuration </oldsource>
         <translation type="unfinished">Файли конфігурації команд збирання [*]</translation>
     </message>
 </context>
@@ -4417,9 +4417,9 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="318"/>
-        <source>Code completion prefix length:</source>
+        <source>Code completion prefix </source>
         <oldsource>Word Complete Prefix Length</oldsource>
-        <translation>Довжина префіксу для автодоповнення:</translation>
+        <translation>Довжина префіксу для </translation>
     </message>
     <message>
         <location filename="src/plugins/liteeditor/liteeditoroption.ui" line="402"/>
@@ -4475,8 +4475,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="20"/>
-        <source>Environment definition files:</source>
-        <translation>Файли визначення оточення:</translation>
+        <source>Environment definition </source>
+        <translation>Файли визначення </translation>
     </message>
     <message>
         <location filename="src/plugins/liteenv/liteenvoption.ui" line="33"/>
@@ -4545,7 +4545,7 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="231"/>
-        <source>Select the folder containing your markdown files:</source>
+        <source>Select the folder containing your markdown </source>
         <oldsource>Select Markdown Folder</oldsource>
         <translation>Оберіть директорію з Markdown-файлами:</translation>
     </message>
@@ -4556,8 +4556,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="290"/>
-        <source>Select the folder to contain separated markdown exports:</source>
-        <translation>Виберіть директорію для збереження окремих експортів Markdown:</translation>
+        <source>Select the folder to contain separated markdown </source>
+        <translation>Виберіть директорію для збереження окремих експортів </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchbrowser.cpp" line="303"/>
@@ -4624,8 +4624,8 @@ Success: %2.</oldsource>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="106"/>
-        <source>Export Folder:</source>
-        <translation>Директорія експорту:</translation>
+        <source>Export </source>
+        <translation>Директорія </translation>
     </message>
     <message>
         <location filename="src/plugins/markdown/markdownbatchwidget.ui" line="116"/>
@@ -4916,19 +4916,19 @@ Do you want to replace it?</source>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="280"/>
-        <source>File template details:</source>
-        <translation type="unfinished">Деталі шаблону:</translation>
+        <source>File template </source>
+        <translation type="unfinished">Деталі </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="282"/>
-        <source>Project template details:</source>
-        <oldsource>New project wizard:</oldsource>
-        <translation type="unfinished">Шаблон нового проекту:</translation>
+        <source>Project template </source>
+        <oldsource>New project </oldsource>
+        <translation type="unfinished">Шаблон нового </translation>
     </message>
     <message>
         <location filename="src/liteapp/newfiledialog.cpp" line="362"/>
         <source>Choose a directory for the new content:</source>
-        <translation type="unfinished">Вибрати директорію для нового вмісту:</translation>
+        <translation type="unfinished">Вибрати директорію для нового </translation>
     </message>
 </context>
 <context>
@@ -5042,7 +5042,7 @@ Do you want to replace it?</source>
     <message>
         <location filename="src/liteapp/outputoption.ui" line="124"/>
         <source>Sets the maximum number of lines</source>
-        <translation>Максимальне число рядків:</translation>
+        <translation>Максимальне число </translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,6 @@
 # litedebug - plugin
 
-plugin_sources = [
+litedebug_sources = [
   'litedebugplugin.cpp',
   'debugmanager.cpp',
   'debugwidget.cpp',
@@ -10,7 +10,7 @@ plugin_sources = [
   'selectexternaldialog.cpp',
 ]
 
-plugin_headers = [
+litedebug_headers = [
   'litedebugplugin.h',
   'litedebug_global.h',
   'debugmanager.h',
@@ -21,19 +21,20 @@ plugin_headers = [
   'selectexternaldialog.h',
 ]
 
-plugin_ui = [
-  'litedebugoption.ui',
-  'selectexternaldialog.ui',
-]
+litedebug_gen = qt6_mod.preprocess(
+  include_directories: plugin_inc,
+  moc_headers: litedebug_headers,
+  ui_files: ['litedebugoption.ui', 'selectexternaldialog.ui'],
+  qresources: 'litedebug.qrc',
+)
 
-plugin_resources = [
-  'litedebug.qrc',
-]
-
-plugin_lib = static_library('litedebug',
-  plugin_sources,
-  plugin_headers,
-  include_directories : [global_inc],
-  dependencies : [qt_dep],
-  link_with : [liteapp_lib],
+shared_module('litedebug',
+  litedebug_sources,
+  litedebug_gen,
+  name_prefix: '',
+  include_directories: [global_inc],
+  dependencies: [qt_dep],
+  link_args: plugin_link_args,
+  install: true,
+  install_dir: plugin_install_dir,
 )

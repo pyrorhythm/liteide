@@ -46,5 +46,5 @@ QStringList GolangHighlighterFactory::mimeTypes() const
 
 TextEditor::SyntaxHighlighter *GolangHighlighterFactory::create(LiteApi::ITextEditor *editor, QTextDocument *doc, const QString &/*mimeType*/)
 {
-    return new GolangHighlighter(editor,doc);
+    return new GolangHighligher(editor,doc);
 }

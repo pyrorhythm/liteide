@@ -31,21 +31,23 @@
 #include <QSettings>
 #include <QLabel>
 
+#include "acpoption_global.h"
+
 ACPOption::ACPOption()
 {
     // Create UI programmatically since we don't have uic processed .ui file
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    auto *mainLayout = new QVBoxLayout();
 
     // Agent group
-    QGroupBox *agentGroup = new QGroupBox(tr("ACP Agents"), this);
-    QVBoxLayout *agentLayout = new QVBoxLayout(agentGroup);
+    auto *agentGroup = new QGroupBox(tr("ACP Agents"));
+    auto *agentLayout = new QVBoxLayout(agentGroup);
 
-    m_agentList = new QListWidget(this);
+    m_agentList = new QListWidget();
     agentLayout->addWidget(m_agentList);
 
-    QHBoxLayout *agentBtnLayout = new QHBoxLayout;
-    QPushButton *addBtn = new QPushButton(tr("Add Agent"), this);
-    QPushButton *removeBtn = new QPushButton(tr("Remove"), this);
+    auto *agentBtnLayout = new QHBoxLayout;
+    auto *addBtn = new QPushButton(tr("Add Agent"));
+    auto removeBtn = new QPushButton(tr("Remove"));
     agentBtnLayout->addWidget(addBtn);
     agentBtnLayout->addWidget(removeBtn);
     agentBtnLayout->addStretch();
@@ -54,15 +56,15 @@ ACPOption::ACPOption()
     mainLayout->addWidget(agentGroup);
 
     // Session group
-    QGroupBox *sessionGroup = new QGroupBox(tr("Active Sessions"), this);
-    QVBoxLayout *sessionLayout = new QVBoxLayout(sessionGroup);
+    auto *sessionGroup = new QGroupBox(tr("Active Sessions"));
+    auto sessionLayout = new QVBoxLayout(sessionGroup);
 
-    m_sessionList = new QListWidget(this);
+    m_sessionList = new QListWidget();
     sessionLayout->addWidget(m_sessionList);
 
-    QHBoxLayout *sessionBtnLayout = new QHBoxLayout;
-    QPushButton *newSessionBtn = new QPushButton(tr("New Session"), this);
-    QPushButton *closeSessionBtn = new QPushButton(tr("Close"), this);
+    auto *sessionBtnLayout = new QHBoxLayout;
+    auto *newSessionBtn = new QPushButton(tr("New Session"));
+    auto *closeSessionBtn = new QPushButton(tr("Close"));
     sessionBtnLayout->addWidget(newSessionBtn);
     sessionBtnLayout->addWidget(closeSessionBtn);
     sessionBtnLayout->addStretch();
@@ -77,8 +79,7 @@ ACPOption::ACPOption()
     loadAgents();
 }
 
-ACPOption::~ACPOption() {
-}
+ACPOption::~ACPOption() = default;
 
 QString ACPOption::name() const {
     return "ACP";
@@ -88,12 +89,12 @@ QString ACPOption::displayName() const {
     return "ACP (Agent Client Protocol)";
 }
 
-IOption::Type ACPOption::type() const {
-    return IOption::PluginOption;
+QString ACPOption::mimeType() const {
+    return OPTION_AGENTPROTO;
 }
 
 QWidget *ACPOption::widget() {
-    return this;
+    return ;
 }
 
 void ACPOption::save() {

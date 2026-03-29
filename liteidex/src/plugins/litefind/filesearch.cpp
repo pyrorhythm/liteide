@@ -104,7 +104,11 @@ void FindThread::findFile(const QRegularExpression &reg, const QString &fileName
     file.seek(0);
 
     QTextStream stream(&file);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    stream.setEncoding(QStringConverter::Utf8);
+#else
     stream.setCodec("utf-8");
+#endif
     QString line;
     int lineNr = 1;
     while (!stream.atEnd()) {

@@ -36,102 +36,103 @@
 
 #include "highlightdefinitionmetadata.h"
 
-#include <QtCore/QString>
-#include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtCore/QUrl>
-#include <QtCore/QList>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QFutureWatcher>
-//#include <QtNetwork/QNetworkAccessManager>
+#include <QtCore/QHash>
+#include <QtCore/QList>
+#include <QtCore/QSet>
+#include <QtCore/QSharedPointer>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
+// #include <QtNetwork/QNetworkAccessManager>
 
 QT_BEGIN_NAMESPACE
 class QFileInfo;
-class QStringList;
 class QIODevice;
 template <class> class QFutureInterface;
 template <class> class QSharedPointer;
 QT_END_NAMESPACE
 
-namespace TextEditor {
-namespace Internal {
+namespace TextEditor::Internal {
 
 class HighlightDefinition;
 class DefinitionDownloader;
 
 // This is the generic highlighter manager. It is not thread-safe.
 
-class Manager : public QObject
-{
-    Q_OBJECT
+class Manager : public QObject {
+  Q_OBJECT
 public:
-    virtual ~Manager();
-    static Manager *instance();
+  virtual ~Manager();
+  static Manager *instance();
 
-    QString definitionIdByName(const QString &name) const;
-    QString definitionIdByMimeType(const QString &mimeType) const;
-    QString definitionIdByAnyMimeType(const QStringList &mimeTypes) const;
+  QString definitionIdByName(const QString &name) const;
+  QString definitionIdByMimeType(const QString &mimeType) const;
+  QString definitionIdByAnyMimeType(const QStringList &mimeTypes) const;
 
-    bool isBuildingDefinition(const QString &id) const;
+  bool isBuildingDefinition(const QString &id) const;
 
-    QSharedPointer<HighlightDefinition> definition(const QString &id);
-    QSharedPointer<HighlightDefinitionMetaData> definitionMetaData(const QString &id) const;
+  QSharedPointer<HighlightDefinition> definition(const QString &id);
+  QSharedPointer<HighlightDefinitionMetaData>
+  definitionMetaData(const QString &id) const;
 
-    void downloadAvailableDefinitionsMetaData();
-    void downloadDefinitions(const QList<QUrl> &urls, const QString &savePath);
-    bool isDownloadingDefinitions() const;
+  void downloadAvailableDefinitionsMetaData();
+  void downloadDefinitions(const QList<QUrl> &urls, const QString &savePath);
+  bool isDownloadingDefinitions() const;
 
-    static QSharedPointer<HighlightDefinitionMetaData> parseMetadata(const QFileInfo &fileInfo);
-    void loadFromPath(const QStringList & definitionsPaths);
+  static QSharedPointer<HighlightDefinitionMetaData>
+  parseMetadata(const QFileInfo &fileInfo);
+  void loadFromPath(const QStringList &definitionsPaths);
 public slots:
-    void registerMimeTypes();
+  void registerMimeTypes();
 
 private slots:
-    void registerMimeType(int index) const;
-    void registerMimeTypesFinished();
-    void downloadAvailableDefinitionsListFinished();
-    void downloadDefinitionsFinished();
+  void registerMimeType(int index) const;
+  void registerMimeTypesFinished();
+  void downloadAvailableDefinitionsListFinished();
+  void downloadDefinitionsFinished();
 
 signals:
-    void mimeTypesRegistered();
+  void mimeTypesRegistered();
 
 private:
-    Manager();
-    Q_DISABLE_COPY(Manager)
+  Manager();
+  Q_DISABLE_COPY(Manager)
 
-//    void gatherDefinitionsMimeTypes(QFutureInterface<Core::MimeType> &future);
-    QList<HighlightDefinitionMetaData> parseAvailableDefinitionsList(QIODevice *device) const;
-    void clear();
+  //    void gatherDefinitionsMimeTypes(QFutureInterface<Core::MimeType>
+  //    &future);
+  QList<HighlightDefinitionMetaData>
+  parseAvailableDefinitionsList(QIODevice *device) const;
+  void clear();
 
-    bool m_downloadingDefinitions;
-    bool m_registeringMimeTypes;
-    int m_queuedMimeTypeRegistrations;
+  bool m_downloadingDefinitions;
+  bool m_registeringMimeTypes;
+  int m_queuedMimeTypeRegistrations;
 
-    QHash<QString, QString> m_idByName;
-    QHash<QString, QString> m_idByMimeType;
-    QHash<QString, QSharedPointer<HighlightDefinition> > m_definitions;
-    QHash<QString, QSharedPointer<HighlightDefinitionMetaData> > m_definitionsMetaData;
-    QSet<QString> m_isBuilding;
+  QHash<QString, QString> m_idByName;
+  QHash<QString, QString> m_idByMimeType;
+  QHash<QString, QSharedPointer<HighlightDefinition>> m_definitions;
+  QHash<QString, QSharedPointer<HighlightDefinitionMetaData>>
+      m_definitionsMetaData;
+  QSet<QString> m_isBuilding;
 
-    //QList<DefinitionDownloader *> m_downloaders;
-    //QNetworkAccessManager m_networkManager;
+  // QList<DefinitionDownloader *> m_downloaders;
+  // QNetworkAccessManager m_networkManager;
 
-    QFutureWatcher<void> m_downloadWatcher;
-    //QFutureWatcher<Core::MimeType> m_mimeTypeWatcher;
+  QFutureWatcher<void> m_downloadWatcher;
+  // QFutureWatcher<Core::MimeType> m_mimeTypeWatcher;
 
-    struct PriorityComp
-    {
-        bool operator()(const QSharedPointer<HighlightDefinitionMetaData> &a,
-                        const QSharedPointer<HighlightDefinitionMetaData> &b) {
-            return a->priority() > b->priority();
-        }
-    };
+  struct PriorityComp {
+    bool operator()(const QSharedPointer<HighlightDefinitionMetaData> &a,
+                    const QSharedPointer<HighlightDefinitionMetaData> &b) {
+      return a->priority() > b->priority();
+    }
+  };
 signals:
-    void definitionsMetaDataReady(const QList<Internal::HighlightDefinitionMetaData>&);
-    void errorDownloadingDefinitionsMetaData();
+  void definitionsMetaDataReady(
+      const QList<Internal::HighlightDefinitionMetaData> &);
+  void errorDownloadingDefinitionsMetaData();
 };
 
-} // namespace Internal
-} // namespace TextEditor
+} // namespace TextEditor::Internal
 
 #endif // MANAGER_H
